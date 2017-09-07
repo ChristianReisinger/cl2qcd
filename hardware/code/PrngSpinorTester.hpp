@@ -181,7 +181,7 @@ protected:
 	const int numberOfElements;
 	double mean, variance;
 	std::vector<su3vec> hostOutput;
-	const PrngSpinorStaggeredTestParameters & testParameters;
+	const PrngSpinorStaggeredTestParameters testParameters;
 	const hardware::buffers::PRNGBuffer* prngStates;
 private:
 	uint32_t hostSeed;

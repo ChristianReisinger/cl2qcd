@@ -77,17 +77,13 @@ BOOST_AUTO_TEST_CASE(perform_wilson_rhmc_step){
 	physics::PrngParametersImplementation prngParameters{parameters};
 	physics::PRNG prng{system, &prngParameters};
 
-	//physics::algorithms::Rational_Approximation approx_hb(parameters.get_metro_approx_ord(), 3, 4,
-	//													  parameters.get_approx_lower(), parameters.get_approx_upper(), false); //N_f=3 , positive rational exponent
-	physics::algorithms::Rational_Approximation approx_hb("rational_approximation_files/Nf3_Approx_Heatbath");
-	//physics::algorithms::Rational_Approximation approx_md(parameters.get_metro_approx_ord(), 3, 2,
-	//													  parameters.get_approx_lower(), parameters.get_approx_upper(), true); //N_f=3 , negative rational exponent
-	physics::algorithms::Rational_Approximation approx_md("rational_approximation_files/Nf3_Approx_MD");
-	//physics::algorithms::Rational_Approximation approx_met(parameters.get_metro_approx_ord(), 3, 2,
-	//													   parameters.get_approx_lower(), parameters.get_approx_upper(), true); //N_f=3 , negative rational exponent
-	physics::algorithms::Rational_Approximation approx_met("rational_approximation_files/Nf3_Approx_Metropolis");
+	physics::algorithms::Rational_Approximation approx_hb(parameters.get_metro_approx_ord(), 3, 4,
+														  parameters.get_approx_lower(), parameters.get_approx_upper(), false); //N_f=3 , positive rational exponent
+	physics::algorithms::Rational_Approximation approx_md(parameters.get_metro_approx_ord(), 3, 2,
+														  parameters.get_approx_lower(), parameters.get_approx_upper(), true); //N_f=3 , negative rational exponent
+	physics::algorithms::Rational_Approximation approx_met(parameters.get_metro_approx_ord(), 3, 2,
+														   parameters.get_approx_lower(), parameters.get_approx_upper(), true); //N_f=3 , negative rational exponent
 
-	//Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, true);
 	int iteration = 3;
 	const double randomNumber = prng.get_double();
@@ -99,10 +95,8 @@ BOOST_AUTO_TEST_CASE(perform_wilson_eo_rhmc_step){
 	using namespace physics::lattices;
 	using namespace physics::algorithms;
 
-	//const char * _params[] = {"foo", "--ntime=4", "--nspace=12","--use_eo=true", "--num_dev=1", "--num_timescales=2", "--integrator0=twomn", "--integrationsteps0=10", "--integrator1=twomn", "--integrationsteps1=10"};
-	const char * _params[] = {"foo", "--input-file=testinputfile", "--num_dev=1"};
-	//meta::Inputparameters parameters(10, _params);
-	meta::Inputparameters parameters(3, _params);
+	const char * _params[] = {"foo", "--ntime=4", "--nspace=12","--use_eo=true", "--num_dev=1", "--num_timescales=2", "--integrator0=twomn", "--integrationsteps0=10", "--integrator1=twomn", "--integrationsteps1=10"};
+	meta::Inputparameters parameters(10, _params);
 
 	hardware::HardwareParametersImplementation hP(&parameters);
 	hardware::code::OpenClKernelParametersImplementation kP(parameters);
@@ -111,19 +105,14 @@ BOOST_AUTO_TEST_CASE(perform_wilson_eo_rhmc_step){
 	physics::PrngParametersImplementation prngParameters{parameters};
 	physics::PRNG prng{system, &prngParameters};
 
-	//physics::algorithms::Rational_Approximation approx_hb(parameters.get_metro_approx_ord(), 3, 4,
-	//													  parameters.get_approx_lower(), parameters.get_approx_upper(), false); //N_f=3 , positive rational exponent
-	physics::algorithms::Rational_Approximation approx_hb("rational_approximation_files/Nf3_Approx_Heatbath");
-	//physics::algorithms::Rational_Approximation approx_md(parameters.get_metro_approx_ord(), 3, 2,
-	//													  parameters.get_approx_lower(), parameters.get_approx_upper(), true); //N_f=3 , negative rational exponent
-	physics::algorithms::Rational_Approximation approx_md("rational_approximation_files/Nf3_Approx_MD");
-	//physics::algorithms::Rational_Approximation approx_met(parameters.get_metro_approx_ord(), 3, 2,
-	//													   parameters.get_approx_lower(), parameters.get_approx_upper(), true); //N_f=3 , negative rational exponent
-	physics::algorithms::Rational_Approximation approx_met("rational_approximation_files/Nf3_Approx_Metropolis");
+	physics::algorithms::Rational_Approximation approx_hb(parameters.get_metro_approx_ord(), 3, 4,
+														  parameters.get_approx_lower(), parameters.get_approx_upper(), false); //N_f=3 , positive rational exponent
+	physics::algorithms::Rational_Approximation approx_md(parameters.get_metro_approx_ord(), 3, 2,
+														  parameters.get_approx_lower(), parameters.get_approx_upper(), true); //N_f=3 , negative rational exponent
+	physics::algorithms::Rational_Approximation approx_met(parameters.get_metro_approx_ord(), 3, 2,
+														   parameters.get_approx_lower(), parameters.get_approx_upper(), true); //N_f=3 , negative rational exponent
 
-	//Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng);
-	//Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, true);
+	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, true);
 	int iteration = 3;
 	const double randomNumber = prng.get_double();
 	physics::algorithms::perform_wilson_rhmc_step(approx_hb, approx_md, approx_met, &gf, iteration, randomNumber, prng, system, interfacesHandler);

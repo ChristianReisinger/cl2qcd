@@ -125,8 +125,7 @@ BOOST_AUTO_TEST_CASE(fermion_force_shifted)
 	physics::PRNG prng{system, &prngParameters};
 	const physics::algorithms::RhmcParametersInterface & parametersInterface = interfacesHandler.getRhmcParametersInterface();
 
-	//Rational_Approximation approx(25, 99999999,100000000, 1.e-5,1); // x = 99999999 and y = 100000000 are chosen such that N_f=2 is approximated
-	Rational_Approximation approx("rational_approximation_files/Nf2_approximation_for_fermion_force_shifted_test"); // x = 99999999 and y = 100000000 are chosen such that N_f=2 is approximated
+	Rational_Approximation approx(25, 99999999,100000000, 1.e-5,1); // x = 99999999 and y = 100000000 are chosen such that N_f=2 is approximated
 
 	physics::fermionmatrix::QplusQminus Qpm(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
 	hmc_float minEigen, maxEigen;
@@ -164,9 +163,7 @@ BOOST_AUTO_TEST_CASE(fermion_force_eo_shifted)
 	physics::PRNG prng{system, &prngParameters};
 	const physics::algorithms::RhmcParametersInterface & parametersInterface = interfacesHandler.getRhmcParametersInterface();
 
-	//Rational_Approximation approx(25, 99999999,100000000, 1.e-5,1); // x = 99999999 and y = 100000000 are chosen such that N_f=2 is approximated
-	Rational_Approximation approx("rational_approximation_files/Nf2_approximation_for_fermion_force_shifted_test"); // x = 99999999 and y = 100000000 are chosen such that N_f=2 is approximated
-	//approx.Save_rational_approximation("Nf2_approximation_for_fermion_force_shifted_test");
+	Rational_Approximation approx(25, 99999999,100000000, 1.e-5,1); // x = 99999999 and y = 100000000 are chosen such that N_f=2 is approximated
 
 	physics::fermionmatrix::QplusQminus_eo Qpm(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
 	hmc_float minEigen, maxEigen;
@@ -351,14 +348,3 @@ BOOST_AUTO_TEST_CASE(calc_detratio_forces_eo)
 		BOOST_CHECK_CLOSE(squarenorm(gm), 33313.511647643441, 0.01);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-

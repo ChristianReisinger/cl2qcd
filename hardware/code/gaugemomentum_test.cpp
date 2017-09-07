@@ -166,7 +166,7 @@ protected:
 	const int numberOfElements;
 	double mean, variance;
 	std::vector<ae> hostOutput;
-	const PrngGaugemomentumTestParameters & testParameters;
+	const PrngGaugemomentumTestParameters testParameters;
 	const hardware::buffers::PRNGBuffer* prngStates;
 private:
 	uint32_t hostSeed;

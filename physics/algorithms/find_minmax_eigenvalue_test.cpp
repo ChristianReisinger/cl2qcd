@@ -81,7 +81,6 @@ BOOST_AUTO_TEST_CASE(wilson_max)
 
 	//Operator for the test
 	physics::fermionmatrix::QplusQminus matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
-	//This configuration for the Ref.Code is the same as for example dks_input_5
 	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
 	hmc_float max = find_max_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Spinorfield>());
@@ -89,8 +88,7 @@ BOOST_AUTO_TEST_CASE(wilson_max)
 	logger.info() << "ref_max_eig = " << std::setprecision(16) << ref_max_eig;
 	logger.info() << "    max_eig = " << std::setprecision(16) << max;
 
-	//The precision of this test is not 1.e-8 because the method is not exactly
-	//in the same way implemented in the Ref.Code
+    //TODO: Result still has to be checked by true analytic test
 	BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-2);
 }
 
@@ -99,7 +97,7 @@ BOOST_AUTO_TEST_CASE(wilson_eo_max)
 	using namespace physics::lattices;
 	using namespace physics::algorithms;
 
-	hmc_float ref_max_eig = 3.386990108467724;
+	hmc_float ref_max_eig = 1.648104965055741;
 
 	const char * _params[] = {"foo", "--ntime=4", "--fermact=wilson", "--num_dev=1"};
 	meta::Inputparameters params(4, _params);
@@ -112,7 +110,6 @@ BOOST_AUTO_TEST_CASE(wilson_eo_max)
 
 	//Operator for the test
 	physics::fermionmatrix::QplusQminus_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
-	//This configuration for the Ref.Code is the same as for example dks_input_5
 	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
 	hmc_float max = find_max_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
@@ -120,8 +117,7 @@ BOOST_AUTO_TEST_CASE(wilson_eo_max)
 	logger.info() << "ref_max_eig = " << std::setprecision(16) << ref_max_eig;
 	logger.info() << "    max_eig = " << std::setprecision(16) << max;
 
-	//The precision of this test is not 1.e-8 because the method is not exactly
-	//in the same way implemented in the Ref.Code
+    //TODO: Result still has to be checked by true analytic test
 	BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-2);
 }
 
@@ -177,7 +173,6 @@ BOOST_AUTO_TEST_CASE(wilson_min)
 
 	//Operator for the test
 	physics::fermionmatrix::QplusQminus matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
-	//This configuration for the Ref.Code is the same as for example dks_input_5
 	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
 	hmc_float min = find_min_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Spinorfield>());
@@ -185,8 +180,7 @@ BOOST_AUTO_TEST_CASE(wilson_min)
 	logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
 	logger.info() << "     min_eig = " << std::setprecision(16) << min;
 
-	//The precision of this test is not so high because the method to calculate
-	// the eigenvalue is not exactly the same as that implemented in the Ref.Code
+    //TODO: Result still has to be checked by true analytic test
 	BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
 }
 
@@ -195,7 +189,7 @@ BOOST_AUTO_TEST_CASE(wilson_eo_min)
 	using namespace physics::lattices;
 	using namespace physics::algorithms;
 
-	hmc_float ref_min_eig = 0.059663414391956771;
+	hmc_float ref_min_eig = 0.1880074965126497;
 
 	const char * _params[] = {"foo", "--ntime=4", "--fermact=wilson", "--num_dev=1"};
 	meta::Inputparameters params(4, _params);
@@ -208,7 +202,6 @@ BOOST_AUTO_TEST_CASE(wilson_eo_min)
 
 	//Operator for the test
 	physics::fermionmatrix::QplusQminus_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
-	//This configuration for the Ref.Code is the same as for example dks_input_5
 	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
 	hmc_float min = find_min_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
@@ -216,8 +209,7 @@ BOOST_AUTO_TEST_CASE(wilson_eo_min)
 	logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
 	logger.info() << "     min_eig = " << std::setprecision(16) << min;
 
-	//The precision of this test is not so high because the method to calculate
-	// the eigenvalue is not exactly the same as that implemented in the Ref.Code
+    //TODO: Result still has to be checked by true analytic test
 	BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
 }
 
@@ -264,7 +256,6 @@ BOOST_AUTO_TEST_CASE(wilson_maxmin)
 	using namespace physics::lattices;
 	using namespace physics::algorithms;
 
-//	hmc_float ref_max_eig = 3.3878964603747419;
 	hmc_float ref_max_eig = 3.3869901084677232;
 	hmc_float ref_min_eig = 0.059663414391956771;
 
@@ -279,7 +270,6 @@ BOOST_AUTO_TEST_CASE(wilson_maxmin)
 
 	//Operator for the test
 	physics::fermionmatrix::QplusQminus matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
-	//This configuration for the Ref.Code is the same as for example dks_input_5
 	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
 	hmc_float max,min;
@@ -290,8 +280,7 @@ BOOST_AUTO_TEST_CASE(wilson_maxmin)
 	logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
 	logger.info() << "     min_eig = " << std::setprecision(16) << min;
 
-	//The precision of this test is not so high because the method to calculate
-	// the eigenvalue is not exactly the same as that implemented in the Ref.Code
+    //TODO: Result still has to be checked by true analytic test
 	BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-3);
 	BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
 }
@@ -301,9 +290,8 @@ BOOST_AUTO_TEST_CASE(wilson_eo_maxmin)
 	using namespace physics::lattices;
 	using namespace physics::algorithms;
 
-//	hmc_float ref_max_eig = 3.3878964603747419;
-	hmc_float ref_max_eig = 3.3869901084677232;
-	hmc_float ref_min_eig = 0.059663414391956771;
+	hmc_float ref_max_eig = 1.648104965055741;
+	hmc_float ref_min_eig = 0.1880074965126497;
 
 	const char * _params[] = {"foo", "--ntime=4", "--fermact=wilson", "--num_dev=1"};
 	meta::Inputparameters params(4, _params);
@@ -316,7 +304,6 @@ BOOST_AUTO_TEST_CASE(wilson_eo_maxmin)
 
 	//Operator for the test
 	physics::fermionmatrix::QplusQminus_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
-	//This configuration for the Ref.Code is the same as for example dks_input_5
 	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
 	hmc_float max,min;
@@ -327,8 +314,7 @@ BOOST_AUTO_TEST_CASE(wilson_eo_maxmin)
 	logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
 	logger.info() << "     min_eig = " << std::setprecision(16) << min;
 
-	//The precision of this test is not so high because the method to calculate
-	// the eigenvalue is not exactly the same as that implemented in the Ref.Code
+	//TODO: Result still has to be checked by true analytic test
 	BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-3);
 	BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
 }

@@ -96,7 +96,6 @@ template<class SPINORFIELD, class FERMIONMATRIX> static hmc_observables perform_
 
     //here, clmem_phi is inverted several times and stored in clmem_phi_inv
     logger.debug() << "\tRHMC:\tcall integrator";
-    logger.error() << "\tRHMC:\tcall integrator";
     //Before MD the coefficients of phi have to be set to the rescaled ones on the base of approx2
     phi.Rescale_Coefficients(approx2, minEigenvalue, maxEigenvalue);
     if(parametersInterface.getUseMp()) {
@@ -108,7 +107,6 @@ template<class SPINORFIELD, class FERMIONMATRIX> static hmc_observables perform_
 
     //metropolis step: afterwards, the updated config is again in gaugefield and p
     logger.debug() << "\tRHMC [MET]:\tperform Metropolis step: ";
-    logger.error() << "\tRHMC [MET]:\tperform Metropolis step: ";
     //Before Metropolis test the coeff. of phi have to be set to the rescaled ones on the base of approx3
     find_maxmin_eigenvalue(maxEigenvalue, minEigenvalue, fm, new_u, system, interfacesHandler, parametersInterface.getFindMinMaxPrec(), additionalParameters);
 
@@ -119,8 +117,6 @@ template<class SPINORFIELD, class FERMIONMATRIX> static hmc_observables perform_
     //this call calculates also the HMC-Observables
     const hmc_observables obs = metropolis(rnd_number, parametersInterface.getBeta(), *gf, new_u, p, new_p, phi, spinor_energy_init,
                                            phi_mp.get(), spinor_energy_init_mp, system, interfacesHandler);
-
-    logger.error() << "\tRHMC [MET]:\tMetropolis step done: ";
 
     if(obs.accept == 1) {
         // perform the change nonprimed->primed !
