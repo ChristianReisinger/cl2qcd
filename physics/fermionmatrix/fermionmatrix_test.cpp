@@ -40,7 +40,7 @@ test_fermionmatrix(const hmc_float refs[4], const int seed);
 
 template<class FERMIONMATRIX>
 typename boost::enable_if<boost::is_base_of<physics::fermionmatrix::Fermionmatrix_eo, FERMIONMATRIX>, void>::type
-test_fermionmatrix(const hmc_float refs[4], const int seed, const bool clover = false);
+test_fermionmatrix(const hmc_float refs[4], const int seed, const bool clover);
 
 BOOST_AUTO_TEST_CASE(M)
 {
@@ -66,27 +66,27 @@ BOOST_AUTO_TEST_CASE(QplusQminus)
 BOOST_AUTO_TEST_CASE(Aee)
 {
 	const hmc_float refs[4] = {1111.6772283004893, 1290.5580533222192, 1114.183875802898, 1304.0219632505139};
-	test_fermionmatrix<physics::fermionmatrix::Aee>(refs, 5);
+	test_fermionmatrix<physics::fermionmatrix::Aee>(refs, 5, false);
 }
 BOOST_AUTO_TEST_CASE(Aee_minus)
 {
 	const hmc_float refs[4] = {1115.2304524177298, 1291.4471557813199, 1125.22036086961, 1315.8354179702137};
-	test_fermionmatrix<physics::fermionmatrix::Aee_minus>(refs, 6);
+	test_fermionmatrix<physics::fermionmatrix::Aee_minus>(refs, 6, false);
 }
 BOOST_AUTO_TEST_CASE(Qplus_eo)
 {
 	const hmc_float refs[4] = {1120.7679957612427, 1303.6316057267845, 1095.6614513886482, 1285.3471211115243};
-	test_fermionmatrix<physics::fermionmatrix::Qplus_eo>(refs, 7);
+	test_fermionmatrix<physics::fermionmatrix::Qplus_eo>(refs, 7, false);
 }
 BOOST_AUTO_TEST_CASE(Qminus_eo)
 {
 	const hmc_float refs[4] = {1100.7016006189097, 1282.8216593368254, 1111.2138438131915, 1309.970927161924};
-	test_fermionmatrix<physics::fermionmatrix::Qminus_eo>(refs, 8);
+	test_fermionmatrix<physics::fermionmatrix::Qminus_eo>(refs, 8, false);
 }
 BOOST_AUTO_TEST_CASE(QplusQminus_eo)
 {
 	const hmc_float refs[4] = {1286.5408969350369, 1931.6496938488942, 1350.5870046327818, 2182.2775949059878};
-	test_fermionmatrix<physics::fermionmatrix::QplusQminus_eo>(refs, 9);
+	test_fermionmatrix<physics::fermionmatrix::QplusQminus_eo>(refs, 9, false);
 }
 
 BOOST_AUTO_TEST_CASE(Aee_clover)
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE(Qplus_eo_clover)
 
 template<class FERMIONMATRIX>
 typename boost::enable_if<boost::is_base_of<physics::fermionmatrix::Fermionmatrix_eo, FERMIONMATRIX>, void>::type
-test_fermionmatrix(const hmc_float refs[4], const int seed, const bool clover = false)
+test_fermionmatrix(const hmc_float refs[4], const int seed, const bool clover)
 {
 	{
 		using namespace physics::lattices;
