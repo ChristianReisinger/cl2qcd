@@ -2,6 +2,7 @@
  * Unit test for the physics::lattices::Rooted_Staggeredfield_eo class
  *
  * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2017 Francesca Cuteri <cuteri@th.physik.uni-frankfurt.de>
  *
  * This file is part of CL2QCD.
  *
@@ -47,12 +48,54 @@ BOOST_AUTO_TEST_CASE(initialization)
 	physics::InterfacesHandlerImplementation interfacesHandler{params};
 	logger.debug() << "Devices: " << system.get_devices().size();
 
-	Rooted_Staggeredfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>());
+	BOOST_CHECK_NO_THROW(Rooted_Staggeredfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>()));
 	physics::algorithms::Rational_Approximation approx(3,1,4,1e-5,1);
-	Rooted_Staggeredfield_eo sf2(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(), approx);
-	
+	BOOST_CHECK_NO_THROW(Rooted_Staggeredfield_eo sf2(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(), approx));
 }
 
+BOOST_AUTO_TEST_CASE(initializationWithPseudofermions)
+{
+    using namespace physics::lattices;
+
+    const char * _params[] = {"foo", "--num_pseudofermions=3", "--fermact=rooted_stagg"};
+    meta::Inputparameters params(3, _params);
+    hardware::HardwareParametersImplementation hP(&params);
+    hardware::code::OpenClKernelParametersImplementation kP(params);
+    hardware::System system(hP, kP);
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+
+    BOOST_CHECK_NO_THROW(Rooted_Staggeredfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>()));
+}
+
+BOOST_AUTO_TEST_CASE(rangeBasedForLoopOnPseudofermions)
+{
+    using namespace physics::lattices;
+
+    const char * _params[] = {"foo", "--num_pseudofermions=3", "--fermact=rooted_stagg"};
+    meta::Inputparameters params(3, _params);
+    hardware::HardwareParametersImplementation hP(&params);
+    hardware::code::OpenClKernelParametersImplementation kP(params);
+    hardware::System system(hP, kP);
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+
+    {
+        Rooted_Staggeredfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>());
+        //Try a range based for loop
+        for(const auto& myField : sf){
+            BOOST_CHECK_NO_THROW(myField.get()->set_cold());
+            logger.info() << "Squarenorm of cold fields: " << squarenorm(*myField);
+        }
+    }
+    {
+        const Rooted_Staggeredfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>());
+        //Try a range based for loop
+        for(const auto& myField : sf){
+            BOOST_CHECK_NO_THROW(myField.get()->set_cold());
+            logger.info() << "Squarenorm of cold fields: " << squarenorm(*myField);
+        }
+    }
+
+}
 
 BOOST_AUTO_TEST_CASE(rescale)
 {
@@ -120,17 +163,17 @@ BOOST_AUTO_TEST_CASE(rescale)
 				    2.3690543226274733968, 8.1633847494467222106,
 				    62.215004455600926292};
 	
-	int ord = sf.Get_order();
+	int ord = sf.getOrder();
 
 	sf.Rescale_Coefficients(approx, minEigenvalue, maxEigenvalue);
-	BOOST_CHECK_CLOSE(sf.Get_a0(), a0_ref, 5.e-5);
-	std::vector<hmc_float> a = sf.Get_a();
-	std::vector<hmc_float> b = sf.Get_b();
+	BOOST_CHECK_CLOSE(sf.get_a0(), a0_ref, 5.e-5);
+	std::vector<hmc_float> a = sf.get_a();
+	std::vector<hmc_float> b = sf.get_b();
 	
 	sf.Rescale_Coefficients(approx, minEigenvalueCons, maxEigenvalueCons);
-	BOOST_CHECK_CLOSE(sf.Get_a0(), a0_ref_cons, 5.e-5);
-	std::vector<hmc_float> a_cons = sf.Get_a();
-	std::vector<hmc_float> b_cons = sf.Get_b();
+	BOOST_CHECK_CLOSE(sf.get_a0(), a0_ref_cons, 5.e-5);
+	std::vector<hmc_float> a_cons = sf.get_a();
+	std::vector<hmc_float> b_cons = sf.get_b();
 	
 	//Test result: note that the precision is not so high since
 	//the reference code uses a slightly different method to calculate

@@ -83,6 +83,7 @@ namespace physics {
                 virtual ~RootedStaggeredfieldEoParametersInterface(){}
                 virtual unsigned getMetropolisRationalApproximationOrder() const = 0;
                 virtual unsigned getMolecularDynamicsRationalApproximationOrder() const = 0;
+                virtual unsigned getNumberOfPseudofermions() const = 0;
         };
 
     }

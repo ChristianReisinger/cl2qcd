@@ -3,7 +3,8 @@
  *
  * Copyright (c) 2013 Matthias Bach <bach@compeng.uni-frankfurt.de>
  * Copyright (c) 2012-2014 Christopher Pinke <pinke@th.physik.uni-frankfurt.de>
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2013, 2017 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2017 Francesca Cuteri <cuteri@th.physik.uni-frankfurt.de>
  *
  * This file is part of CL2QCD.
  *
@@ -217,10 +218,10 @@ hmc_float physics::algorithms::calc_s_fermion_mp(const physics::lattices::Gaugef
 
 /**
  * This function returns the value of the fermionic part of the action for the RHMC, i.e.
- * \f$ \phi^*\,(M^\dag\,M)^{-\frac{N_f}{4}}\,\phi \f$.
+ * \f$ \phi_j^*\,(M^\dag\,M)^{-\frac{N_f}{4}}\,\phi_j \f$.
  * 
  * Here, we use the coefficients of the rational expansion of \f$ x^{-\frac{N_f}{4}} \f$ 
- * included in the Rooted_Staggeredfield_eo object to calculate \f$ (M^\dag\,M)^{-\frac{N_f}{4}}\,\phi \f$
+ * included in the Rooted_Staggeredfield_eo object to calculate \f$ (M^\dag\,M)^{-\frac{N_f}{4}}\,\phi_j \f$
  * (using the multi-shifted inverter). Then a scalar product give the returning value.
  * 
  */
@@ -238,25 +239,32 @@ hmc_float physics::algorithms::calc_s_fermion(const physics::lattices::Gaugefiel
 
     const physics::fermionmatrix::MdagM_eo fm(system, interfacesHandler.getInterface<physics::fermionmatrix::MdagM_eo>());
     int iterations = 0;
+    hmc_float result = 0.;
+
+    for(const auto& phi_j : phi){
 
     //Temporary fields for shifted inverter
     logger.debug() << "\t\tstart solver...";
     std::vector<std::shared_ptr<physics::lattices::Staggeredfield_eo> > X;
-    for (int i = 0; i < phi.Get_order(); i++)
+    for(unsigned int i = 0; i < phi.getOrder(); i++)
         X.emplace_back(std::make_shared<physics::lattices::Staggeredfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Staggeredfield_eo>()));
     //Here the inversion must be performed with high precision, because it'll be used for Metropolis test
-    iterations = physics::algorithms::solvers::cg_m(X, fm, gf, phi.Get_b(), phi, system, interfacesHandler, parametersInterface.getSolverPrec(), additionalParameters);
+    iterations = physics::algorithms::solvers::cg_m(X, fm, gf, phi.get_b(), *phi_j, system, interfacesHandler, parametersInterface.getSolverPrec(), additionalParameters);
     logger.debug() << "\t\t...end solver in " << iterations << " iterations";
 
-    //this is to reconstruct (MdagM)^{-\frac{N_f}{4}}\,\phi
+    //this is to reconstruct (MdagM)^{-\frac{N_f}{4}}\,\phi_j
     physics::lattices::Staggeredfield_eo tmp(system, interfacesHandler.getInterface<physics::lattices::Staggeredfield_eo>());
-    sax(&tmp, { phi.Get_a0(), 0. }, phi);
-    for (int i = 0; i < phi.Get_order(); i++) {
-        saxpy(&tmp, { (phi.Get_a())[i], 0. }, *X[i], tmp);
+    sax(&tmp, { phi.get_a0(), 0. }, *phi_j);
+    for(unsigned int i = 0; i < phi.getOrder(); i++) {
+        saxpy(&tmp, { (phi.get_a())[i], 0. }, *X[i], tmp);
     }
 
     logger.trace() << "Calulated S_fermion, solver took " << iterations << " iterations.";
-    return scalar_product(phi, tmp).re;
+    result += scalar_product(*phi_j, tmp).re;
+
+    }
+
+    return result;
 
 }
 

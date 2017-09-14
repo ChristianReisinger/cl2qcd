@@ -3,7 +3,8 @@
  *
  * Copyright (c) 2013 Matthias Bach <bach@compeng.uni-frankfurt.de>
  * Copyright (c) 2012-2013 Christopher Pinke <pinke@th.physik.uni-frankfurt.de>
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2013, 2017 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2017 Francesca Cuteri <cuteri@th.physik.uni-frankfurt.de>
  *
  * This file is part of CL2QCD.
  *
@@ -94,20 +95,24 @@ void physics::algorithms::md_update_spinorfield(const physics::lattices::Rooted_
     const physics::algorithms::MolecularDynamicsInterface & parametersInterface = interfacesHandler.getMolecularDynamicsInterface();
     const physics::fermionmatrix::MdagM_eo fm(system, interfacesHandler.getInterface<physics::fermionmatrix::MdagM_eo>());
 
-    //Temporary fields for shifted inverter
-    logger.trace() << "\t\tstart solver...";
-    std::vector<std::shared_ptr<physics::lattices::Staggeredfield_eo> > X;
-    for (int i = 0; i < out->Get_order(); i++)
-        X.emplace_back(std::make_shared<physics::lattices::Staggeredfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Staggeredfield_eo>()));
-    //Here the inversion must be performed with high precision, because it'll be used for Metropolis test
-    const int iterations = physics::algorithms::solvers::cg_m(X, fm, gf, out->Get_b(), orig, system, interfacesHandler, parametersInterface.getSolverPrec(), additionalParameters);
-    logger.trace() << "\t\t...end solver in " << iterations << " iterations";
+    const unsigned int numberOfPseudofermions = interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>().getNumberOfPseudofermions();
+    for(unsigned int j=0; j<numberOfPseudofermions; j++){
+        logger.trace() << "\t\tstart solver...";
+        //Temporary fields for shifted inverter
+        std::vector<std::shared_ptr<physics::lattices::Staggeredfield_eo> > X;
+        for (unsigned int i = 0; i < out->getOrder(); i++)
+            X.emplace_back(std::make_shared<physics::lattices::Staggeredfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Staggeredfield_eo>()));
+        //Here the inversion must be performed with high precision, because it'll be used for Metropolis test
+        const int iterations = physics::algorithms::solvers::cg_m(X, fm, gf, out->get_b(), *orig[j], system, interfacesHandler, parametersInterface.getSolverPrec(), additionalParameters);
+        logger.trace() << "\t\t...end solver in " << iterations << " iterations";
 
-    physics::lattices::sax(out, { out->Get_a0(), 0. }, orig);
-    for (int i = 0; i < out->Get_order(); i++)
-        physics::lattices::saxpy(out, { (out->Get_a())[i], 0. }, *X[i], *out);
+        const physics::lattices::Staggeredfield_eo& pseudofermionInOut = *(*out)[j];
+        physics::lattices::sax(&pseudofermionInOut, { out->get_a0(), 0. }, *orig[j]);
+        for (unsigned int i = 0; i < out->getOrder(); i++)
+            physics::lattices::saxpy(&pseudofermionInOut, { (out->get_a())[i], 0. }, *X[i], pseudofermionInOut);
 
-    log_squarenorm("Staggeredfield_eo after update", *out);
+        log_squarenorm("Staggeredfield_eo after update", pseudofermionInOut);
+    }
 }
 
 /**
