@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(testStaggeredfieldEoParameters)
     auto params = createDefaultMetaInputparameters();
     physics::lattices::StaggeredfieldEoParametersImplementation test(*params);
 
-    BOOST_CHECK_EQUAL(test.getNumberOfElements(), std::pow(params->get_nspace(), 3.)*params->get_ntime());
+    BOOST_CHECK_EQUAL(test.getNumberOfElements(), std::pow(params->get_nspace(), 3.)*params->get_ntime()/2.);
 }
 
 BOOST_AUTO_TEST_CASE(testRootedStaggeredfieldEoParameters)
@@ -97,4 +97,5 @@ BOOST_AUTO_TEST_CASE(testRootedStaggeredfieldEoParameters)
     BOOST_CHECK_EQUAL(test.getNumberOfElements(), std::pow(params->get_nspace(), 3.)*params->get_ntime());
     BOOST_CHECK_EQUAL(test.getMetropolisRationalApproximationOrder(), params->get_metro_approx_ord());
     BOOST_CHECK_EQUAL(test.getMolecularDynamicsRationalApproximationOrder(), params->get_md_approx_ord());
+    BOOST_CHECK_EQUAL(test.getNumberOfPseudofermions(), params->get_num_pseudofermions());
 }

@@ -1,7 +1,8 @@
 /** @file
  * Implementation of the rhmc algorithm
  *
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2013, 2017 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2017 Francesca Cuteri <cuteri@th.physik.uni-frankfurt.de>
  *
  * This file is part of CL2QCD.
  *
@@ -38,13 +39,6 @@
 
 template<class SPINORFIELD> static void init_spinorfield(const SPINORFIELD * phi, hmc_float * const spinor_energy_init, const physics::lattices::Gaugefield& gf,
         const physics::PRNG& prng, const hardware::System& system, physics::InterfacesHandler& interfacesHandler);
-
-//template<> void init_spinorfield<physics::lattices::Spinorfield_eo>(const physics::lattices::Spinorfield_eo * phi, hmc_float * const spinor_energy_init,
-//                                                                    const physics::lattices::Gaugefield& gf, const physics::PRNG& prng,
-//                                                                    const hardware::System& system, physics::InterfacesHandler& interfacesHandler);
-template<> void init_spinorfield<physics::lattices::wilson::Rooted_Spinorfield_eo>(const physics::lattices::wilson::Rooted_Spinorfield_eo * phi, hmc_float * const spinor_energy_init,
-                                                                    const physics::lattices::Gaugefield& gf, const physics::PRNG& prng,
-                                                                    const hardware::System& system, physics::InterfacesHandler& interfacesHandler);
 
 template<class SPINORFIELD, class FERMIONMATRIX> static hmc_observables perform_rhmc_step(const physics::algorithms::Rational_Approximation& approx1,
         const physics::algorithms::Rational_Approximation& approx2, const physics::algorithms::Rational_Approximation& approx3,
@@ -161,9 +155,6 @@ hmc_observables physics::algorithms::perform_rhmc_step(const physics::algorithms
 		 {
     		 return ::perform_rhmc_step<wilson::Rooted_Spinorfield_eo, QplusQminus_eo>(approx1, approx2, approx3, gf, iter, rnd_number, prng, system, interfaceHandler);
 		 }
-    	 else {
-    		 throw Print_Error_Message("Wilson RHMC algorithm not implemented for even-odd preconditioned fields!", __FILE__, __LINE__);
-    	 }
     }else if(parametersInterface.getFermact() == common::action::rooted_stagg){
     	if(parametersInterface.getUseEo()) {
     		return ::perform_rhmc_step<Rooted_Staggeredfield_eo, MdagM_eo>(approx1, approx2, approx3, gf, iter, rnd_number, prng, system, interfaceHandler);
@@ -200,46 +191,16 @@ template<class SPINORFIELD> static void init_spinorfield(const SPINORFIELD * phi
     const physics::AdditionalParameters& additionalParameters = interfacesHandler.getAdditionalParameters<SPINORFIELD>();
     const SPINORFIELD initial(system, interfacesHandler.getInterface<SPINORFIELD>());
 
-    //init/update spinorfield phi
-    initial.setGaussian(prng);
-    //calc init energy for spinorfield
-    *spinor_energy_init = squarenorm(initial);
-    //update spinorfield
+    //here the range based for loop on the vector of unique_ptrs to Staggeredfield_eo is done at this level, while md_update_spinorfield contains the same kind of loop
+    //a better idea could be to move the set_gaussian inside the fct md_update_spinorfield, which should at that point be called hbInitAndUpdateSpinorfield and should
+    //be implemented in an own mcHeatbath.cpp file
+    for(const auto& in_j : initial) {
+        //init/update spinorfield phi
+        in_j->setGaussian(prng);
+        //calc init energy for spinorfield
+        *spinor_energy_init += squarenorm(*in_j);
+    }
     md_update_spinorfield(phi, gf, initial, system, interfacesHandler, additionalParameters);
 }
 
-template<> void init_spinorfield<physics::lattices::wilson::Rooted_Spinorfield_eo>(const physics::lattices::wilson::Rooted_Spinorfield_eo * phi, hmc_float * const spinor_energy_init,
-                                                                    const physics::lattices::Gaugefield& gf, const physics::PRNG& prng,
-                                                                    const hardware::System& system, physics::InterfacesHandler& interfacesHandler)
-{
-	 using namespace physics::algorithms;
-
-	 const physics::AdditionalParameters& additionalParameters = interfacesHandler.getAdditionalParameters<physics::lattices::wilson::Rooted_Spinorfield_eo>();
-	 const physics::lattices::wilson::Rooted_Spinorfield_eo initial(system, interfacesHandler.getInterface<physics::lattices::wilson::Rooted_Spinorfield_eo>());
-
-	 //init/update rooted_spinorfield phi
-	 initial.gaussian(prng);
-	 //calc init energy for rooted_spinorfield
-	 *spinor_energy_init = squarenorm(initial);
-	 //update spinorfield: det(kappa, mu)
-	 logger.info() << "In function" << __FUNCTION__ << "calling md_update_spinorfield(...)";
-	 md_update_spinorfield(phi, gf, initial, system, interfacesHandler, additionalParameters);
-}
-
-//template<> void init_spinorfield<physics::lattices::Spinorfield_eo>(const physics::lattices::Spinorfield_eo * phi, hmc_float * const spinor_energy_init,
-//                                                                    const physics::lattices::Gaugefield& gf, const physics::PRNG& prng,
-//                                                                    const hardware::System& system, physics::InterfacesHandler& interfacesHandler)
-//{
-//	 using namespace physics::algorithms;
-//
-//	 const physics::AdditionalParameters& additionalParameters = interfacesHandler.getAdditionalParameters<physics::lattices::Spinorfield_eo>();
-//	 const physics::lattices::Spinorfield_eo initial(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-//
-//	 //init/update spinorfield phi
-//	 initial.gaussian(prng);
-//	 //calc init energy for spinorfield
-//	 *spinor_energy_init = squarenorm(initial);
-//	 //update spinorfield: det(kappa, mu)
-//	 md_update_spinorfield(phi, gf, initial, system, interfacesHandler, additionalParameters);
-//}
 

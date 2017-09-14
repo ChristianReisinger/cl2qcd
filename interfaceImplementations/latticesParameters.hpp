@@ -24,6 +24,7 @@
 #include "../meta/inputparameters.hpp"
 #include "../meta/util.hpp"
 #include "../physics/lattices/latticesInterfaces.hpp"
+#include "../executables/exceptions.h"
 
 namespace physics {
     namespace lattices {
@@ -182,6 +183,14 @@ namespace physics {
         		{
         			return parameters.get_md_approx_ord();
         		}
+                unsigned getNumberOfPseudofermions() const override
+                {
+                    unsigned int num_pseudofermions = parameters.get_num_pseudofermions();
+                    if (num_pseudofermions > 1)
+                        throw Print_Error_Message("Multiple pseudofermions not implemented for wilson fermions!", __FILE__, __LINE__);
+                    else
+                        return num_pseudofermions;
+                }
         	private:
         		const meta::Inputparameters& parameters;
 
@@ -228,6 +237,14 @@ namespace physics {
                 		{
                 			 return SpinorfieldEoParametersImplementation::getNumberOfElements();
                 		}
+                        unsigned getNumberOfPseudofermions() const override
+                        {
+                            unsigned int num_pseudofermions = parameters.get_num_pseudofermions();
+                            if (num_pseudofermions > 1)
+                                throw Print_Error_Message("Multiple pseudofermions not implemented for wilson fermions!", __FILE__, __LINE__);
+                            else
+                                return num_pseudofermions;
+                        }
                 	private:
                 		const meta::Inputparameters& parameters;
 
@@ -245,7 +262,7 @@ namespace physics {
                 }
                 unsigned getNumberOfElements() const override
                 {
-                    return meta::get_vol4d(parameters.get_ntime(), parameters.get_nspace());
+                    return meta::get_vol4d(parameters.get_ntime(), parameters.get_nspace())/2;
                 }
             private:
                 const meta::Inputparameters& parameters;
@@ -273,6 +290,10 @@ namespace physics {
                 unsigned getMolecularDynamicsRationalApproximationOrder() const override
                 {
                     return parameters.get_md_approx_ord();
+                }
+                unsigned getNumberOfPseudofermions() const override
+                {
+                    return parameters.get_num_pseudofermions();
                 }
             private:
                 const meta::Inputparameters& parameters;

@@ -174,100 +174,99 @@ void physics::algorithms::calc_fermion_force(const physics::lattices::Gaugemomen
                                              physics::InterfacesHandler& interfacesHandler, const physics::AdditionalParameters& additionalParameters)
 {
 
-	//Implement calculation of fermion force for eo rooted spinorfields here!!!
-
-	logger.error() << "\tRHMC [MET]:\tcomputing the fermion force ";
 	using physics::lattices::Spinorfield_eo;
 	using namespace physics::algorithms::solvers;
 	using namespace physics::fermionmatrix;
 
 	const physics::algorithms::ForcesParametersInterface & parametersInterface = interfacesHandler.getForcesParametersInterface();
+    logger.debug() << "\t\tcalc fermion_force...";
 
-	std::vector<std::shared_ptr<Spinorfield_eo>> X_e; //Contains solution vectors (X_e)_i
-	std::vector<std::shared_ptr<Spinorfield_eo>> Y_e; //Will be Y_e = Q * X_e  (before: phi_inv)
-	for (int i = 0; i < phi.Get_order(); i++) {
-		X_e.emplace_back(std::make_shared<Spinorfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>()));
-		Y_e.emplace_back(std::make_shared<Spinorfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>()));
-	}
+    logger.debug() << "\t\t\tstart solver";
+    std::vector<std::shared_ptr<Spinorfield_eo>> X_e; //Contains solution vectors (X_e)_i
+    std::vector<std::shared_ptr<Spinorfield_eo>> Y_e; //Will be Y_e = Q * X_e  (before: phi_inv)
+    for (unsigned int i = 0; i < phi.getOrder(); i++) {
+        X_e.emplace_back(std::make_shared<Spinorfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>()));
+        Y_e.emplace_back(std::make_shared<Spinorfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>()));
+    }
 
-	logger.debug() << "\t\tcalc fermion_force...";
-	//the source is already set, it is Dpsi, where psi is the initial gaussian spinorfield
+    //the source is already set, it is Dpsi, where psi is the initial gaussian spinorfield
 
-	/* The first inversion calculates
-	 * X = phi = (QplusQminus)^-1 psi
-	 * out of
-	 * QplusQminus phi = psi
-	 */
-	logger.debug() << "\t\t\tstart solver";
+    /* The first inversion calculates
+     * X = phi = (QplusQminus)^-1 psi
+     * out of
+     * QplusQminus phi = psi
+     */
 
-	const QplusQminus_eo fm(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
-	cg_m(X_e, fm, gf, phi.Get_b(), phi, system, interfacesHandler, parametersInterface.getForcePreconditioning(), additionalParameters);
+    const QplusQminus_eo fm(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
+    //*(phi[0]) in the following line is to use the only pseudofermion that can be used in Wilson rhmc
+    cg_m(X_e, fm, gf, phi.get_b(), *(phi[0]), system, interfacesHandler, parametersInterface.getForcePreconditioning(), additionalParameters);
 
-	//For debugging: Checking the squarenorm of X_e/Y_e
-	for (int i = 0; i < phi.Get_order(); i++) 
-	{
-		logger.debug() << "X_e" << "[" << i << "]: " << squarenorm(*X_e[i]);
-	}
+    //For debugging: Checking the squarenorm of X_e/Y_e
+    for (unsigned int i = 0; i < phi.getOrder(); i++)
+    {
+        logger.debug() << "X_e" << "[" << i << "]: " << squarenorm(*X_e[i]);
+    }
 
-	/**
-	 * Y_e is now just
-	 *  Y_e = (Qminus) X_e = (Qminus) (Qplusminus)^-1 psi =
-	 *    = (Qplus)^-1 psi
-	 */
-	const Qminus_eo qminus_eo(system, interfacesHandler.getInterface<physics::fermionmatrix::Qminus_eo>());
+    /**
+     * Y_e is now just
+     *  Y_e = (Qminus) X_e = (Qminus) (Qplusminus)^-1 psi =
+     *    = (Qplus)^-1 psi
+     */
+    const Qminus_eo qminus_eo(system, interfacesHandler.getInterface<physics::fermionmatrix::Qminus_eo>());
 
-	//for-loop
-	for(int i = 0; i < phi.Get_order(); i++)
-	{
-		qminus_eo(Y_e[i].get(), gf, *X_e[i], additionalParameters);
-	}
-	
-	//For debugging: Checking the squarenorm of X_e/Y_e
-	for (int i = 0; i < phi.Get_order(); i++) 
-	{
-		logger.debug() << "Y_e" << "[" << i << "]: " << squarenorm(*Y_e[i]);
-	}
+    //for-loop
+    for(unsigned int i = 0; i < phi.getOrder(); i++)
+    {
+        qminus_eo(Y_e[i].get(), gf, *X_e[i], additionalParameters);
+    }
 
-	std::vector<std::shared_ptr<Spinorfield_eo>> X_o;
-	std::vector<std::shared_ptr<Spinorfield_eo>> Y_o;
+    //For debugging: Checking the squarenorm of X_e/Y_e
+    for (unsigned int i = 0; i < phi.getOrder(); i++)
+    {
+        logger.debug() << "Y_e" << "[" << i << "]: " << squarenorm(*Y_e[i]);
+    }
 
-	for (int i = 0; i < phi.Get_order(); i++) {
-		X_o.emplace_back(std::make_shared<Spinorfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>()));
-		Y_o.emplace_back(std::make_shared<Spinorfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>()));
-	}
+    std::vector<std::shared_ptr<Spinorfield_eo>> X_o;
+    std::vector<std::shared_ptr<Spinorfield_eo>> Y_o;
 
-	physics::lattices::Gaugemomenta tmp(system, interfacesHandler.getInterface<physics::lattices::Gaugemomenta>());
+    for (unsigned int i = 0; i < phi.getOrder(); i++) {
+        X_o.emplace_back(std::make_shared<Spinorfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>()));
+        Y_o.emplace_back(std::make_shared<Spinorfield_eo>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>()));
+    }
 
-	if(parametersInterface.getFermact() == common::action::wilson) {
-		for (int i = 0; i < phi.Get_order(); i++) {
-			dslash(X_o[i].get(), gf, *X_e[i], ODD, additionalParameters.getKappa());
-			sax(X_o[i].get(), { -1., 0. }, *X_o[i]);
+    physics::lattices::Gaugemomenta tmp(system, interfacesHandler.getInterface<physics::lattices::Gaugemomenta>());
 
-			//For debugging: Checking the squarenorm of X_e/Y_e
+    if(parametersInterface.getFermact() == common::action::wilson) {
+        for (unsigned int i = 0; i < phi.getOrder(); i++) {
+            dslash(X_o[i].get(), gf, *X_e[i], ODD, additionalParameters.getKappa());
+            sax(X_o[i].get(), { -1., 0. }, *X_o[i]);
 
-			logger.debug() << "Trying to comput fermion force EVEN with following fields:";
-			logger.debug() << "X_o" << "[" << i << "]: squarenorm: " << squarenorm(*X_o[i]);
-			logger.debug() << "Y_e" << "[" << i << "]: squarenorm: " << squarenorm(*Y_e[i]);
+            //For debugging: Checking the squarenorm of X_e/Y_e
 
-			tmp.zero();
-			fermion_force(&tmp, *Y_e[i], *X_o[i], EVEN, gf, additionalParameters);
-			physics::lattices::saxpy(force, (phi.Get_a())[i], tmp);
-		}
-	} else {
-		throw Print_Error_Message("The selected fermion force has not been implemented.", __FILE__, __LINE__);
-	}
+            logger.debug() << "Trying to comput fermion force EVEN with following fields:";
+            logger.debug() << "X_o" << "[" << i << "]: squarenorm: " << squarenorm(*X_o[i]);
+            logger.debug() << "Y_e" << "[" << i << "]: squarenorm: " << squarenorm(*Y_e[i]);
 
-	if(parametersInterface.getFermact() == common::action::wilson) {
-		for (int i = 0; i < phi.Get_order(); i++) {
-			dslash(Y_o[i].get(), gf, *Y_e[i], ODD, additionalParameters.getKappa());
-			sax(Y_o[i].get(), { -1., 0. }, *Y_o[i]);
-			tmp.zero();
-			fermion_force(&tmp, *Y_o[i], *X_e[i], ODD, gf, additionalParameters);
-			physics::lattices::saxpy(force, (phi.Get_a())[i], tmp);
-		}
-	} else {
-		throw Print_Error_Message("The selected fermion force has not been implemented.", __FILE__, __LINE__);
-	}
+            tmp.zero();
+            fermion_force(&tmp, *Y_e[i], *X_o[i], EVEN, gf, additionalParameters);
+            physics::lattices::saxpy(force, (phi.get_a())[i], tmp);
+        }
+    } else {
+        throw Print_Error_Message("The selected fermion force has not been implemented.", __FILE__, __LINE__);
+    }
+
+    if(parametersInterface.getFermact() == common::action::wilson) {
+        for (unsigned int i = 0; i < phi.getOrder(); i++) {
+            dslash(Y_o[i].get(), gf, *Y_e[i], ODD, additionalParameters.getKappa());
+            sax(Y_o[i].get(), { -1., 0. }, *Y_o[i]);
+            tmp.zero();
+            fermion_force(&tmp, *Y_o[i], *X_e[i], ODD, gf, additionalParameters);
+            physics::lattices::saxpy(force, (phi.get_a())[i], tmp);
+        }
+    } else {
+        throw Print_Error_Message("The selected fermion force has not been implemented.", __FILE__, __LINE__);
+    }
+
 }
 
 void physics::algorithms::calc_fermion_force(const physics::lattices::Gaugemomenta * force, const physics::lattices::Gaugefield& gf,
@@ -372,23 +371,20 @@ void physics::algorithms::calc_fermion_force(const physics::lattices::Gaugemomen
                                              const physics::lattices::wilson::Rooted_Spinorfield& phi, const hardware::System& system,
                                              physics::InterfacesHandler& interfacesHandler, const physics::AdditionalParameters& additionalParameters)
 {
-    logger.error() << "\tRHMC [MET]:\tcomputing the fermion force ";
     using physics::lattices::Spinorfield;
     using namespace physics::algorithms::solvers;
     using namespace physics::fermionmatrix;
 
     const physics::algorithms::ForcesParametersInterface & parametersInterface = interfacesHandler.getForcesParametersInterface();
+    logger.debug() << "\t\tcalc fermion_force...";
 
     std::vector<std::shared_ptr<Spinorfield>> X; //Contains solution vectors X_i
     std::vector<std::shared_ptr<Spinorfield>> Y; //Will be Y = Q * X  (before: phi_inv)
-//    Spinorfield solution(system, interfacesHandler.getInterface<physics::lattices::Spinorfield>());
-//    Spinorfield phi_inv(system, interfacesHandler.getInterface<physics::lattices::Spinorfield>());
-    for (int i = 0; i < phi.Get_order(); i++) {
-    	X.emplace_back(std::make_shared<Spinorfield>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield>()));
+    for (unsigned int i = 0; i < phi.getOrder(); i++) {
+        X.emplace_back(std::make_shared<Spinorfield>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield>()));
         Y.emplace_back(std::make_shared<Spinorfield>(system, interfacesHandler.getInterface<physics::lattices::Spinorfield>()));
     }
 
-    logger.debug() << "\t\tcalc fermion_force...";
     //the source is already set, it is Dpsi, where psi is the initial gaussian spinorfield
 
     /**
@@ -401,13 +397,14 @@ void physics::algorithms::calc_fermion_force(const physics::lattices::Gaugemomen
 
     //here, the "normal" solver can be used since the inversion is of the same structure as in the inverter
     const QplusQminus fm(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
-    cg_m(X, fm, gf, phi.Get_b(), phi, system, interfacesHandler, parametersInterface.getForcePreconditioning(), additionalParameters);
-	
-	//For debugging: Checking the squarenorm of X_e/Y_e
-	for (int i = 0; i < phi.Get_order(); i++) 
-	{
-		logger.debug() << "X" << "[" << i << "]: " << squarenorm(*X[i]);
-	}
+    //*(phi[0]) in the following line is to use the only pseudofermion that can be used in Wilson rhmc
+    cg_m(X, fm, gf, phi.get_b(), *(phi[0]), system, interfacesHandler, parametersInterface.getForcePreconditioning(), additionalParameters);
+
+    //For debugging: Checking the squarenorm of X_e/Y_e
+    for (unsigned int i = 0; i < phi.getOrder(); i++)
+    {
+        logger.debug() << "X" << "[" << i << "]: " << squarenorm(*X[i]);
+    }
 
     /**
      * Y is now just
@@ -418,19 +415,17 @@ void physics::algorithms::calc_fermion_force(const physics::lattices::Gaugemomen
     physics::lattices::Gaugemomenta tmp(system, interfacesHandler.getInterface<physics::lattices::Gaugemomenta>());
 
     //for-loop
-    for(int i = 0; i < phi.Get_order(); i++)
+    for(unsigned int i = 0; i < phi.getOrder(); i++)
     {
-    	qminus(Y[i].get(), gf, *X[i], additionalParameters);
-		logger.debug() << "Y" << "[" << i << "]: " << squarenorm(*Y[i]);
-    	tmp.zero();
-//    	log_squarenorm("\tY ", Y[i]);
-//    	log_squarenorm("\tX ", X[i]);
-    	fermion_force(&tmp, *Y[i], *X[i], gf, additionalParameters);
-//    	physics::lattices::saxpy(force, -1. * (phi.Get_a())[i], tmp);
-    	physics::lattices::saxpy(force, (phi.Get_a())[i], tmp); // I removed the -1* because I think in the Wilson case the "-" is already contained in the fermion force calculation.
+        qminus(Y[i].get(), gf, *X[i], additionalParameters);
+        logger.debug() << "Y" << "[" << i << "]: " << squarenorm(*Y[i]);
+        tmp.zero();
+        logger.debug() << "\t\tcalc fermion_force...";
+        fermion_force(&tmp, *Y[i], *X[i], gf, additionalParameters);
+//      physics::lattices::saxpy(force, -1. * (phi.Get_a())[i], tmp);
+        physics::lattices::saxpy(force, (phi.get_a())[i], tmp); // I removed the -1* because I think in the Wilson case the "-" is already contained in the fermion force calculation.
     }
 
-    logger.debug() << "\t\tcalc fermion_force...";
 }
 
 void physics::algorithms::calc_fermion_force_detratio(const physics::lattices::Gaugemomenta * force, const physics::lattices::Gaugefield& gf,

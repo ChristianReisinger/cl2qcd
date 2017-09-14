@@ -3,7 +3,8 @@
  *
  * Copyright (c) 2013 Matthias Bach <bach@compeng.uni-frankfurt.de>
  * Copyright (c) 2012-2013 Christopher Pinke <pinke@th.physik.uni-frankfurt.de>
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2013, 2017 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2017 Francesca Cuteri <cuteri@th.physik.uni-frankfurt.de>
  *
  * This file is part of CL2QCD.
  *
@@ -70,7 +71,6 @@ void physics::algorithms::md_update_spinorfield(const physics::lattices::Spinorf
                                                 physics::InterfacesHandler & interfacesHandler, const physics::AdditionalParameters& additionalParameters)
 {
     logger.debug() << "\tHMC [UP]:\tupdate SF";
-    logger.info() << "In function " << __FUNCTION__ << ":\tHMC [UP]:\tupdate SF";
     physics::fermionmatrix::Qplus_eo qplus(system, interfacesHandler.getInterface<physics::fermionmatrix::Qplus_eo>());
     qplus(out, gf, orig, additionalParameters);
     log_squarenorm("Spinorfield after update", *out);
@@ -95,26 +95,29 @@ template<class FERMIONMATRIX, class ROOTED_SPINORFIELD, class SPINORFIELD> void 
                                                 const ROOTED_SPINORFIELD& orig, const hardware::System& system,
                                                 physics::InterfacesHandler & interfacesHandler, const physics::AdditionalParameters& additionalParameters)
 {
-	logger.info() << "By Chris: Initializing spinorfield.";
     logger.debug() << "\tRHMC [UP]:\tupdate SF";
     const physics::algorithms::MolecularDynamicsInterface & parametersInterface = interfacesHandler.getMolecularDynamicsInterface();
     const FERMIONMATRIX fm(system, interfacesHandler.getInterface<FERMIONMATRIX>());
 
-    //Temporary fields for shifted inverter
-    logger.trace() << "\t\tstart solver...";
-    std::vector<std::shared_ptr<SPINORFIELD> > X;
-    for (int i = 0; i < out->Get_order(); i++)
-        X.emplace_back(std::make_shared<SPINORFIELD>(system, interfacesHandler.getInterface<SPINORFIELD>()));
-    //Here the inversion must be performed with high precision, because it'll be used for Metropolis test
-    const int iterations = physics::algorithms::solvers::cg_m(X, fm, gf, out->Get_b(), orig, system, interfacesHandler, parametersInterface.getSolverPrec(), additionalParameters);
-    logger.trace() << "\t\t...end solver in " << iterations << " iterations";
+    const unsigned int numberOfPseudofermions = interfacesHandler.getInterface<ROOTED_SPINORFIELD>().getNumberOfPseudofermions();
+    for(unsigned int j=0; j<numberOfPseudofermions; j++){
+        logger.trace() << "\t\tstart solver...";
+        //Temporary fields for shifted inverter
+        std::vector<std::shared_ptr<SPINORFIELD> > X;
+        for (unsigned int i = 0; i < out->getOrder(); i++)
+            X.emplace_back(std::make_shared<SPINORFIELD>(system, interfacesHandler.getInterface<SPINORFIELD>()));
+        //Here the inversion must be performed with high precision, because it'll be used for Metropolis test
+        const int iterations = physics::algorithms::solvers::cg_m(X, fm, gf, out->get_b(), *orig[j], system, interfacesHandler, parametersInterface.getSolverPrec(), additionalParameters);
+        logger.trace() << "\t\t...end solver in " << iterations << " iterations";
 
-    physics::lattices::sax(out, { out->Get_a0(), 0. }, orig);
-    for (int i = 0; i < out->Get_order(); i++){
-    	physics::lattices::saxpy(out, (out->Get_a())[i], *X[i], *out); // out = out->Get_a() * (*X[i]) + out
+        const SPINORFIELD& pseudofermionInOut = *(*out)[j];
+        physics::lattices::sax(&pseudofermionInOut, { out->get_a0(), 0. }, *orig[j]);
+        for (unsigned int i = 0; i < out->getOrder(); i++){
+            physics::lattices::saxpy(&pseudofermionInOut, (out->get_a())[i], *X[i], pseudofermionInOut);
+
+            log_squarenorm("Staggeredfield_eo after update", pseudofermionInOut);
+        }
     }
-
-    log_squarenorm("Spinorfield after update", *out);
 }
 
 void physics::algorithms::md_update_spinorfield(const physics::lattices::Rooted_Staggeredfield_eo * out, const physics::lattices::Gaugefield& gf,

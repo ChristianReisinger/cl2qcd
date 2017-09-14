@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(calc_s_fermion_staggered){
 	Rational_Approximation approx(15,1,4,1e-5,1);
 	Rooted_Staggeredfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(), approx);
 
-	pseudo_randomize<Staggeredfield_eo, su3vec>(&sf, 123);
+	pseudo_randomize<Staggeredfield_eo, su3vec>(sf[0].get(), 123);
 
 	hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler, interfacesHandler.getAdditionalParameters<Rooted_Staggeredfield_eo>());
 
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(calc_s_fermion_rooted_wilson){
 	Rational_Approximation approx(15,99999999,100000000,1e-5,1,1);
 	wilson::Rooted_Spinorfield sf(system, interfacesHandler.getInterface<wilson::Rooted_Spinorfield>(), approx);
 
-	pseudo_randomize<Spinorfield, spinor>(&sf, 123);
+	pseudo_randomize<Spinorfield, spinor>(sf[0].get(), 123);
 
 	hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler, interfacesHandler.getAdditionalParameters<wilson::Rooted_Spinorfield>());
 
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(calc_s_fermion_rooted_wilson_eo){
 	Rational_Approximation approx(15,99999999,100000000,1e-5,1,1);
 	wilson::Rooted_Spinorfield_eo sf(system, interfacesHandler.getInterface<wilson::Rooted_Spinorfield_eo>(), approx);
 
-	pseudo_randomize<Spinorfield_eo, spinor>(&sf, 123);
+	pseudo_randomize<Spinorfield_eo, spinor>(sf[0].get(), 123);
 
 	hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler, interfacesHandler.getAdditionalParameters<wilson::Rooted_Spinorfield_eo>());
 

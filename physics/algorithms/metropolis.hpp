@@ -54,6 +54,10 @@ namespace physics {
                                     physics::InterfacesHandler& interfacesHandler);
         hmc_float calc_s_fermion_mp(const physics::lattices::Gaugefield& gf, const physics::lattices::Rooted_Staggeredfield_eo& phi_mp,
                                     const hardware::System& system, physics::InterfacesHandler& interfacesHandler);   //function so far NOT IMPLEMENTED!!
+        hmc_float calc_s_fermion_mp(const physics::lattices::Gaugefield& gf, const physics::lattices::wilson::Rooted_Spinorfield_eo& phi_mp,
+                                    const hardware::System& system, physics::InterfacesHandler& interfacesHandler);   //function so far NOT IMPLEMENTED!!
+        hmc_float calc_s_fermion_mp(const physics::lattices::Gaugefield& gf, const physics::lattices::wilson::Rooted_Spinorfield& phi_mp,
+                                    const hardware::System& system, physics::InterfacesHandler& interfacesHandler);   //function so far NOT IMPLEMENTED!!
 
         hmc_observables metropolis(const hmc_float rnd, const hmc_float beta, const physics::lattices::Gaugefield& gf,
                                    const physics::lattices::Gaugefield& new_u, const physics::lattices::Gaugemomenta& p, const physics::lattices::Gaugemomenta& new_p,

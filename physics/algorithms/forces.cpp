@@ -102,6 +102,20 @@ void physics::algorithms::calc_total_force(const physics::lattices::Gaugemomenta
     ::calc_total_force(force, gf, phi, system, interfaceHandler, additionalParameters);
 }
 
+void physics::algorithms::calc_total_force(const physics::lattices::Gaugemomenta * force, const physics::lattices::Gaugefield& gf,
+        const physics::lattices::wilson::Rooted_Spinorfield_eo& phi, const hardware::System& system, physics::InterfacesHandler& interfaceHandler,
+        const physics::AdditionalParameters& additionalParameters)
+{
+    ::calc_total_force(force, gf, phi, system, interfaceHandler, additionalParameters);
+}
+
+void physics::algorithms::calc_total_force(const physics::lattices::Gaugemomenta * force, const physics::lattices::Gaugefield& gf,
+        const physics::lattices::wilson::Rooted_Spinorfield& phi, const hardware::System& system, physics::InterfacesHandler& interfaceHandler,
+        const physics::AdditionalParameters& additionalParameters)
+{
+    ::calc_total_force(force, gf, phi, system, interfaceHandler, additionalParameters);
+}
+
 //Here we do not need the last argument mubar and than we do not use the template above
 //void physics::algorithms::calc_total_force(const physics::lattices::Gaugemomenta * force, const physics::lattices::Gaugefield& gf,
 //        const physics::lattices::Rooted_Staggeredfield_eo& phi, const hardware::System& system, physics::InterfacesHandler& interfaceHandler,

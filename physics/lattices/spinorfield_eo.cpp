@@ -189,7 +189,7 @@ for(auto buffer: spinorfieldEo.get_buffers()) {
 	mark_halo_clean();
 }
 
-void physics::lattices::Spinorfield_eo::gaussian(const physics::PRNG& prng) const
+void physics::lattices::Spinorfield_eo::setGaussian(const physics::PRNG& prng) const
 {
 	auto prng_bufs = prng.get_buffers();
 

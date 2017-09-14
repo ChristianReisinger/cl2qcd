@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(zero)
 	physics::PRNG prng(system, &prngParameters);
 
 	Spinorfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-	sf.gaussian(prng);
+	sf.setGaussian(prng);
 	sf.setZero();
 	BOOST_CHECK_CLOSE(squarenorm(sf), 0., .1);
 }
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(cold)
 	physics::PRNG prng(system, &prngParameters);
 
 	Spinorfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-	sf.gaussian(prng);
+	sf.setGaussian(prng);
 	sf.cold();
 	BOOST_CHECK_CLOSE(squarenorm(sf), .5, .1);
 }
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(gaussian)
 	sf.setZero();
 	sf.gamma5();
 	hmc_float const gamma5 = squarenorm(sf);
-	sf.gaussian(prng);
+	sf.setGaussian(prng);
 	BOOST_CHECK_NE(squarenorm(sf), gamma5);
 }
 
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(squarenorm)
 	sf.gamma5();
 	hmc_float const gamma5 = physics::lattices::squarenorm(sf);
 	BOOST_REQUIRE_CLOSE(gamma5, 0., .1);
-	sf.gaussian(prng);
+	sf.setGaussian(prng);
 	BOOST_CHECK_NE(physics::lattices::squarenorm(sf), gamma5);
 	sf.setZero();
 	BOOST_CHECK_CLOSE(physics::lattices::squarenorm(sf), 0., .1);
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(scalar_product)
 	physics::PRNG prng(system, &prngParameters);
 
 	Spinorfield_eo gaussian(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-	gaussian.gaussian(prng);
+	gaussian.setGaussian(prng);
 
 	Spinorfield_eo zero(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 	zero.setZero();
@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE(sax)
 	physics::PRNG prng(system, &prngParameters);
 
 	Spinorfield_eo orig_sf(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-	orig_sf.gaussian(prng);
+	orig_sf.setGaussian(prng);
 	Spinorfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 
 	physics::lattices::sax(&sf, {.5, 0}, orig_sf);
@@ -246,7 +246,7 @@ BOOST_AUTO_TEST_CASE(saxpy)
 	physics::PRNG prng(system, &prngParameters);
 
 	Spinorfield_eo gaussian(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-	gaussian.gaussian(prng);
+	gaussian.setGaussian(prng);
 	Spinorfield_eo cold(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 	cold.cold();
 	Spinorfield_eo zero(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE(saxpy_real)
 
 
 	Spinorfield_eo gaussian(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-	gaussian.gaussian(prng);
+	gaussian.setGaussian(prng);
 	Spinorfield_eo cold(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 	cold.cold();
 	Spinorfield_eo zero(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
@@ -314,7 +314,7 @@ BOOST_AUTO_TEST_CASE(saxpy_real_vec)
 
 
 	Spinorfield_eo gaussian(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-	gaussian.gaussian(prng);
+	gaussian.setGaussian(prng);
 	Spinorfield_eo cold(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 	cold.cold();
 	Spinorfield_eo zero(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
@@ -363,7 +363,7 @@ BOOST_AUTO_TEST_CASE(saxpby)
 	Spinorfield_eo zero(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 	zero.setZero();
 	Spinorfield_eo gaussian(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-	gaussian.gaussian(prng);
+	gaussian.setGaussian(prng);
 	Spinorfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 
 	//Complex
@@ -402,7 +402,7 @@ BOOST_AUTO_TEST_CASE(saxsbypz)
 	physics::PRNG prng(system, &prngParameters);
 
 	Spinorfield_eo gaussian(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-	gaussian.gaussian(prng);
+	gaussian.setGaussian(prng);
 	Spinorfield_eo cold(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 	cold.cold();
 	Spinorfield_eo zero(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
@@ -443,8 +443,8 @@ BOOST_AUTO_TEST_CASE(conversion)
 		recreated.setGaussian(prng);
 		const Spinorfield_eo even(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 		const Spinorfield_eo odd(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
-		even.gaussian(prng);
-		odd.gaussian(prng);
+		even.setGaussian(prng);
+		odd.setGaussian(prng);
 
 		convert_to_eoprec(&even, &odd, orig);
 		log_squarenorm("even: ", even);
@@ -476,7 +476,7 @@ BOOST_AUTO_TEST_CASE(halo_update)
 
 	const Spinorfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 
-	sf.gaussian(prng);
+	sf.setGaussian(prng);
 	orig_squarenorm = physics::lattices::squarenorm(sf);
 	sf.mark_halo_dirty();
 	sf.require_halo();

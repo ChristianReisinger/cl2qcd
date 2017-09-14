@@ -140,7 +140,7 @@ template<> void init_spinorfield<physics::lattices::Spinorfield_eo>(const physic
 	 const physics::lattices::Spinorfield_eo initial(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 
 	 //init/update spinorfield phi
-	 initial.gaussian(prng);
+	 initial.setGaussian(prng);
 	 //calc init energy for spinorfield
 	 *spinor_energy_init = squarenorm(initial);
 	 //update spinorfield: det(kappa, mu)
@@ -179,12 +179,12 @@ template<> void init_spinorfield_mp<physics::lattices::Spinorfield_eo>(const phy
     const physics::lattices::Spinorfield_eo initial(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 
     //init/update spinorfield phi
-    initial.gaussian(prng);
+    initial.setGaussian(prng);
     //calc init energy for spinorfield
     *spinor_energy_init = squarenorm(initial);
     //update spinorfield with heavy mass: det(kappa_mp, mu_mp)
     md_update_spinorfield(phi, gf, initial, system, interfacesHandler, additionalParametersMp);
-    initial.gaussian(prng);
+    initial.setGaussian(prng);
     //calc init energy for mass-prec spinorfield (this is the same as for the spinorfield above)
     *spinor_energy_init_mp = squarenorm(initial);
     //update detratio spinorfield: det(kappa, mu) / det(kappa_mp, mu_mp)

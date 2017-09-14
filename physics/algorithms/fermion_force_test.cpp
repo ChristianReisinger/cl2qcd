@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(fermion_force_shifted)
 
 	sf1.Rescale_Coefficients(approx, minEigen, maxEigen);
 
-	pseudo_randomize<Spinorfield, spinor>(&sf1, 13); //it will be A
+	pseudo_randomize<Spinorfield, spinor>(sf1[0].get(), 13); //it will be A
 
 	gm.zero();
 	physics::algorithms::calc_fermion_forces(&gm, gf, sf1, system, interfacesHandler, interfacesHandler.getAdditionalParameters<physics::lattices::wilson::Rooted_Spinorfield>());
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(fermion_force_eo_shifted)
 
 	sf1.Rescale_Coefficients(approx, minEigen, maxEigen);
 
-	pseudo_randomize<Spinorfield_eo, spinor>(&sf1, 22); //it will be A
+	pseudo_randomize<Spinorfield_eo, spinor>(sf1[0].get(), 22); //it will be A
 
 	gm.zero();
 	physics::algorithms::calc_fermion_forces(&gm, gf, sf1, system, interfacesHandler, interfacesHandler.getAdditionalParameters<physics::lattices::wilson::Rooted_Spinorfield_eo>());

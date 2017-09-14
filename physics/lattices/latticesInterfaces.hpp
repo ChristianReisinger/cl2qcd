@@ -67,6 +67,7 @@ namespace physics {
         		virtual ~RootedSpinorfieldParametersInterface(){}
         		virtual unsigned getMetropolisRationalApproximationOrder() const = 0;
         		virtual unsigned getMolecularDynamicsRationalApproximationOrder() const = 0;
+                virtual unsigned getNumberOfPseudofermions() const = 0;
         };
 
         class SpinorfieldEoParametersInterface {
@@ -82,6 +83,7 @@ namespace physics {
                		virtual ~RootedSpinorfieldEoParametersInterface(){}
                		virtual unsigned getMetropolisRationalApproximationOrder() const = 0;
                		virtual unsigned getMolecularDynamicsRationalApproximationOrder() const = 0;
+                    virtual unsigned getNumberOfPseudofermions() const = 0;
                };
 
         class StaggeredfieldEoParametersInterface {
@@ -95,6 +97,7 @@ namespace physics {
                 virtual ~RootedStaggeredfieldEoParametersInterface(){}
                 virtual unsigned getMetropolisRationalApproximationOrder() const = 0;
                 virtual unsigned getMolecularDynamicsRationalApproximationOrder() const = 0;
+                virtual unsigned getNumberOfPseudofermions() const = 0;
         };
 
     }

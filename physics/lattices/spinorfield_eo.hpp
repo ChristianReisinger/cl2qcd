@@ -88,7 +88,7 @@ public:
 	/**
 	 * Set Spinorfield to be gaussian.
 	 */
-	void gaussian(const physics::PRNG& prng) const;
+	void setGaussian(const physics::PRNG& prng) const;
 
 	/**
 	 * Mark the halo as requiring an update.

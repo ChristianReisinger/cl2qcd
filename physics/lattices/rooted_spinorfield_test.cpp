@@ -37,27 +37,24 @@
 
 BOOST_AUTO_TEST_CASE(initialization)
 {
-	using namespace physics::lattices;
+    using namespace physics::lattices;
 
-	const char * _params[] = {"foo"};
-	meta::Inputparameters params(1, _params);
+    const char * _params[] = {"foo"};
+    meta::Inputparameters params(1, _params);
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
     hardware::System system(hP, kP);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	logger.debug() << "Devices: " << system.get_devices().size();
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    logger.debug() << "Devices: " << system.get_devices().size();
 
-	wilson::Rooted_Spinorfield sf(system, interfacesHandler.getInterface<physics::lattices::wilson::Rooted_Spinorfield>());
-	physics::algorithms::Rational_Approximation approx(3,1,4,1e-5,1);
-	wilson::Rooted_Spinorfield sf2(system, interfacesHandler.getInterface<physics::lattices::wilson::Rooted_Spinorfield>(), approx);
+    BOOST_CHECK_NO_THROW(wilson::Rooted_Spinorfield sf(system, interfacesHandler.getInterface<physics::lattices::wilson::Rooted_Spinorfield>()));
+    physics::algorithms::Rational_Approximation approx(3,1,4,1e-5,1);
+    BOOST_CHECK_NO_THROW(wilson::Rooted_Spinorfield sf2(system, interfacesHandler.getInterface<physics::lattices::wilson::Rooted_Spinorfield>(), approx))
+}
 
-	hmc_float rc = sf2.Get_order();
-
-	pseudo_randomize<wilson::Rooted_Spinorfield, spinor>(&sf, 13);
-
-	log_squarenorm("sq. Rooted_Spinorfield: ",sf);
-
-	logger.debug() << "Rational coefficients order: " << rc;
+BOOST_AUTO_TEST_CASE(initializationWithPseudofermions)
+{
+    //Test once implemented
 }
 
 BOOST_AUTO_TEST_CASE(rescale)
@@ -118,17 +115,17 @@ BOOST_AUTO_TEST_CASE(rescale)
 				    2.3690543226274733968, 8.1633847494467222106,
 				    62.215004455600926292};
 
-	int ord = sf.Get_order();
+	int ord = sf.getOrder();
 
 	sf.Rescale_Coefficients(approx, minEigenvalue, maxEigenvalue);
-	BOOST_CHECK_CLOSE(sf.Get_a0(), a0_ref, 5.e-5);
-	std::vector<hmc_float> a = sf.Get_a();
-	std::vector<hmc_float> b = sf.Get_b();
+	BOOST_CHECK_CLOSE(sf.get_a0(), a0_ref, 5.e-5);
+	std::vector<hmc_float> a = sf.get_a();
+	std::vector<hmc_float> b = sf.get_b();
 
 	sf.Rescale_Coefficients(approx, minEigenvalueCons, maxEigenvalueCons);
-	BOOST_CHECK_CLOSE(sf.Get_a0(), a0_ref_cons, 5.e-5);
-	std::vector<hmc_float> a_cons = sf.Get_a();
-	std::vector<hmc_float> b_cons = sf.Get_b();
+	BOOST_CHECK_CLOSE(sf.get_a0(), a0_ref_cons, 5.e-5);
+	std::vector<hmc_float> a_cons = sf.get_a();
+	std::vector<hmc_float> b_cons = sf.get_b();
 
 	//Test result: note that the precision is not so high since
 	//the reference code uses a slightly different method to calculate

@@ -76,27 +76,27 @@ physics::algorithms::solvers::SolverShifted<FERMIONFIELD, FERMIONMATRIX>::Solver
      : x(xIn), A(AIn), gf(gfIn), sigma(sigmaIn), b(bIn), system(systemIn), solverPrecision(prec), additionalParameters(additionalParametersIn),
        parametersInterface(interfacesHandlerIn.getSolversParametersInterface()),
        hasSystemBeSolved(false), numberOfEquations(sigmaIn.size()), iterationNumber(0), residuumValue(NAN),
-       r(FERMIONFIELD{system, interfacesHandlerIn.getInterface<FERMIONFIELD>()}),
-       p(FERMIONFIELD{system, interfacesHandlerIn.getInterface<FERMIONFIELD>()}),
+       r(system, interfacesHandlerIn.getInterface<FERMIONFIELD>()),
+       p(system, interfacesHandlerIn.getInterface<FERMIONFIELD>()),
        ps(numberOfEquations),
-       zeta_prev(physics::lattices::Vector<hmc_float>{numberOfEquations, system}),
-       zeta(physics::lattices::Vector<hmc_float>{numberOfEquations, system}),
-       zeta_foll(physics::lattices::Vector<hmc_float>{numberOfEquations, system}),
-       alpha_vec(physics::lattices::Vector<hmc_float>{numberOfEquations, system}),
-       beta_vec(physics::lattices::Vector<hmc_float>{numberOfEquations, system}),
-       shift(physics::lattices::Vector<hmc_float>{numberOfEquations, system}),
+       zeta_prev(numberOfEquations, system),
+       zeta(numberOfEquations, system),
+       zeta_foll(numberOfEquations, system),
+       alpha_vec(numberOfEquations, system),
+       beta_vec(numberOfEquations, system),
+       shift(numberOfEquations, system),
        single_system_converged(numberOfEquations, false),
        single_system_iter(),
        resultSquarenorm(numberOfEquations, 0),
-       alpha_scalar_prev(physics::lattices::Scalar<hmc_float>{system}),
-       alpha_scalar(physics::lattices::Scalar<hmc_float>{system}),
-       beta_scalar_prev(physics::lattices::Scalar<hmc_float>{system}),
-       beta_scalar(physics::lattices::Scalar<hmc_float>{system}),
-       zero(physics::lattices::Scalar<hmc_float>{system}),
-       v(FERMIONFIELD(system, interfacesHandlerIn.getInterface<FERMIONFIELD>())),
-       tmp1(physics::lattices::Scalar<hmc_float>{system}),
-       tmp2(physics::lattices::Scalar<hmc_float>{system}),
-       tmp3(physics::lattices::Scalar<hmc_float>{system}),
+       alpha_scalar_prev(system),
+       alpha_scalar(system),
+       beta_scalar_prev(system),
+       beta_scalar(system),
+       zero(system),
+       v(system, interfacesHandlerIn.getInterface<FERMIONFIELD>()),
+       tmp1(system),
+       tmp2(system),
+       tmp3(system),
        single_eq_resid{nullptr},
        single_eq_resid_host{nullptr}
 {
@@ -126,7 +126,7 @@ void physics::algorithms::solvers::SolverShifted<FERMIONFIELD, FERMIONMATRIX>::s
     zeta.store(std::vector<hmc_float>(numberOfEquations, 1.));        // zeta[i] = 1
     alpha_vec.store(std::vector<hmc_float>(numberOfEquations, 0.));   // alpha[i] = 0
     shift.store(sigma);
-    for (int i = 0; i < numberOfEquations; i++) {
+    for(unsigned int i = 0; i < numberOfEquations; i++) {
         x[i]->setZero();    // x[i] = 0
         copyData(ps[i].get(), b);   // ps[i] = b
     }
@@ -139,7 +139,6 @@ void physics::algorithms::solvers::SolverShifted<FERMIONFIELD, FERMIONMATRIX>::s
     alpha_scalar.store(0.0);                // alpha_scalar = 0. The same as beta_scalar above.
 }
 
-//<<<<<<< HEAD
 template<typename FERMIONFIELD, typename FERMIONMATRIX>
 void physics::algorithms::solvers::SolverShifted<FERMIONFIELD, FERMIONMATRIX>::updateBetaScalar()
 {
@@ -204,7 +203,7 @@ template<typename FERMIONFIELD, typename FERMIONMATRIX>
 void physics::algorithms::solvers::SolverShifted<FERMIONFIELD, FERMIONMATRIX>::checkFiledsSquarenormsForPossibleNaN()
 {
     if(logger.beDebug()){
-        for(int k = 0; k < numberOfEquations; k++){
+        for(unsigned int k = 0; k < numberOfEquations; k++){
             if(std::isnan(squarenorm(*x[k]))){
                 logger.fatal() << createLogPrefix() << "NAN occurred in x[" << k << "] squarenorm!";
                 throw SolverStuck(iterationNumber, __FILE__, __LINE__);
@@ -332,7 +331,7 @@ template<typename FERMIONFIELD, typename FERMIONMATRIX>
 void physics::algorithms::solvers::SolverShifted<FERMIONFIELD, FERMIONMATRIX>::debugMakeReportOfFieldsSquarenorm()
 {
     if(logger.beDebug()){
-        const int numberOfComponentsToBePrinted = numberOfEquations;
+        const unsigned int numberOfComponentsToBePrinted = numberOfEquations;
         if(numberOfComponentsToBePrinted > numberOfEquations)
             throw std::invalid_argument("In cg-m numberOfComponentsToBePrinted cannot be bigger than numberOfEquations!");
         if(iterationNumber == 0){
@@ -412,9 +411,9 @@ unsigned int physics::algorithms::solvers::SolverShifted<FERMIONFIELD, FERMIONMA
 template<typename FERMIONFIELD, typename FERMIONMATRIX>
 const std::vector<std::shared_ptr<FERMIONFIELD> > physics::algorithms::solvers::SolverShifted<FERMIONFIELD, FERMIONMATRIX>::solve()
 {
-    logger.debug() << "Calling solve() for wilson eo...";
     if(hasSystemBeSolved) return x;
     if(squarenorm(b) == 0) {
+        logger.warn() << "CG-M solver called with zero field as r.h.s. -> trivial solution!";
         for (uint i = 0; i < sigma.size(); i++) x[i]->setZero();
         hasSystemBeSolved = true;
         return x;
@@ -452,18 +451,3 @@ const std::vector<std::shared_ptr<FERMIONFIELD> > physics::algorithms::solvers::
     logger.fatal() << createLogPrefix() << "Solver did not solve in " << parametersInterface.getCgMax() << " iterations. Last resid: " << residuumValue;
     throw SolverDidNotSolve(iterationNumber, __FILE__, __LINE__);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

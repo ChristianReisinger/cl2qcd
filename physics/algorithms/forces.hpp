@@ -48,6 +48,10 @@ namespace physics
                               const hardware::System& system, physics::InterfacesHandler& interfacesHandler, const physics::AdditionalParameters& additionalParameters);
         void calc_total_force(const physics::lattices::Gaugemomenta * gm, const physics::lattices::Gaugefield& gf, const physics::lattices::Rooted_Staggeredfield_eo& phi,
                               const hardware::System& system, physics::InterfacesHandler& interfacesHandler, const physics::AdditionalParameters& additionalParameters);
+        void calc_total_force(const physics::lattices::Gaugemomenta * gm, const physics::lattices::Gaugefield& gf, const physics::lattices::wilson::Rooted_Spinorfield& phi,
+                              const hardware::System& system, physics::InterfacesHandler& interfacesHandler, const physics::AdditionalParameters& additionalParameters);
+        void calc_total_force(const physics::lattices::Gaugemomenta * gm, const physics::lattices::Gaugefield& gf, const physics::lattices::wilson::Rooted_Spinorfield_eo& phi,
+                              const hardware::System& system, physics::InterfacesHandler& interfacesHandler, const physics::AdditionalParameters& additionalParameters);
 
     }
 }

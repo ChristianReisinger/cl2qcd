@@ -32,7 +32,7 @@ namespace physics {
 		namespace wilson {
 
 			//Representation of a rooted spinorfield without eo preconditioning
-			class Rooted_Spinorfield: public physics::lattices::Spinorfield {
+		    class Rooted_Spinorfield {
 
 				public:
 				Rooted_Spinorfield(const hardware::System&, const RootedSpinorfieldParametersInterface&);
@@ -47,12 +47,25 @@ namespace physics {
 				Rooted_Spinorfield(const Rooted_Spinorfield&) = delete;
 				Rooted_Spinorfield() = delete;
 
-				int Get_order() const;
-				hmc_float Get_a0() const;
-				std::vector<hmc_float> Get_a() const;
-				std::vector<hmc_float> Get_b() const;
+                unsigned int getOrder() const;
+                hmc_float get_a0() const;
+                std::vector<hmc_float> get_a() const;
+                std::vector<hmc_float> get_b() const;
+                /**
+                 * This method returns the asked pseudofermion field
+                 */
+                const std::unique_ptr<physics::lattices::Spinorfield>& operator[](unsigned int) const;
+
+                /*
+                 * Methods to be able to make range based for loops on Rooted_Staggeredfield_eo objects
+                 */
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield> >::iterator begin();
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield> >::const_iterator begin() const;
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield> >::iterator end();
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield> >::const_iterator end() const;
 
 				private:
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield> > pseudofermions;
 				physics::algorithms::Rational_Coefficients rationalCoefficients;
 
 				friend void pseudo_randomize<Rooted_Spinorfield, spinor>(const Rooted_Spinorfield* to, int seed);
