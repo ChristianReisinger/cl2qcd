@@ -152,18 +152,26 @@ static void invert_M_nf2_upperflavour(const physics::lattices::Spinorfield* resu
 		result_eo.cold();
 		logger.debug() << "start eoprec-inversion";
 		//even solution
-		if(parametersInterface.getSolver() == common::cg) {
-			//to use cg, one needs an hermitian matrix, which is QplusQminus
-			//the source must now be gamma5 b, to obtain the desired solution in the end
-			source_even.gamma5();
-			QplusQminus_eo f_eo(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
-			converged = cg(&result_eo, f_eo, gf, source_even, system, interfacesHandler, parametersInterface.getSolverPrec(), additionalParameters);
-			//now, calc Qminus result_buf_eo to obtain x = A^⁻1 b
-			//therefore, use source as an intermediate buffer
-			Qminus_eo qminus(system, interfacesHandler.getInterface<physics::fermionmatrix::Qminus_eo>());
-			qminus(&source_even, gf, result_eo, additionalParameters);
-			//save the result to result_buf
-			copyData(&result_eo, source_even);
+        if(parametersInterface.getSolver() == common::cg) {
+            try{
+                Aee f_eo(system, interfacesHandler.getInterface<physics::fermionmatrix::Aee>());
+                converged = bicgstab(&result_eo, f_eo, gf, source_even, system, interfacesHandler, parametersInterface.getSolverPrec(), additionalParameters);
+            }
+            catch (physics::algorithms::solvers::SolverException& e ) {
+                logger.fatal() << e.what();
+                logger.info() << "Retry with CG...";
+                //to use cg, one needs an hermitian matrix, which is QplusQminus
+                //the source must now be gamma5 b, to obtain the desired solution in the end
+                source_even.gamma5();
+                QplusQminus_eo f_eo(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
+                converged = cg(&result_eo, f_eo, gf, source_even, system, interfacesHandler, parametersInterface.getSolverPrec(), additionalParameters);
+                //now, calc Qminus result_buf_eo to obtain x = A^⁻1 b
+                //therefore, use source as an intermediate buffer
+                Qminus_eo qminus(system, interfacesHandler.getInterface<physics::fermionmatrix::Qminus_eo>());
+                qminus(&source_even, gf, result_eo, additionalParameters);
+                //save the result to result_buf
+                copyData(&result_eo, source_even);
+            }
 		} else {
 			Aee f_eo(system, interfacesHandler.getInterface<physics::fermionmatrix::Aee>());
 			converged = bicgstab(&result_eo, f_eo, gf, source_even, system, interfacesHandler, parametersInterface.getSolverPrec(), additionalParameters);
