@@ -1,6 +1,7 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2013,2018 Alessandro Sciarra
+ * Copyright (c) 2013 Christopher Pinke
+ * Copyright (c) 2013 Matthias Bach
  *
  * This file is part of CL2QCD.
  *
@@ -11,11 +12,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // hmc_float squarenorm, return in result
@@ -76,4 +77,3 @@ __kernel void global_squarenorm_staggered(__global const su3vec * const restrict
 	}
 	return;
 }
-

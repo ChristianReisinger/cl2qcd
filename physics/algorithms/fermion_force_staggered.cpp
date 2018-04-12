@@ -1,8 +1,9 @@
 /** @file
  * Implementation of the fermion_force functions
  *
- * Copyright (c) 2013, 2017 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
- * Copyright (c) 2017 Francesca Cuteri <cuteri@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2014-2018 Alessandro Sciarra
+ * Copyright (c) 2016 Christopher Czaban
+ * Copyright (c) 2017 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -13,11 +14,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "fermion_force_staggered.hpp"
@@ -40,10 +41,10 @@
  * @endcode
  * where k is the order of rational approximation, c_i are the numerators and
  * @code
- *               | +eta_\mu(n) (D_oe X_e^i)_{n+\mu} (X_e^i^\dag)_n     if evenodd = EVEN 
- *  Q^i_\mu(n) = | 
- *               | -eta_\mu(n) (X_e^i)_{n+\mu} ((D_oe X_e^i)^\dag)_n   if evenodd = ODD 
- * 
+ *               | +eta_\mu(n) (D_oe X_e^i)_{n+\mu} (X_e^i^\dag)_n     if evenodd = EVEN
+ *  Q^i_\mu(n) = |
+ *               | -eta_\mu(n) (X_e^i)_{n+\mu} ((D_oe X_e^i)^\dag)_n   if evenodd = ODD
+ *
  * @endcode
  * If we put U_\mu(n) into Q^i_\mu(n) we have
  * @code
@@ -53,10 +54,10 @@
  * @endcode
  * with
  * @code
- *                | +eta_\mu(n) U_\mu(n) * (D_oe X_e^i)_{n+\mu} (X_e^i^\dag)_n     if evenodd = EVEN 
- *  QQ^i_\mu(n) = | 
- *                | -eta_\mu(n) U_\mu(n) * (X_e^i)_{n+\mu} ((D_oe X_e^i)^\dag)_n   if evenodd = ODD 
- * 
+ *                | +eta_\mu(n) U_\mu(n) * (D_oe X_e^i)_{n+\mu} (X_e^i^\dag)_n     if evenodd = EVEN
+ *  QQ^i_\mu(n) = |
+ *                | -eta_\mu(n) U_\mu(n) * (X_e^i)_{n+\mu} ((D_oe X_e^i)^\dag)_n   if evenodd = ODD
+ *
  * @endcode
  * Now, (-i) * [QQ^i_\mu(n)]_TA is exactly what the function fermion_force calculates, given the fields
  * (D_oe X_e^i) and (X_e^i). So, basically, here we have to calculate them with the
@@ -69,12 +70,12 @@
  * Hdot_\mu(n) = \sum_{i=1}^k {c_i * out_fermion_force} ==> F_\mu(n) = \sum_{i=1}^k {-c_i * out_fermion_force}
  * @endcode
  * where we add a minus sign to pass from Hdot_\mu(n) to F_\mu(n).
- * 
+ *
  * @note To perform the sum above, the saxpy operation of the gaugemomenta is used.
- * 
+ *
  * @warning Remember that this function add to the Gaugemomenta field "force" the fermionic
  *          contribution. Therefore such a field must be properly initialized.
- * 
+ *
  * @attention If an imaginary chemical potential is used, this function is not modified,
  *            because chem_pot_im is included in the kernel. See force_staggered_fermion_eo.cl
  *            file documentation for further information.
@@ -157,4 +158,3 @@ void physics::algorithms::fermion_force(const physics::lattices::Gaugemomenta * 
     }
     gm->update_halo();
 }
-

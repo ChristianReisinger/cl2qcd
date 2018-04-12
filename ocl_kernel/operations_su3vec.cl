@@ -1,6 +1,7 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011,2013 Matthias Bach
+ * Copyright (c) 2011 Christopher Pinke
+ * Copyright (c) 2013,2014,2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *
@@ -11,16 +12,16 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /** @file
  * Device code for operations on SU(3) vectors
- * 
+ *
  */
 
 #ifdef ENABLE_PRINTF
@@ -263,7 +264,7 @@ Matrix3x3 tr_v_times_u_dagger(su3vec u, su3vec v, su3vec w, su3vec x)
 Matrix3x3 u_times_v_dagger(su3vec u, su3vec v)
 {
 	Matrix3x3 out;
-	
+
 	out.e00.re = u.e0.re * v.e0.re + u.e0.im * v.e0.im;
 	out.e00.im = u.e0.im * v.e0.re - u.e0.re * v.e0.im;
 	out.e01.re = u.e0.re * v.e1.re + u.e0.im * v.e1.im;
@@ -282,6 +283,6 @@ Matrix3x3 u_times_v_dagger(su3vec u, su3vec v)
 	out.e21.im = u.e2.im * v.e1.re - u.e2.re * v.e1.im;
 	out.e22.re = u.e2.re * v.e2.re + u.e2.im * v.e2.im;
 	out.e22.im = u.e2.im * v.e2.re - u.e2.re * v.e2.im;
-	
+
 	return out;
 }

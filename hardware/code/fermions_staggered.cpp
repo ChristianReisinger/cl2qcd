@@ -1,7 +1,10 @@
 /** @file
  * Implementation of the hardware::code::fermions_staggered class
  *
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2013-2015,2018 Alessandro Sciarra
+ * Copyright (c) 2013-2015 Christopher Pinke
+ * Copyright (c) 2013 Matthias Bach
+ * Copyright (c) 2015 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -12,11 +15,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "fermions_staggered.hpp"
@@ -34,7 +37,7 @@ using namespace std;
 
 void hardware::code::Fermions_staggered::fill_kernels()
 {
-	sources = get_basic_sources() <<  "operations_geometry.cl" << "operations_complex.h"  << "operations_matrix_su3.cl" << "operations_matrix.cl" << "operations_gaugefield.cl" << "types_fermions.h" << "operations_su3vec.cl" << "operations_staggered.cl";
+	sources = get_basic_sources() <<  "operations_geometry.cl" << "operations_complex.hpp"  << "operations_matrix_su3.cl" << "operations_matrix.cl" << "operations_gaugefield.cl" << "types_fermions.hpp" << "operations_su3vec.cl" << "operations_staggered.cl";
 	if(kernelParameters->getUseEo()) {
 		sources = sources << "spinorfield_staggered_eo.cl";;
 	} else {
@@ -59,7 +62,7 @@ void hardware::code::Fermions_staggered::fill_kernels()
 void hardware::code::Fermions_staggered::clear_kernels()
 {
 	cl_uint clerr = CL_SUCCESS;
-	
+
 	logger.debug() << "Clearing Fermions_staggered kernels...";
 
 	if(kernelParameters->getUseEo()){
@@ -174,7 +177,7 @@ size_t hardware::code::Fermions_staggered::get_read_write_size(const std::string
  * into account (for standard Dirac operator we intend M = D_KS + m). Working with evenodd
  * preconditioning, then the mass term is not put in the kernel and this is taken into account
  * in the number of flops calculation.
- * 
+ *
  * @attention In this function (as in the whole code) the staggered phases are not included
  *            in links and, then, we have some flops in addition to take them into account
  *            as well as for the boundary conditions. Usually, in the community, in all
@@ -205,21 +208,21 @@ size_t hardware::code::Fermions_staggered::get_read_write_size(const std::string
  */
 /*
  * Considering that:
- * 
+ *
  *  - su3matrix times su3vec is 66 flops
  *  - real times complex is 2 flops
  *  - complex times complex is 6 flops
  *  - real times su3vec is 6 flops
  *  - complex times su3vec is 18 flops
  *  - su3vec plus su3vec is 6 flops = NC*2
- * 
+ *
  * The way of counting flops for the dslash can be summarized as follows:
- * 
+ *
  *  + For each direction we have twice su3matrix times su3vec
  *  + We have to sum the 2 resulting su3vec in each direction
  *  + The mass term is a real times su3vec
  *  + Then we have to sum the 5 su3vec (one for each direction + the mass term)
- * 
+ *
  */
 static int flop_dslash_staggered_per_site()
 {

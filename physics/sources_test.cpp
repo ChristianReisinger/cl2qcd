@@ -1,8 +1,11 @@
 /** @file
  * Tests for functions working with sources.
  *
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2012,2013 Matthias Bach
+ * Copyright (c) 2014,2015 Christopher Pinke
+ * Copyright (c) 2014-2016,2018 Alessandro Sciarra
+ * Copyright (c) 2015 Christopher Czaban
+ * Copyright (c) 2016 Tim Breitenfelder
  *
  * This file is part of CL2QCD.
  *
@@ -13,11 +16,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // use the boost test framework
@@ -26,7 +29,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "sources.hpp"
-#include "test_util_staggered.h"
+#include "test_util_staggered.hpp"
 #include <sstream>
 #include "../interfaceImplementations/interfacesHandler.hpp"
 #include "../interfaceImplementations/hardwareParameters.hpp"
@@ -93,7 +96,7 @@ static void test_volume_source_stagg(std::string content)
  	options.push_back("--sourcetype=volume");
 	std::string tmp = "--sourcecontent=" + content;
 	options.push_back(tmp.c_str());
-	
+
 	meta::Inputparameters params(5, &(options[0]));
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
@@ -104,7 +107,7 @@ static void test_volume_source_stagg(std::string content)
 
 	Staggeredfield_eo source(system, interfacesHandler.getInterface<physics::lattices::Staggeredfield_eo>());
 	set_volume_source(&source, prng);
-	
+
 	//The following lines are to be used to produce the ref_vec file needed to get the ref_value
 	//---> Comment them out when the reference values have been obtained!
 	/*
@@ -114,7 +117,7 @@ static void test_volume_source_stagg(std::string content)
 	}
 	return;
 	// */
-	
+
 	hmc_float sqnorm = squarenorm(source);
 	//Lattice is here 8^4 and we have even-odd preconditioning
 	logger.info() << "source content: " << content << " and squarnorm of volume source is " << sqnorm;

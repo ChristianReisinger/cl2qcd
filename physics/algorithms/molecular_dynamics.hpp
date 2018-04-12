@@ -1,8 +1,8 @@
 /** @file
  * Declaration of the molecular dynamics algorithms
  *
- * Copyright (c) 2013 Matthias Bach <bach@compeng.uni-frankfurt.de>
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2013,2015,2016,2018 Alessandro Sciarra
+ * Copyright (c) 2013 Matthias Bach
  *
  * This file is part of CL2QCD.
  *
@@ -13,11 +13,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _PHYSICS_ALGORITHMS_MOLECULAR_DYNAMICS_

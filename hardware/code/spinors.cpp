@@ -1,6 +1,10 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011-2015 Christopher Pinke
+ * Copyright (c) 2011 Lars Zeidlewicz
+ * Copyright (c) 2012,2013 Matthias Bach
+ * Copyright (c) 2013,2018 Alessandro Sciarra
+ * Copyright (c) 2015,2016 Francesca Cuteri
+ * Copyright (c) 2016,2017 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *
@@ -11,11 +15,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "spinors.hpp"
@@ -33,20 +37,20 @@ using namespace std;
 
 void hardware::code::Spinors::fill_kernels()
 {
-	basic_fermion_code = get_basic_sources() <<  "operations_geometry.cl" << "operations_complex.h" << "types_fermions.h" << "operations_su3vec.cl" << "operations_spinor.cl" << "spinorfield.cl";
+	basic_fermion_code = get_basic_sources() <<  "operations_geometry.cl" << "operations_complex.hpp" << "types_fermions.hpp" << "operations_su3vec.cl" << "operations_spinor.cl" << "spinorfield.cl";
 	if(kernelParameters->getUseEo()) {
 		basic_fermion_code = basic_fermion_code << "operations_spinorfield_eo.cl";
 	}
-	
+
 	ClSourcePackage prng_code = get_device()->getPrngCode()->get_sources();
-	
+
 	logger.debug() << "Creating Spinors kernels...";
-	
+
 	//Reductions are really small kernels, so few needed options loaded by hands
-	_global_squarenorm_reduction = createKernel("global_squarenorm_reduction")  << ClSourcePackage("-I " + std::string(SOURCEDIR) + " -D _INKERNEL_" + ((kernelParameters->getPrecision() == 64) ? (std::string(" -D _USEDOUBLEPREC_") + " -D _DEVICE_DOUBLE_EXTENSION_KHR_") : "")) << "types.h" << "spinorfield_squarenorm_reduction.cl";
-	scalar_product_reduction = createKernel("scalar_product_reduction") << ClSourcePackage("-I " + std::string(SOURCEDIR) + " -D _INKERNEL_" + ((kernelParameters->getPrecision() == 64) ? (std::string(" -D _USEDOUBLEPREC_") + " -D _DEVICE_DOUBLE_EXTENSION_KHR_") : "")) << "types.h" << "operations_complex.h" << "spinorfield_scalar_product_reduction.cl";
-	scalar_product_real_reduction = createKernel("scalar_product_real_reduction") << ClSourcePackage("-I " + std::string(SOURCEDIR) + " -D _INKERNEL_" + ((kernelParameters->getPrecision() == 64) ? (std::string(" -D _USEDOUBLEPREC_") + " -D _DEVICE_DOUBLE_EXTENSION_KHR_") : "")) << "types.h" << "operations_complex.h" << "spinorfield_scalar_product_reduction.cl";
-	
+	_global_squarenorm_reduction = createKernel("global_squarenorm_reduction")  << ClSourcePackage("-I " + std::string(SOURCEDIR) + " -D _INKERNEL_" + ((kernelParameters->getPrecision() == 64) ? (std::string(" -D _USEDOUBLEPREC_") + " -D _DEVICE_DOUBLE_EXTENSION_KHR_") : "")) << "types.hpp" << "spinorfield_squarenorm_reduction.cl";
+	scalar_product_reduction = createKernel("scalar_product_reduction") << ClSourcePackage("-I " + std::string(SOURCEDIR) + " -D _INKERNEL_" + ((kernelParameters->getPrecision() == 64) ? (std::string(" -D _USEDOUBLEPREC_") + " -D _DEVICE_DOUBLE_EXTENSION_KHR_") : "")) << "types.hpp" << "operations_complex.hpp" << "spinorfield_scalar_product_reduction.cl";
+	scalar_product_real_reduction = createKernel("scalar_product_real_reduction") << ClSourcePackage("-I " + std::string(SOURCEDIR) + " -D _INKERNEL_" + ((kernelParameters->getPrecision() == 64) ? (std::string(" -D _USEDOUBLEPREC_") + " -D _DEVICE_DOUBLE_EXTENSION_KHR_") : "")) << "types.hpp" << "operations_complex.hpp" << "spinorfield_scalar_product_reduction.cl";
+
 	if(kernelParameters->getUseEo() ) {
 		generate_gaussian_spinorfield_eo = createKernel("generate_gaussian_spinorfield_eo") << basic_fermion_code << prng_code << "spinorfield_eo_gaussian.cl";
 		convert_from_eoprec = createKernel("convert_from_eoprec") << basic_fermion_code << "spinorfield_eo_convert.cl";
@@ -118,7 +122,7 @@ void hardware::code::Spinors::fill_kernels()
 void hardware::code::Spinors::clear_kernels()
 {
 	cl_int clerr = CL_SUCCESS;
-	
+
 	logger.debug() << "Clearing Spinors kernels...";
 
 	//Reductions

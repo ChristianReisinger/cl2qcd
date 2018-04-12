@@ -1,7 +1,10 @@
 /** @file
  * Tests of the Rational_Approximation algorithm
  *
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2013-2016,2018 Alessandro Sciarra
+ * Copyright (c) 2013 Matthias Bach
+ * Copyright (c) 2014 Christopher Pinke
+ * Copyright (c) 2016 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -12,11 +15,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "rational_approximation.hpp"
@@ -41,16 +44,16 @@ BOOST_AUTO_TEST_CASE(initialization)
 	if(boost::unit_test::framework::master_test_suite().argc !=2)
 	  logger.error() << "In the initialization test the sourcefile for the approx. is needed!";
 	BOOST_REQUIRE_EQUAL(boost::unit_test::framework::master_test_suite().argc, 2);
-	
+
         using namespace physics::algorithms;
-	
+
 	Rational_Approximation approx(6,1,2,1e-5,1);
 	logger.info() << approx;
 	int ord = approx.Get_order();
 	hmc_float a0 = approx.Get_a0();
 	std::vector<hmc_float> a = approx.Get_a();
 	std::vector<hmc_float> b = approx.Get_b();
-	
+
 	Rational_Coefficients coeff_alloc(ord);
 	Rational_Coefficients coeff(ord, a0, a, b);
 	int ord2 = coeff.Get_order();
@@ -63,7 +66,7 @@ BOOST_AUTO_TEST_CASE(initialization)
 		BOOST_CHECK_CLOSE(a[i], a2[i], 1.e-8);
 		BOOST_CHECK_CLOSE(b[i], b2[i], 1.e-8);
 	}
-	
+
 	Rational_Approximation approx_file(boost::unit_test::framework::master_test_suite().argv[1]);
 	int ord3 = approx_file.Get_order();
 	hmc_float a03 = approx_file.Get_a0();
@@ -75,7 +78,7 @@ BOOST_AUTO_TEST_CASE(initialization)
 		BOOST_CHECK_CLOSE(a[i], a3[i], 1.e-8);
 		BOOST_CHECK_CLOSE(b[i], b3[i], 1.e-8);
 	}
-	
+
 	logger.info() << "Test done!";
 }
 
@@ -83,12 +86,12 @@ BOOST_AUTO_TEST_CASE(initialization)
 BOOST_AUTO_TEST_CASE(errors)
 {
 	using namespace physics::algorithms;
-	
+
 	//Calculating 3 different precision rational approximations of x^(-1/2) and comparing errors
 	//with those declared by Martin Lüscher in Computational Strategies in Lattice QCD (page 42).
 	//Actually, we put here the reference values from the Lüscher's code available at the link
 	//http://cern.ch/luscher/ and written to approximate the sign(x) function. But since such
-	//a function is there obtained as x*R(x^2), with R(x) the rational approximation of the 
+	//a function is there obtained as x*R(x^2), with R(x) the rational approximation of the
 	//inverse square root of x, we can use that code to extract the errors of the approximation.
 	hmc_float errors[3];
 	errors[0] = 5.0287212083799089e-04;
@@ -113,7 +116,7 @@ BOOST_AUTO_TEST_CASE(errors)
 BOOST_AUTO_TEST_CASE(coefficients)
 {
 	using namespace physics::algorithms;
-	
+
 	//Again, we used the Martin Lüscher's code described above to build a test on
 	//the coefficients of the rational approximation. Indeed, with such a code we
 	//can generate the Approximation of the inverse square root of x in the form
@@ -152,12 +155,12 @@ BOOST_AUTO_TEST_CASE(rescale)
 	physics::InterfacesHandlerImplementation interfacesHandler{params};
 	physics::PrngParametersImplementation prngParameters{params};
 	physics::PRNG prng{system, &prngParameters};
-	
+
 	//Operator for the test
 	physics::fermionmatrix::MdagM_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::MdagM_eo>());
 	//This configuration for the Ref.Code is the same as for example dks_input_5
 	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
-	
+
 	//Min and max eigenvalues for conservative and not conservative case
 	hmc_float minEigenvalue = 0.3485318319429664;
 	hmc_float maxEigenvalue = 5.2827906935473500;
@@ -223,36 +226,37 @@ BOOST_AUTO_TEST_CASE(rescale)
 		BOOST_CHECK_CLOSE(a_cons[i], a_ref_cons[i], 2.e-4);
 		BOOST_CHECK_CLOSE(b_cons[i], b_ref_cons[i], 2.e-4);
 	}
+
 	logger.info() << "Test done!";
 }
 
 BOOST_AUTO_TEST_CASE(input_output)
 {
 	using namespace physics::algorithms;
-	
+
 	int order = 5;
-	bool inv = true;         
-	int y = 1;            
-	int z = 2;            
+	bool inv = true;
+	int y = 1;
+	int z = 2;
 	int precision = 113;
-	hmc_float low = 0.001;    
+	hmc_float low = 0.001;
 	hmc_float high = 1.0;
-	
+
 	std::vector<hmc_float> a, b;
-	hmc_float a0, error;  
+	hmc_float a0, error;
 	Rational_Approximation approx(order, y, z, low, high, inv, precision);
 	a = approx.Get_a();
 	b = approx.Get_b();
 	a0 = approx.Get_a0();
 	error = approx.Get_error();
-	
+
 	std::string outputFileName="temporalFileForRationalApproximation";
 	BOOST_REQUIRE_MESSAGE(boost::filesystem::exists( outputFileName ) == false,
 			      "The file \"" << outputFileName << "\" exists for some reason! Aborting...");
 	approx.Save_rational_approximation("temporalFileForRationalApproximation");
 	BOOST_REQUIRE_EQUAL(boost::filesystem::exists( outputFileName ), true);
 	Rational_Approximation approx2(outputFileName);
-	
+
 	BOOST_REQUIRE_EQUAL(order, approx2.Get_order());
 	BOOST_REQUIRE_EQUAL(-(double)y/z, approx2.Get_exponent());
 	BOOST_REQUIRE_EQUAL(low, approx2.Get_lower_bound());
@@ -263,6 +267,6 @@ BOOST_AUTO_TEST_CASE(input_output)
 	  BOOST_REQUIRE_CLOSE(b[i], approx2.Get_b()[i], 1.e-13);
 	}
 	BOOST_REQUIRE_CLOSE(error, approx2.Get_error(), 1.e-13);
-	
+
 	boost::filesystem::remove(outputFileName);
 }

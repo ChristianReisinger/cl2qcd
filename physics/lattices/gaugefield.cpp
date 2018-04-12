@@ -1,8 +1,9 @@
 /** @file
  * Implementation of the physics::lattices::Gaugefield class
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- *
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2012,2013 Matthias Bach
+ * Copyright (c) 2013-2015 Christopher Pinke
+ * Copyright (c) 2015,2016,2018 Alessandro Sciarra
+ * Copyright (c) 2016 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -13,19 +14,20 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "gaugefield.hpp"
 #include "../../host_functionality/logger.hpp"
-#include "../../host_functionality/host_operations_gaugefield.h"
 #include "../../hardware/device.hpp"
 #include "../../ildg_io/ildgIo.hpp"
 #include "../../hardware/code/gaugefield.hpp"
+
+#include "../../host_functionality/host_operations_gaugefield.hpp"
 #include "../utilities.hpp"
 
 physics::lattices::Gaugefield::Gaugefield(const hardware::System& system, const GaugefieldParametersInterface * parameters, const physics::PRNG& prng)
@@ -116,7 +118,7 @@ void physics::lattices::Gaugefield::save(std::string outputfile, int number)
 	//http://stackoverflow.com/questions/2434196/how-to-initialize-stdvector-from-c-style-array
 	std::vector<Matrixsu3> tmp(numberOfElements);
 	tmp.assign(host_buf, host_buf + numberOfElements);
-	
+
 	ildgIo::writeGaugefieldToFile(outputfile, tmp, latticeObjectParameters, number);
 
 	delete host_buf;
@@ -152,7 +154,7 @@ void physics::lattices::Gaugefield::update_halo() const
 	gaugefield.update_halo();
 }
 
-const physics::PRNG * physics::lattices::Gaugefield::getPrng() const 
+const physics::PRNG * physics::lattices::Gaugefield::getPrng() const
 {
 	return &prng;
 }
@@ -171,4 +173,3 @@ int physics::lattices::Gaugefield::get_trajectoryNumberAtInit() const
 {
 	return trajectoryNumberAtInit;
 }
-

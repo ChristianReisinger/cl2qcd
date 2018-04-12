@@ -1,7 +1,8 @@
 /** @file
  * Utilities for handling LIME files
  *
- * Copyright 2014, Christopher Pinke
+ * Copyright (c) 2014 Christopher Pinke
+ * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *
@@ -12,11 +13,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _LIMEUTILITIES_HPP_
@@ -45,7 +46,7 @@ class LimeFileProperties
 public:
 	LimeFileProperties();
 	LimeFileProperties(int numberOfEntries,  int numberOfBinaryDataEntries);
-	
+
   void operator+=(LimeFileProperties other);
   int numberOfEntries;
   int numberOfBinaryDataEntries;
@@ -56,7 +57,7 @@ public:
 class LimeFilePropertiesCollector: public LimeFileProperties
 {
  public:
-  ~LimeFilePropertiesCollector();  
+  ~LimeFilePropertiesCollector();
 };
 
 class LimeEntryTypes
@@ -70,7 +71,7 @@ public:
 	}
 };
 
-class LimeFile_basic 
+class LimeFile_basic
 {
 protected:
 	LimeFile_basic(std::string filenameIn) : filename(filenameIn) {};

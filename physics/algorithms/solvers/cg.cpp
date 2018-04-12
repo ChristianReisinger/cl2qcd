@@ -1,9 +1,10 @@
 /** @file
  * Implementation of the cg algorithm
  *
- * Copyright (c) 2012-2013 Christopher Pinke <pinke@th.uni-frankfurt.de>
- * Copyright (c) 2012-2013 Matthias Bach <bach@compeng.uni-frankfurt.de>
- * Copyright (c) 2017 Christopher Czaban <czaban@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2014 Christopher Pinke
+ * Copyright (c) 2015,2016,2018 Alessandro Sciarra
+ * Copyright (c) 2016,2017 Christopher Czaban
+ * Copyright (c) 2016 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *
@@ -14,11 +15,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "cg.hpp"

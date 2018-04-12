@@ -1,8 +1,10 @@
 /** @file
  * Reading of gauge field from files.
  *
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011,2013,2014 Matthias Bach
+ * Copyright (c) 2011,2014,2015 Christopher Pinke
+ * Copyright (c) 2016 Francesca Cuteri
+ * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *
@@ -13,18 +15,18 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _READGAUGEH_
 #define _READGAUGEH_
 
-#include "../common_header_files/types.h"
-#include "../executables/exceptions.h"
+#include "../common_header_files/types.hpp"
+#include "../executables/exceptions.hpp"
 #include "../geometry/latticeExtents.hpp"
 #include "../geometry/index.hpp"
 
@@ -65,11 +67,11 @@ namespace ildgIo {
 	public:
 		IldgIoWriter_gaugefield(const std::vector<Matrixsu3> & data, const IldgIoParameters * parameters, std::string filenameIn, int trajectoryNumber, double plaquetteValue);
 	};
-	
+
 	Checksum calculate_ildg_checksum(const char * buf, size_t nbytes, const size_t NT, const size_t NS);
 	void copy_gaugefield_from_ildg_format(Matrixsu3 * gaugefield, char * gaugefield_tmp, int check, const IldgIoParameters& parameters);
 	void copy_gaugefield_to_ildg_format(std::vector<char> & dest, const std::vector<Matrixsu3> & source_in, const IldgIoParameters& parameters);
-	
+
 	size_t getNumberOfElements_gaugefield(const meta::Inputparameters * parameters);
 	n_uint64_t getSizeInBytes_gaugefield(size_t numberOfElements);
 }

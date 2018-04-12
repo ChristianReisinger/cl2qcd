@@ -1,6 +1,6 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011-2013 Matthias Bach
+ * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *
@@ -11,21 +11,21 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
- 
- 
-//alpha*x +y	
+
+
+//alpha*x +y
 //CC: defined with a plus!!!
  __kernel void saxpy_eoprec_real_vec(__global const spinorStorageType * const x, __global const spinorStorageType * const y, __global const hmc_float * alpha, const int index_alpha, __global spinorStorageType * const out)
 {
 	int id = get_global_id(0);
 	int global_size = get_global_size(0);
-	
+
 	for(int id_mem = id; id_mem < EOPREC_SPINORFIELDSIZE_MEM; id_mem += global_size) {
 		spinor x_tmp = getSpinor_eo(x, id_mem);
 		spinor y_tmp = getSpinor_eo(y, id_mem);

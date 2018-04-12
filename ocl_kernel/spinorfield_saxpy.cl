@@ -1,6 +1,7 @@
 /*
- * Copyright 2012, 2013, 2016 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra, Christopher Czaban
+ * Copyright (c) 2011,2013 Matthias Bach
+ * Copyright (c) 2016 Christopher Czaban
+ * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *
@@ -11,11 +12,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // -alpha*x + y
@@ -68,7 +69,7 @@ __kernel void saxpy_real_vec(__global spinor* x, __global spinor* y, __global co
 {
 	int id = get_global_id(0);
 	int global_size = get_global_size(0);
-	
+
 	for(int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
 		const spinor x_tmp = x[id_mem];
 		const spinor y_tmp = y[id_mem];

@@ -1,6 +1,8 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011-2013 Matthias Bach
+ * Copyright (c) 2011,2014 Christopher Pinke
+ * Copyright (c) 2011 Lars Zeidlewicz
+ * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *
@@ -11,11 +13,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /** @file
@@ -39,7 +41,7 @@
 #endif
 #endif
 
-/// this requires "globaldefs.h" and  "types.h"
+/// this requires "globaldefs.hpp" and  "types.hpp"
 #ifdef _USE_BLOCKED_LOOPS_
 #define PARALLEL_FOR(VAR, LIMIT) \
 size_t _block_size = (LIMIT + get_global_size(0) - 1) / get_global_size(0); \
