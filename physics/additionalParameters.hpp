@@ -2,6 +2,7 @@
  * additional parameters definition
  *
  * Copyright (c) 2016,2018 Alessandro Sciarra
+ * Copyright (c) 2016 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *

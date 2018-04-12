@@ -1,7 +1,8 @@
 /** @file
  * Implementation of the physics::lattices::Rooted_Spinorfield_eo class
  *
- * Copyright (c) 2017 Christopher Czaban <czaban@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2017 Christopher Czaban
+ * Copyright (c) 2017 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -96,4 +97,3 @@ std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo> >::const_iterator
 {
     return pseudofermions.end();
 }
-

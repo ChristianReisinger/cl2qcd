@@ -5,6 +5,7 @@
  * Copyright (c) 2014,2016,2018 Alessandro Sciarra
  * Copyright (c) 2014,2016 Christopher Pinke
  * Copyright (c) 2015,2016 Francesca Cuteri
+ * Copyright (c) 2016 Christopher Czaban
  * Copyright (c) 2016 Tim Breitenfelder
  *
  * This file is part of CL2QCD.

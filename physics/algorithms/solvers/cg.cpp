@@ -4,7 +4,6 @@
  * Copyright (c) 2014 Christopher Pinke
  * Copyright (c) 2015,2016,2018 Alessandro Sciarra
  * Copyright (c) 2016,2017 Christopher Czaban
- * Copyright (c) 2016 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *

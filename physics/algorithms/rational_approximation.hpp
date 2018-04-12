@@ -1,10 +1,11 @@
 /** @file
  * Declaration of the Rational_Coefficients and Rational_Approximation classes
  *
- * Copyright (c) 2013-2018 Alessandro Sciarra
+ * Copyright (c) 2013,2014,2016-2018 Alessandro Sciarra
  * Copyright (c) 2013 Matthias Bach
  * Copyright (c) 2014 Christopher Pinke
- * Copyright (c) 2016 Francesca Cuteri
+ * Copyright (c) 2016,2017 Francesca Cuteri
+ * Copyright (c) 2016 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *

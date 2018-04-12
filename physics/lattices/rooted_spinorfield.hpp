@@ -1,7 +1,8 @@
 /** @file
  * Declaration of the physics::lattices::wilson:Rooted_Spinorfield class
  *
- * Copyright (c) 2016 Christopher Czaban <czaban@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2016 Christopher Czaban
+ * Copyright (c) 2017 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *

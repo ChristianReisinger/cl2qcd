@@ -3,6 +3,7 @@
  *
  * Copyright (c) 2013-2018 Alessandro Sciarra
  * Copyright (c) 2013 Matthias Bach
+ * Copyright (c) 2016 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *

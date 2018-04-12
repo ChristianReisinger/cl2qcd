@@ -1,7 +1,8 @@
 /** @file
  * Tests of the perform_rhmc_step template function inverter algorithm
  *
- * Copyright (c) 2016 Christopher Czaban <czaban@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2016,2017 Christopher Czaban
+ * Copyright (c) 2017 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
