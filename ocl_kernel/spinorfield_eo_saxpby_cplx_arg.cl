@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Christopher Czaban
+ * Copyright (c) 2017 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *
@@ -44,5 +44,5 @@ __kernel void saxpby_eoprec_cplx_arg(__global const spinorStorageType * const x,
 		const spinor y_tmp_tmp = spinor_times_complex(y_tmp, beta);
 		const spinor x_y_sum = spinor_acc(y_tmp_tmp, x_tmp_tmp);
 		putSpinor_eo(out, id_mem, x_y_sum);
-	}	
+	}
 }

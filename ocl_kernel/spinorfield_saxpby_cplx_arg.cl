@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Christopher Czaban
+ * Copyright (c) 2016 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *
@@ -43,8 +43,8 @@ __kernel void saxpby_cplx_arg(__global const spinor * const x, __global const sp
 		const spinor x_tmp_tmp = spinor_times_complex(x_tmp, alpha);
 		const spinor y_tmp = y[id_mem];
 		const spinor y_tmp_tmp = spinor_times_complex(y_tmp, beta);
-		
+
 		out[id_mem] = spinor_acc(y_tmp_tmp, x_tmp_tmp);
 	}
-	
+
 }

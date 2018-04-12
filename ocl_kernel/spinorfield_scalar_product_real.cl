@@ -1,5 +1,6 @@
 /*
- * Copyright 2016 Christopher Czaban
+ * Copyright (c) 2016 Christopher Czaban
+ * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *

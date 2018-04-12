@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Christopher Czaban
+ * Copyright (c) 2017 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *
@@ -30,7 +30,7 @@ __kernel void saxpby_eoprec_real_vec(__global const spinorStorageType * const x,
 {
 	const int id = get_global_id(0);
 	const int global_size = get_global_size(0);
-	
+
 	for(int id_mem = id; id_mem < EOPREC_SPINORFIELDSIZE_MEM; id_mem += global_size) {
 		const spinor x_tmp = getSpinor_eo(x, id_mem);
 		const spinor x_tmp_tmp = real_multiply_spinor(x_tmp, alpha[index_alpha]);

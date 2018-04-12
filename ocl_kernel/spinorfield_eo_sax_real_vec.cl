@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Christopher Czaban
+ * Copyright (c) 2017 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *
@@ -29,4 +29,3 @@ __kernel void sax_real_vec_eoprec(__global const spinorStorageType * const restr
 		putSpinor_eo(out,id_mem,x_tmp);
 	}
 }
-
