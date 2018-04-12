@@ -16,8 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- 
+
+
  __kernel void scalar_product_real_part( __global const spinor * const restrict x, __global const spinor * const restrict y, __global hmc_float * const restrict result, __local hmc_float * const restrict result_local)
 {
 	int local_size = get_local_size(0);
@@ -27,9 +27,9 @@
 	int num_groups = get_num_groups(0);
 	int group_id = get_group_id (0);
 	int idx = get_local_id(0);
-	
+
 	hmc_float sum = 0.0;
-	
+
 	for(int id_local = id; id_local < SPINORFIELDSIZE_LOCAL; id_local += global_size) {
 		site_idx id_mem = get_site_idx((id_local % 2 == 0) ? get_even_st_idx_local(id_local /   2) : get_odd_st_idx_local(id_local / 2));
 		spinor x_tmp = x[id_mem];
@@ -37,7 +37,7 @@
 		hmc_float tmp = spinor_scalarproduct_real_part(x_tmp, y_tmp);
 		sum += tmp;
 	}
-	
+
 		if(local_size == 1) {
 		result[ group_id ] = sum;
 	} else {
