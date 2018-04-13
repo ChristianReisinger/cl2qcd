@@ -1,5 +1,24 @@
 (* ::Package:: *)
 
+(*
+ * Copyright (c)
+ *
+ * This file is part of CL2QCD.
+ *
+ * CL2QCD is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CL2QCD is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
+*)
+
 SetOptions[SelectedNotebook[], PrintPrecision -> 16]
 Get["pauliMatricesTensorColorIdentity.m",Path->{NotebookDirectory[]}]
 
@@ -9,29 +28,29 @@ BeginPackage["cloverPackage`"]
 FieldStrengthTensor::usage =
 	"FieldStrengtTensor[u] for a given uniform gaugefield filling."
 
-FieldStrengthTensor0i::usage = 
+FieldStrengthTensor0i::usage =
 	"FieldStrengtTensor[u,v] for a different filling for temporal and spatial direction."
 
-Sigma::usage = 
+Sigma::usage =
 	"Sigma[x,y] gives the gamma-matrices defined via the commuator."
 
-EplusB::usage = 
+EplusB::usage =
 	"E+B"
 
-EminusB::usage = 
+EminusB::usage =
 	"E-B"
 
-UpperLeftBlock::usage = 
+UpperLeftBlock::usage =
 	"upper-left block of 1+T"
 
-LowerRightBlock::usage = 
+LowerRightBlock::usage =
 	"lower-right block of 1+T"
 
 
 Begin["Private`"]
 Needs["PauliMatricesTensorColorIdentity`"]
 
-FieldStrengthTensor[u_] := 
+FieldStrengthTensor[u_] :=
 	Module[{fst=1/8*(u.u.ConjugateTranspose[u].ConjugateTranspose[u]+u.ConjugateTranspose[u].ConjugateTranspose[u].u+ConjugateTranspose[u].ConjugateTranspose[u].u.u+ConjugateTranspose[u].u.u.ConjugateTranspose[u]-u.u.ConjugateTranspose[u].ConjugateTranspose[u]-ConjugateTranspose[u].u.u.ConjugateTranspose[u]-ConjugateTranspose[u].ConjugateTranspose[u].u.u-u.ConjugateTranspose[u].ConjugateTranspose[u].u)},
 	fst
 	]
@@ -69,15 +88,3 @@ LowerRightBlock[k_, csw_, u_, v_] :=
 End[]
 
 EndPackage[]
-
-
-
-
-
-
-
-
-
-
-
-

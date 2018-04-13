@@ -11,11 +11,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -54,7 +54,7 @@ su3vec field_strength_tensor_times_su3vec(su3vec in, __global Matrixsu3StorageTy
     // U_mu(x)
     U = getSU3(field, get_link_idx(dir1, idx_arg));
     psi1 = su3matrix_times_su3vec(U, psi1);
-    
+
     //////////////////////
     // 2.term = U_nu(x) * U_mu(x+nu-mu)^dagger * U_nu(x-mu)^dagger * U_mu(x-mu)
     su3vec psi2 = in;
@@ -78,7 +78,7 @@ su3vec field_strength_tensor_times_su3vec(su3vec in, __global Matrixsu3StorageTy
     // U_nu(x)
     U = getSU3(field, get_link_idx(dir2, idx_arg));
     psi2 = su3matrix_times_su3vec(U, psi2);
-    
+
     //////////////////////
     // 3.term = U_mu(x-mu)^dagger * U_nu(x-mu-nu)^dagger * U_mu(x-mu-nu) * U_nu(x-nu)
     su3vec psi3 = in;
@@ -104,7 +104,7 @@ su3vec field_strength_tensor_times_su3vec(su3vec in, __global Matrixsu3StorageTy
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir1);
     U = getSU3(field, get_link_idx(dir1, idx_neigh));
     psi3 = su3matrix_dagger_times_su3vec(U, psi3);
-    
+
     ///////////////////////
     // 4.term = U_nu(x-nu)^dagger * U_mu(x-nu) * U_nu(x-nu+mu) * U_mu(x)^dagger
     su3vec psi4 = in;
@@ -127,7 +127,7 @@ su3vec field_strength_tensor_times_su3vec(su3vec in, __global Matrixsu3StorageTy
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     psi4 = su3matrix_dagger_times_su3vec(U, psi4);
-    
+
     ////////////////////////
     // 5.term = U_nu(x) * U_mu(x+nu) * U_nu(x+mu)^dagger * U_mu(x)^dagger
     su3vec psi5 = in;
@@ -148,7 +148,7 @@ su3vec field_strength_tensor_times_su3vec(su3vec in, __global Matrixsu3StorageTy
     // U_nu(x)
     U = getSU3(field, get_link_idx(dir2, idx_arg));
     psi5 = su3matrix_times_su3vec(U, psi5);
-    
+
     //////////////////////////
     // 6.term = U_mu(x-mu)^dagger * U_nu(x-mu) * U_mu(x+nu-mu) * U_nu(x)^dagger
     su3vec psi6 = in;
@@ -170,7 +170,7 @@ su3vec field_strength_tensor_times_su3vec(su3vec in, __global Matrixsu3StorageTy
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir1);
     U = getSU3(field, get_link_idx(dir1, idx_neigh));
     psi6 = su3matrix_dagger_times_su3vec(U, psi6);
-    
+
     ////////////////////////////
     // 7.term = U_nu(x-nu)^dagger * U_mu(x-nu-mu)^dagger * U_nu(x-nu-mu) * U_mu(x-mu)
     su3vec psi7 = in;
@@ -192,7 +192,7 @@ su3vec field_strength_tensor_times_su3vec(su3vec in, __global Matrixsu3StorageTy
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg,dir2);
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     psi7 = su3matrix_dagger_times_su3vec(U, psi7);
-    
+
     ///////////////////////////
     // 8.term = U_mu(x) * U_nu(x-nu+mu)^dagger * U_mu(x-nu)^dagger * U_nu(x-nu)
     su3vec psi8 = in;
@@ -212,8 +212,8 @@ su3vec field_strength_tensor_times_su3vec(su3vec in, __global Matrixsu3StorageTy
     // U_mu(x)
     U = getSU3(field, get_link_idx(dir1, idx_arg));
     psi8 = su3matrix_times_su3vec(U, psi8);
-    
-    
+
+
     //add psi1,...,psi8 and multiply by factor 1/8
     hmc_float factor = 1./8.;
     out = psi1;
@@ -225,7 +225,7 @@ su3vec field_strength_tensor_times_su3vec(su3vec in, __global Matrixsu3StorageTy
     out = su3vec_dim(out, psi7);
     out = su3vec_dim(out, psi8);
     out = su3vec_times_real(out, factor);
-    
+
     return out;
 }
 
@@ -245,10 +245,10 @@ spinor field_strength_tensor_times_spinor(spinor in, __global Matrixsu3StorageTy
 spinor clover_eoprec_unified_local(__global const spinorStorageType * const restrict in, __global Matrixsu3StorageType  const * const restrict field, const st_idx idx_arg, const dir_idx dir, hmc_float kappa_in, hmc_float csw)
 {
     dir_idx dir2;
-    
+
     spinor out_tmp, phi, tmp, psi;
     site_idx pos_eo;
-    
+
     out_tmp = set_spinor_zero();
     pos_eo = get_eo_site_idx_from_st_idx(idx_arg);
     phi = getSpinor_eo(in, pos_eo);
@@ -256,7 +256,7 @@ spinor clover_eoprec_unified_local(__global const spinorStorageType * const rest
     //note: no factor for boundary conditions and chemical potential because clover term is diagonal in the lattice points
     hmc_float factor = 0.5 * csw * kappa_in;
 
-    
+
     if(dir == TDIR) {
         /////////////////////////////////
         // nu = 1
@@ -267,7 +267,7 @@ spinor clover_eoprec_unified_local(__global const spinorStorageType * const rest
         //calculate field-strength-tensor * psi
 	tmp = field_strength_tensor_times_spinor(psi, field, idx_arg, dir, dir2);
         out_tmp = spinor_acc(out_tmp, tmp);
-        
+
         /////////////////////////////////
         // nu = 2
         dir2 = YDIR;
@@ -277,8 +277,8 @@ spinor clover_eoprec_unified_local(__global const spinorStorageType * const rest
         //calculate field-strength-tensor * psi
 	tmp = field_strength_tensor_times_spinor(psi, field, idx_arg, dir, dir2);
         out_tmp = spinor_acc(out_tmp, tmp);
-        
-        
+
+
         /////////////////////////////////
         // nu = 3
         dir2 = ZDIR;
@@ -288,7 +288,7 @@ spinor clover_eoprec_unified_local(__global const spinorStorageType * const rest
         //calculate field-strength-tensor * psi
 	tmp = field_strength_tensor_times_spinor(psi, field, idx_arg, dir, dir2);
         out_tmp = spinor_acc(out_tmp, tmp);
-        
+
     }
     if(dir == XDIR) {
         /////////////////////////////////
@@ -300,7 +300,7 @@ spinor clover_eoprec_unified_local(__global const spinorStorageType * const rest
         //calculate field-strength-tensor * psi
 	tmp = field_strength_tensor_times_spinor(psi, field, idx_arg, dir, dir2);
         out_tmp = spinor_acc(out_tmp, tmp);
-        
+
         /////////////////////////////////
         // nu = 2
         dir2 = YDIR;
@@ -310,7 +310,7 @@ spinor clover_eoprec_unified_local(__global const spinorStorageType * const rest
         //calculate field-strength-tensor * psi
 	tmp = field_strength_tensor_times_spinor(psi, field, idx_arg, dir, dir2);
         out_tmp = spinor_acc(out_tmp, tmp);
-        
+
         /////////////////////////////////
         // nu = 3
         dir2 = ZDIR;
@@ -331,8 +331,8 @@ spinor clover_eoprec_unified_local(__global const spinorStorageType * const rest
         //calculate field-strength-tensor * psi
 	tmp = field_strength_tensor_times_spinor(psi, field, idx_arg, dir, dir2);
         out_tmp = spinor_acc(out_tmp, tmp);
-        
-        
+
+
         /////////////////////////////////
         // nu = 1
         dir2 = XDIR;
@@ -363,7 +363,7 @@ spinor clover_eoprec_unified_local(__global const spinorStorageType * const rest
         //calculate field-strength-tensor * psi
 	tmp = field_strength_tensor_times_spinor(psi, field, idx_arg, dir, dir2);
         out_tmp = spinor_acc(out_tmp, tmp);
-        
+
         /////////////////////////////////
         // nu = 1
         dir2 = XDIR;
@@ -373,8 +373,8 @@ spinor clover_eoprec_unified_local(__global const spinorStorageType * const rest
         //calculate field-strength-tensor * psi
 	tmp = field_strength_tensor_times_spinor(psi, field, idx_arg, dir, dir2);
         out_tmp = spinor_acc(out_tmp, tmp);
-        
-        
+
+
         /////////////////////////////////
         // nu = 2
         dir2 = YDIR;
@@ -383,7 +383,7 @@ spinor clover_eoprec_unified_local(__global const spinorStorageType * const rest
         psi = sigma_mu_nu_times_spinor(phi, dir, dir2);
         //calculate field-strength-tensor * psi
 	tmp = field_strength_tensor_times_spinor(psi, field, idx_arg, dir, dir2);
-        out_tmp = spinor_acc(out_tmp, tmp);  
+        out_tmp = spinor_acc(out_tmp, tmp);
     }
 
     out_tmp = real_multiply_spinor(out_tmp, factor);
@@ -396,7 +396,7 @@ void clover_eo_for_site(__global const spinorStorageType * const restrict in, __
 {
     spinor out_tmp = getSpinor_eo(in, get_eo_site_idx_from_st_idx(pos)); //note: clover = 1 + T
     spinor out_tmp2;
-    
+
     out_tmp2 = clover_eoprec_unified_local(in, field, pos, TDIR, kappa_in, csw);
     out_tmp = spinor_acc(out_tmp, out_tmp2);
     out_tmp2 = clover_eoprec_unified_local(in, field, pos, XDIR, kappa_in, csw);
@@ -405,7 +405,7 @@ void clover_eo_for_site(__global const spinorStorageType * const restrict in, __
     out_tmp = spinor_acc(out_tmp, out_tmp2);
     out_tmp2 = clover_eoprec_unified_local(in, field, pos, ZDIR, kappa_in, csw);
     out_tmp = spinor_acc(out_tmp, out_tmp2);
-    
+
     putSpinor_eo(out, get_eo_site_idx_from_st_idx(pos), out_tmp);
 }
 

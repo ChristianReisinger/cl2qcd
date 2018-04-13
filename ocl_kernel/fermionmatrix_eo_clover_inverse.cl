@@ -1,6 +1,6 @@
 /*
  * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra, 
+ * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra,
  * Max Theilig
  *
  * This file is part of CL2QCD.
@@ -12,11 +12,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* This function performs the inversion a complex 6x6 matrix
@@ -76,7 +76,7 @@ Matrix6x6 inverse_6x6_via_Householder_triangularization(Matrix6x6 a)
     hmc_complex u[6];
     hmc_complex N1[6][6];
     hmc_complex R[6-1][6][6] = {0.};
-    
+
     for(int k=0; k<(cols-1); ++k){
         //build u_k and norm^2 of u_k
         hmc_float norm_u_squared = 0.;
@@ -125,7 +125,7 @@ Matrix6x6 inverse_6x6_via_Householder_triangularization(Matrix6x6 a)
     for(unsigned int m=0; m<rows; ++m){ //initialise as R_1
         for(unsigned int n=0; n<cols; ++n){
             R_prod[m][n] = R[0][m][n];}}
-    
+
     for(unsigned int k=1; k<(cols-1); k=k+1){ //multiply R_k's
         for(unsigned int m=0; m<rows; ++m){
             for(unsigned int n=0; n<cols; ++n){
@@ -190,7 +190,7 @@ Matrix6x6 inverse_6x6_via_Householder_triangularization(Matrix6x6 a)
     out.e53.re = r[5][3].re; out.e53.im = r[5][3].im;
     out.e54.re = r[5][4].re; out.e54.im = r[5][4].im;
     out.e55.re = r[5][5].re; out.e55.im = r[5][5].im;
-	
+
     return out;
 }
 
@@ -205,19 +205,19 @@ void clover_eo_inverse_for_site(__global const spinorStorageType * const restric
     tmp1.e1 = phi.e1;
     tmp2.e0 = phi.e2;
     tmp2.e1 = phi.e3;
-    
+
     //get 6x6 blocks
     Matrix6x6 B_plus = clover_eoprec_unified_local_upper_left_block(field, pos, kappa_in, csw);
     Matrix6x6 B_minus = clover_eoprec_unified_local_lower_right_block(field, pos, kappa_in, csw);
-    
+
     //inversion of 6x6 blocks
     Matrix6x6 A_plus = inverse_6x6_via_Householder_triangularization(B_plus);
     Matrix6x6 A_minus = inverse_6x6_via_Householder_triangularization(B_minus);
-    
+
     //Inverse * spinor
     tmp1 = matrix6x6_times_halfspinor(A_plus, tmp1);
     tmp2 = matrix6x6_times_halfspinor(A_minus, tmp2);
-    
+
     out_tmp.e0 = tmp1.e0;
     out_tmp.e1 = tmp1.e1;
     out_tmp.e2 = tmp2.e0;

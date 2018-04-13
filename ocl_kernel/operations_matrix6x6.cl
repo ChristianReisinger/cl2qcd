@@ -12,11 +12,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /** @file
@@ -52,28 +52,28 @@ inline void put6x6(__global Matrix6x6StorageType * const restrict out, const uin
 Matrix3x3 get_3x3_block_upperleft(Matrix6x6 in)
 {
     Matrix3x3 out;
-    
+
     out.e00.re = in.e00.re;
     out.e00.im = in.e00.im;
     out.e01.re = in.e01.re;
     out.e01.im = in.e01.im;
     out.e02.re = in.e02.re;
     out.e02.im = in.e02.im;
-    
+
     out.e10.re = in.e10.re;
     out.e10.im = in.e10.im;
     out.e11.re = in.e11.re;
     out.e11.im = in.e11.im;
     out.e12.re = in.e12.re;
     out.e12.im = in.e12.im;
-    
+
     out.e20.re = in.e20.re;
     out.e20.im = in.e20.im;
     out.e21.re = in.e21.re;
     out.e21.im = in.e21.im;
     out.e22.re = in.e22.re;
     out.e22.im = in.e22.im;
-    
+
     return out;
 }
 
@@ -81,84 +81,84 @@ Matrix3x3 get_3x3_block_upperleft(Matrix6x6 in)
 Matrix3x3 get_3x3_block_upperright(Matrix6x6 in)
 {
     Matrix3x3 out;
-    
+
     out.e00.re = in.e03.re;
     out.e00.im = in.e03.im;
     out.e01.re = in.e04.re;
     out.e01.im = in.e04.im;
     out.e02.re = in.e05.re;
     out.e02.im = in.e05.im;
-    
+
     out.e10.re = in.e13.re;
     out.e10.im = in.e13.im;
     out.e11.re = in.e14.re;
     out.e11.im = in.e14.im;
     out.e12.re = in.e15.re;
     out.e12.im = in.e15.im;
-    
+
     out.e20.re = in.e23.re;
     out.e20.im = in.e23.im;
     out.e21.re = in.e24.re;
     out.e21.im = in.e24.im;
     out.e22.re = in.e25.re;
     out.e22.im = in.e25.im;
-    
+
     return out;
 }
 
 Matrix3x3 get_3x3_block_lowerleft(Matrix6x6 in)
 {
     Matrix3x3 out;
-    
+
     out.e00.re = in.e30.re;
     out.e00.im = in.e30.im;
     out.e01.re = in.e31.re;
     out.e01.im = in.e31.im;
     out.e02.re = in.e32.re;
     out.e02.im = in.e32.im;
-    
+
     out.e10.re = in.e40.re;
     out.e10.im = in.e40.im;
     out.e11.re = in.e41.re;
     out.e11.im = in.e41.im;
     out.e12.re = in.e42.re;
     out.e12.im = in.e42.im;
-    
+
     out.e20.re = in.e50.re;
     out.e20.im = in.e50.im;
     out.e21.re = in.e51.re;
     out.e21.im = in.e51.im;
     out.e22.re = in.e52.re;
     out.e22.im = in.e52.im;
-    
+
     return out;
 }
 
 Matrix3x3 get_3x3_block_lowerright(Matrix6x6 in)
 {
     Matrix3x3 out;
-    
+
     out.e00.re = in.e33.re;
     out.e00.im = in.e33.im;
     out.e01.re = in.e34.re;
     out.e01.im = in.e34.im;
     out.e02.re = in.e35.re;
     out.e02.im = in.e35.im;
-    
+
     out.e10.re = in.e43.re;
     out.e10.im = in.e43.im;
     out.e11.re = in.e44.re;
     out.e11.im = in.e44.im;
     out.e12.re = in.e45.re;
     out.e12.im = in.e45.im;
-    
+
     out.e20.re = in.e53.re;
     out.e20.im = in.e53.im;
     out.e21.re = in.e54.re;
     out.e21.im = in.e54.im;
     out.e22.re = in.e55.re;
     out.e22.im = in.e55.im;
-    
+
     return out;
 }
 
@@ -169,12 +169,12 @@ halfspinor matrix6x6_times_halfspinor(Matrix6x6 u, halfspinor in)
 {
     halfspinor out;
     su3vec tmp1, tmp2, tmp3, tmp4;
-    
+
     tmp1 = matrix3x3_times_su3vec(get_3x3_block_upperleft(u), in.e0);
     tmp2 = matrix3x3_times_su3vec(get_3x3_block_upperright(u), in.e1);
     tmp3 = matrix3x3_times_su3vec(get_3x3_block_lowerleft(u), in.e0);
     tmp4 = matrix3x3_times_su3vec(get_3x3_block_lowerright(u), in.e1);
-    
+
     out.e0 = su3vec_acc(tmp1, tmp2);
     out.e1 = su3vec_acc(tmp3, tmp4);
     return out;
@@ -184,28 +184,28 @@ halfspinor matrix6x6_times_halfspinor(Matrix6x6 u, halfspinor in)
 Matrix6x6 put_3x3block_matrix6x6_upperleft(Matrix6x6 in, Matrix3x3 p)
 {
 	Matrix6x6 out = in;
-	
+
     out.e00.re = p.e00.re;
     out.e00.im = p.e00.im;
     out.e01.re = p.e01.re;
     out.e01.im = p.e01.im;
     out.e02.re = p.e02.re;
     out.e02.im = p.e02.im;
-    
+
     out.e10.re = p.e10.re;
     out.e10.im = p.e10.im;
     out.e11.re = p.e11.re;
     out.e11.im = p.e11.im;
     out.e12.re = p.e12.re;
     out.e12.im = p.e12.im;
-    
+
     out.e20.re = p.e20.re;
     out.e20.im = p.e20.im;
     out.e21.re = p.e21.re;
     out.e21.im = p.e21.im;
     out.e22.re = p.e22.re;
     out.e22.im = p.e22.im;
-    
+
     return out;
 }
 
@@ -219,77 +219,77 @@ Matrix6x6 put_3x3block_matrix6x6_upperright(Matrix6x6 in, Matrix3x3 p)
     out.e04.im = p.e01.im;
     out.e05.re = p.e02.re;
     out.e05.im = p.e02.im;
-    
+
     out.e13.re = p.e10.re;
     out.e13.im = p.e10.im;
     out.e14.re = p.e11.re;
     out.e14.im = p.e11.im;
     out.e15.re = p.e12.re;
     out.e15.im = p.e12.im;
-    
+
     out.e23.re = p.e20.re;
     out.e23.im = p.e20.im;
     out.e24.re = p.e21.re;
     out.e24.im = p.e21.im;
     out.e25.re = p.e22.re;
     out.e25.im = p.e22.im;
-    
+
     return out;
 }
 
 Matrix6x6 put_3x3block_matrix6x6_lowerleft(Matrix6x6 in, Matrix3x3 p)
 {
-	Matrix6x6 out = in; 
-	
+	Matrix6x6 out = in;
+
     out.e30.re = p.e00.re;
     out.e30.im = p.e00.im;
     out.e31.re = p.e01.re;
     out.e31.im = p.e01.im;
     out.e32.re = p.e02.re;
     out.e32.im = p.e02.im;
-    
+
     out.e40.re = p.e10.re;
     out.e40.im = p.e10.im;
     out.e41.re = p.e11.re;
     out.e41.im = p.e11.im;
     out.e42.re = p.e12.re;
     out.e42.im = p.e12.im;
-    
+
     out.e50.re = p.e20.re;
     out.e50.im = p.e20.im;
     out.e51.re = p.e21.re;
     out.e51.im = p.e21.im;
     out.e52.re = p.e22.re;
     out.e52.im = p.e22.im;
-    
+
     return out;
 }
 
 Matrix6x6 put_3x3block_matrix6x6_lowerright(Matrix6x6 in, Matrix3x3 p)
 {
 	Matrix6x6 out = in;
-	
+
     out.e33.re = p.e00.re;
     out.e33.im = p.e00.im;
     out.e34.re = p.e01.re;
     out.e34.im = p.e01.im;
     out.e35.re = p.e02.re;
     out.e35.im = p.e02.im;
-    
+
     out.e43.re = p.e10.re;
     out.e43.im = p.e10.im;
     out.e44.re = p.e11.re;
     out.e44.im = p.e11.im;
     out.e45.re = p.e12.re;
     out.e45.im = p.e12.im;
-    
+
     out.e53.re = p.e20.re;
     out.e53.im = p.e20.im;
     out.e54.re = p.e21.re;
     out.e54.im = p.e21.im;
     out.e55.re = p.e22.re;
     out.e55.im = p.e22.im;
-    
+
     return out;
 }
 
@@ -392,7 +392,7 @@ inline Matrix6x6 identity_matrix6x6 ()
 inline Matrix6x6 multiply_matrix6x6_by_complex (Matrix6x6 in, hmc_complex factor)
 {
     Matrix6x6 out;
-    
+
     out.e00 = complexmult(in.e00, factor);
     out.e01 = complexmult(in.e01, factor);
     out.e02 = complexmult(in.e02, factor);
@@ -429,6 +429,6 @@ inline Matrix6x6 multiply_matrix6x6_by_complex (Matrix6x6 in, hmc_complex factor
     out.e53 = complexmult(in.e53, factor);
     out.e54 = complexmult(in.e54, factor);
     out.e55 = complexmult(in.e55, factor);
-    
+
     return out;
 }

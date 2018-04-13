@@ -1,5 +1,24 @@
 (* ::Package:: *)
 
+(*
+ * Copyright (c)
+ *
+ * This file is part of CL2QCD.
+ *
+ * CL2QCD is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CL2QCD is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
+*)
+
 SetOptions[SelectedNotebook[], PrintPrecision -> 16]
 
 (*Get the needed packages for these tests*)
@@ -25,7 +44,7 @@ Ns = 4; Nt = 4;
 F = FieldStrengthTensor[nonTrivial3x3mat];
 EPlusB = 8*F + ( 4*F - 4*F );
 EMinusB = 8*F - ( 4*F - 4*F );
-UpperLeftBlock = IdentityMatrix[6] + factor * (Pauli1[EMinusB] + Pauli2[EMinusB] + Pauli3[EMinusB]); 
+UpperLeftBlock = IdentityMatrix[6] + factor * (Pauli1[EMinusB] + Pauli2[EMinusB] + Pauli3[EMinusB]);
 LowerRightBlock = IdentityMatrix[6] - factor * (Pauli1[EPlusB] + Pauli2[EPlusB] + Pauli3[EPlusB]);
 
 (*Invert 6x6 blocks*)
@@ -40,7 +59,7 @@ UpperLeftBlockInverseKernelResult = Ns^3 * Nt * UpperLeftBlockInverseSum
 F0i = FieldStrengthTensor0i[ascending3x3mat,nonTrivial3x3mat];
 EPlusBNU = 8*F0i + ( 4*F - 4*F );
 EMinusBNU = 8*F0i - ( 4*F - 4*F );
-UpperLeftBlockNU = IdentityMatrix[6] + factor * (Pauli1[EMinusBNU] + Pauli2[EMinusBNU] + Pauli3[EMinusBNU]); 
+UpperLeftBlockNU = IdentityMatrix[6] + factor * (Pauli1[EMinusBNU] + Pauli2[EMinusBNU] + Pauli3[EMinusBNU]);
 LowerRightBlockNU = IdentityMatrix[6] - factor * (Pauli1[EPlusBNU] + Pauli2[EPlusBNU] + Pauli3[EPlusBNU]);
 
 (*Invert 6x6 blocks*)
@@ -50,6 +69,3 @@ LowerRightBlockInverseNU = Inverse[LowerRightBlockNU];
 (*Sum up all entries of 6x6 blocks*)
 UpperLeftBlockInverseSumNU = Total [UpperLeftBlockInverseNU, 2];
 UpperLeftBlockInverseKernelResultNU = Ns^3 * Nt * UpperLeftBlockInverseSumNU
-
-
-

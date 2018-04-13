@@ -11,11 +11,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -86,7 +86,7 @@ hmc_float log_det_matrix6x6_squared_qr(Matrix6x6 a)
     for(unsigned int i=0; i<rows; ++i){
         for(unsigned int j=0; j<cols; ++j){
             T[i][j] = N1[i][j];}}
-    
+
     for(int k=0; k<(cols-1); ++k){
         //build u_k and norm^2 of u_k
         hmc_float norm_u_squared = 0.;
@@ -119,7 +119,7 @@ hmc_float log_det_matrix6x6_squared_qr(Matrix6x6 a)
         for(unsigned int n=0; n<cols; ++n){
 	  		printf("(%f,%f)", T[m][n].re, T[m][n].im);}
 		printf("\n");}*/
-	
+
 	hmc_complex det = hmc_complex_one;
 	//compute determinant of T
 	for(unsigned int i=0; i<rows; ++i){
@@ -211,14 +211,14 @@ hmc_float log_det_matrix6x6_squared(Matrix6x6 a)
         }
         s = sqrt(1. + s / (complex_abs_value(T[k][k]) * complex_abs_value(T[k][k])));
         sigma = complex_mult(convert_float_to_complex(s), T[k][k]);
-        
+
         /* determinant */
         det = complex_mult(det, sigma);
         q = complex_mult(sigma, complex_conj(T[k][k]));
-        
+
         T[k][k] = complex_add(T[k][k], sigma);
         p[k] = complex_mult(sigma, complex_conj(T[k][k]));
-        
+
         /* reflect all columns to the right */
         for(unsigned int j=k+1; j<=n; j++) {
             z = hmc_complex_zero;
@@ -232,7 +232,7 @@ hmc_float log_det_matrix6x6_squared(Matrix6x6 a)
         }
     }
     sigma = T[n][n];
-    
+
     /* determinant */
     det = complex_mult(det, sigma);
 	/* logarithm */
@@ -263,5 +263,3 @@ __kernel void S_det(__global Matrixsu3StorageType const * const restrict field, 
 		*res = tmp;
 	}
 }
-
-

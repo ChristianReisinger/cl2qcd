@@ -10,11 +10,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _HARDWARE_CODE_MATRIX6X6FIELD_
@@ -36,14 +36,14 @@ namespace code {
 *
 * @todo Everything is public to faciliate inheritance. Actually, more parts should be private.
 */
-    
+
 class matrix6x6Field : public Opencl_Module {
-   
+
 public:
     friend hardware::Device;
-    
+
     virtual ~matrix6x6Field();
-    
+
     matrix6x6Field(const hardware::code::OpenClKernelParametersInterface& kernelParameters, const hardware::Device * device);
 
 
@@ -62,7 +62,7 @@ public:
      * @todo should not be public
      */
     void importMatrix6x6Field(const hardware::buffers::matrix6x6 * matrix6x6Field, const Matrix6x6 * const data) const;
-    
+
     /**
      * Export the matrix6x6Field from the OpenCL buffer, that uses a device
      * specific storage format, into the given pointer using the generic
@@ -71,7 +71,7 @@ public:
      * @param[out] dest The array to store the matrix6x6Field in
      */
     void exportMatrix6x6Field(Matrix6x6 * const dest, const hardware::buffers::matrix6x6 * matrix6x6Field) const;
-    
+
 	/**
 	 * Get the code required to use the matrix6x6Field from kernels.
 	 */
@@ -115,10 +115,10 @@ private:
 
     //cl_kernel convertMatrix6x6FieldToSOA;
     //cl_kernel convertMatrix6x6FieldFromSOA;
-    
+
     //void convertMatrix6x6FieldToSOA_device(const hardware::buffers::matrix6x6 * out, const hardware::buffers::Plain<Matrix6x6> * in) const;
     //void convertMatrix6x6FieldFromSOA_device(const hardware::buffers::Plain<Matrix6x6> * out, const hardware::buffers::matrix6x6 * in) const;
-    
+
     /**
      * Collect the kernels for OpenCL.
      */
@@ -128,9 +128,9 @@ private:
      */
     void clear_kernels();
 };
-    
+
 }
-    
+
 }
 
 #endif /* _HARDWARE_CODE_MATRIX6X6FIELD_ */

@@ -1,6 +1,6 @@
 /*
  * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra, 
+ * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra,
  * Max Theilig
  *
  * This file is part of CL2QCD.
@@ -12,11 +12,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* The clover Matrix (1+T) is a complex 12x12 Matrix for every lattice site
@@ -33,8 +33,8 @@ Matrix3x3 field_strength_tensor(__global Matrixsu3StorageType  const * const res
     st_idx idx_neigh, idx_neigh1;
     Matrixsu3 U, tmp;
     Matrix3x3 out = zero_matrix3x3();
-    
-    
+
+
     //////////////////////
     // 1.term = U_mu(x) * U_nu(x+mu) * U_mu(x+nu)^dagger * U_nu(x)^dagger
     //////////////////////
@@ -57,8 +57,8 @@ Matrix3x3 field_strength_tensor(__global Matrixsu3StorageType  const * const res
     tmp = multiply_matrixsu3_dagger(tmp, U);
     /////////////////////
     out = add_matrix3x3(out, matrix_su3to3x3(tmp));
-    
-    
+
+
     //////////////////////
     // 2.term = U_nu(x) * U_mu(x+nu-mu)^dagger * U_nu(x-nu)^dagger * U_mu(x-mu)
     //////////////////////
@@ -84,7 +84,7 @@ Matrix3x3 field_strength_tensor(__global Matrixsu3StorageType  const * const res
     /////////////////////
     out = add_matrix3x3(out, matrix_su3to3x3(tmp));
 
-    
+
     //////////////////////
     // 3.term = U_mu(x-mu)^dagger * U_nu(x-mu-nu)^dagger * U_mu(x-mu-nu) * U_nu(x-nu)
     //////////////////////
@@ -111,8 +111,8 @@ Matrix3x3 field_strength_tensor(__global Matrixsu3StorageType  const * const res
     tmp = multiply_matrixsu3(tmp, U);
     /////////////////////
     out = add_matrix3x3(out, matrix_su3to3x3(tmp));
-    
-    
+
+
     ///////////////////////
     // 4.term = U_nu(x-nu)^dagger * U_mu(x-nu) * U_nu(x-nu+mu) * U_mu(x)^dagger
     ////////////////////////
@@ -161,8 +161,8 @@ Matrix3x3 field_strength_tensor(__global Matrixsu3StorageType  const * const res
     tmp = multiply_matrixsu3_dagger(tmp, U);
     /////////////////////
     out = subtract_matrix3x3(out, matrix_su3to3x3(tmp));
-    
-    
+
+
     //////////////////////////
     // 6.term = U_mu(x-mu)^dagger * U_nu(x-mu) * U_mu(x+nu-mu) * U_nu(x)^dagger
     /////////////////////////
@@ -187,8 +187,8 @@ Matrix3x3 field_strength_tensor(__global Matrixsu3StorageType  const * const res
     tmp = multiply_matrixsu3_dagger(tmp, U);
     /////////////////////
     out = subtract_matrix3x3(out, matrix_su3to3x3(tmp));
-    
-    
+
+
     ////////////////////////////
     // 7.term = U_nu(x-nu)^dagger * U_mu(x-nu-mu)^dagger * U_nu(x-nu-mu) * U_mu(x-mu)
     /////////////////////////
@@ -216,7 +216,7 @@ Matrix3x3 field_strength_tensor(__global Matrixsu3StorageType  const * const res
     /////////////////////
     out = subtract_matrix3x3(out, matrix_su3to3x3(tmp));
 
-    
+
     ///////////////////////////
     // 8.term = U_mu(x) * U_nu(x-nu+mu)^dagger * U_mu(x-nu)^dagger * U_nu(x-nu)
     /////////////////////////
@@ -241,7 +241,7 @@ Matrix3x3 field_strength_tensor(__global Matrixsu3StorageType  const * const res
     tmp = multiply_matrixsu3(tmp, U);
     /////////////////////
     out = subtract_matrix3x3(out, matrix_su3to3x3(tmp));
-	
+
 	out = multiply_matrix3x3_by_real(out, 1./8.);
     return out;
 }
@@ -255,9 +255,9 @@ Matrix6x6 clover_eoprec_unified_local_upper_left_block(__global Matrixsu3Storage
     Matrix3x3 EB1, EB2, EB3, E, B, tmp, tmp1;
     //note: no factor for boundary conditions and chemical potential because clover term is diagonal in the lattice points
     hmc_complex factor = {0., 0.125 * kappa_in * csw};
-    
+
     //the matrix consits out of 4 3x3 blocks which are calculated now
-    
+
     //E1 = 8 * F_01
     tmp = field_strength_tensor(field, idx_arg, 0, 1);
     E = multiply_matrix3x3_by_real(tmp, 8.);
@@ -269,7 +269,7 @@ Matrix6x6 clover_eoprec_unified_local_upper_left_block(__global Matrixsu3Storage
     //EB1 = E1 - B1
     EB1 = subtract_matrix3x3(E, B);
     EB1 = multiply_matrix3x3_by_complex(EB1, factor);
-    
+
     //E2 = 8 * F_02
     tmp = field_strength_tensor(field, idx_arg, 0, 2);
     E = multiply_matrix3x3_by_real(tmp, 8.);
@@ -281,7 +281,7 @@ Matrix6x6 clover_eoprec_unified_local_upper_left_block(__global Matrixsu3Storage
     //EB2 = E2 - B2
     EB2 = subtract_matrix3x3(E, B);
     EB2 = multiply_matrix3x3_by_complex(EB2, factor);
-    
+
     //E3 = 8 * F_03
     tmp = field_strength_tensor(field, idx_arg, 0, 3);
     E = multiply_matrix3x3_by_real(tmp, 8.);
@@ -293,23 +293,23 @@ Matrix6x6 clover_eoprec_unified_local_upper_left_block(__global Matrixsu3Storage
     //EB3 = E3 - B3
     EB3 = subtract_matrix3x3(E, B);
     EB3 = multiply_matrix3x3_by_complex(EB3, factor);
-    
+
     //upper-left block = 1 + EB3
     tmp = add_matrix3x3(identity_matrix3x3(), EB3);
     out = put_3x3block_matrix6x6_upperleft(out, tmp);
-    
+
     //upper-right block = EB1 - i * EB2
     tmp = multiply_matrix3x3_by_complex(EB2, hmc_complex_i);
     out = put_3x3block_matrix6x6_upperright(out, subtract_matrix3x3(EB1, tmp));
-    
+
     //lower-left block = EB1 + i * EB2
     tmp = multiply_matrix3x3_by_complex(EB2, hmc_complex_i);
     out = put_3x3block_matrix6x6_lowerleft(out, add_matrix3x3(EB1, tmp));
-    
+
     //lower-right block = 1 - EB3
     tmp = subtract_matrix3x3(identity_matrix3x3(), EB3);
     out = put_3x3block_matrix6x6_lowerright(out, tmp);
-    
+
     return out;
 }
 
@@ -322,7 +322,7 @@ Matrix6x6 clover_eoprec_unified_local_lower_right_block(__global Matrixsu3Storag
     Matrix3x3 EB1, EB2, EB3, E, B, tmp, tmp1;
     //note: no factor for boundary conditions and chemical potential because clover term is diagonal in the lattice points
     hmc_complex factor = {0., - 0.125 * kappa_in * csw};
-    
+
     //the matrix consits out of 4 3x3 blocks which are calculated now(cf. equation 4.1 in openQCD documentation)
 
     //E1 = 8 * F_01
@@ -336,7 +336,7 @@ Matrix6x6 clover_eoprec_unified_local_lower_right_block(__global Matrixsu3Storag
     //EB1 = E1 + B1
     EB1 = add_matrix3x3(E, B);
     EB1 = multiply_matrix3x3_by_complex(EB1, factor);
-    
+
     //E2 = 8 * F_02
     tmp = field_strength_tensor(field, idx_arg, 0, 2);
     E = multiply_matrix3x3_by_real(tmp, 8.);
@@ -348,7 +348,7 @@ Matrix6x6 clover_eoprec_unified_local_lower_right_block(__global Matrixsu3Storag
     //EB2 = E2 + B2
     EB2 = add_matrix3x3(E, B);
     EB2 = multiply_matrix3x3_by_complex(EB2, factor);
-    
+
     //E3 = 8 * F_03
     tmp = field_strength_tensor(field, idx_arg, 0, 3);
     E = multiply_matrix3x3_by_real(tmp, 8.);
@@ -360,19 +360,19 @@ Matrix6x6 clover_eoprec_unified_local_lower_right_block(__global Matrixsu3Storag
     //EB3 = E3 + B3
     EB3 = add_matrix3x3(E, B);
     EB3 = multiply_matrix3x3_by_complex(EB3, factor);
-    
+
     //upper-left block = 1 + EB3
     tmp = add_matrix3x3(identity_matrix3x3(), EB3);
     out = put_3x3block_matrix6x6_upperleft(out, tmp);
-    
+
     //upper-right block = EB1 - i * EB2
     tmp = multiply_matrix3x3_by_complex(EB2, hmc_complex_i);
     out = put_3x3block_matrix6x6_upperright(out, subtract_matrix3x3(EB1, tmp));
-    
+
     //lower-left block = EB1 + i * EB2
     tmp = multiply_matrix3x3_by_complex(EB2, hmc_complex_i);
     out = put_3x3block_matrix6x6_lowerleft(out, add_matrix3x3(EB1, tmp));
-    
+
     //lower-right block = 1 - EB3
     tmp = subtract_matrix3x3(identity_matrix3x3(), EB3);
     out = put_3x3block_matrix6x6_lowerright(out, tmp);

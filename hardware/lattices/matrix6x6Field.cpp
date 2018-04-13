@@ -10,11 +10,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "matrix6x6Field.hpp"
@@ -41,9 +41,9 @@ const std::vector<const hardware::buffers::matrix6x6 *> hardware::lattices::Matr
 std::vector<const hardware::buffers::matrix6x6 *> hardware::lattices::Matrix6x6Field::allocate_buffers()
 {
     using hardware::buffers::matrix6x6;
-    
+
     std::vector<const matrix6x6 *> buffers;
-    
+
     auto const devices = system.get_devices();
     for(auto device: devices)
     {
@@ -72,7 +72,7 @@ void hardware::lattices::Matrix6x6Field::send_matrix6x6_to_buffers(const Matrix6
     for(auto const buffer: buffers) {
         auto device = buffer->get_device();
         TemporalParallelizationHandlerLink tmp2(device->getGridPos(), device->getLocalLatticeExtents(), sizeof(Matrix6x6), device->getHaloExtent());
-        
+
         if(buffers.size() == 1) device->getMatrix6x6FieldCode()->importMatrix6x6Field(buffer, gf_host);
         else{
             Matrix6x6 * mem_host = new Matrix6x6[buffer->get_elements()];
@@ -80,7 +80,7 @@ void hardware::lattices::Matrix6x6Field::send_matrix6x6_to_buffers(const Matrix6
             memcpy(&mem_host[tmp2.getMainPartIndex_destination()]  , &gf_host[tmp2.getMainPartIndex_source()]  , tmp2.getMainPartSizeInBytes());
             memcpy(&mem_host[tmp2.getFirstHaloIndex_destination()] , &gf_host[tmp2.getFirstHaloPartIndex_source()] , tmp2.getHaloPartSizeInBytes());
             memcpy(&mem_host[tmp2.getSecondHaloIndex_destination()], &gf_host[tmp2.getSecondHaloPartIndex_source()], tmp2.getHaloPartSizeInBytes());
-            
+
             device->getMatrix6x6FieldCode()->importMatrix6x6Field(buffer, mem_host);
             delete[] mem_host;
         }
@@ -102,12 +102,12 @@ void hardware::lattices::Matrix6x6Field::fetch_matrix6x6_from_buffers(Matrix6x6 
             // fetch local part for each device
             auto device = buffer->get_device();
             Matrix6x6 * mem_host = new Matrix6x6[buffer->get_elements()];
-            
+
             device->getMatrix6x6FieldCode()->exportMatrix6x6Field(gf_host, buffers[0]);
-            
+
             TemporalParallelizationHandlerLink tmp2(device->getGridPos(), device->getLocalLatticeExtents(), sizeof(Matrix6x6), device->getHaloExtent());
             memcpy(&gf_host[tmp2.getMainPartIndex_source()]  , &mem_host[tmp2.getMainPartIndex_destination()]  , tmp2.getMainPartSizeInBytes());
-            
+
             delete[] mem_host;
         }
     }
@@ -121,7 +121,7 @@ void hardware::lattices::Matrix6x6Field::update_halo_aos(const std::vector<const
             throw Print_Error_Message("Mixed SoA-AoS configuration halo update is not implemented, yet.", __FILE__, __LINE__);
         }
     }
-    
+
     hardware::buffers::update_halo<Matrix6x6>(buffers, system, NDIM);
 }
 
@@ -133,7 +133,7 @@ void hardware::lattices::Matrix6x6Field::update_halo_soa(const std::vector<const
             throw Print_Error_Message("Mixed SoA-AoS configuration halo update is not implemented, yet.", __FILE__, __LINE__);
         }
     }
-    
+
     hardware::buffers::update_halo_soa<Matrix6x6>(buffers, system, .5, 2 * NDIM);
 }
 

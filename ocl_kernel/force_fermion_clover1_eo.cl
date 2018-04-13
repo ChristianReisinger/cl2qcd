@@ -11,11 +11,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -31,18 +31,18 @@ Matrixsu3 square(__global const spinorStorageType * const restrict X, __global c
     spinor x, y, u, v;
     x = getSpinor_eo(X, pos_square);
     y = getSpinor_eo(Y, pos_square);
-    
+
     //calculate u/v = gamma_5 * simga_{mu,nu} * x/y
     u = sigma_mu_nu_times_spinor(x, dir1, dir2);
     u = gamma5_local(u);
     v = sigma_mu_nu_times_spinor(y, dir1, dir2);
     v = gamma5_local(v);
-    
+
     tmp1 = tr_dirac_x_times_y_dagger(v.e0, v.e1, v.e2, v.e3, x.e0, x.e1, x.e2, x.e3);
     tmp2 = tr_dirac_x_times_y_dagger(u.e0, u.e1, u.e2, u.e3, y.e0, y.e1, y.e2, y.e3);
-    
+
     tmp1 = add_matrix3x3(tmp1, tmp2);
-    
+
     out = matrix_3x3tosu3(tmp1);
     out = multiply_matrixsu3_by_complex(out, hmc_complex_i);
     return out;
@@ -55,22 +55,22 @@ Matrixsu3 diagram1a_up(__global const Matrixsu3StorageType * const restrict fiel
     out = unit_matrixsu3();
     st_idx idx_neigh;
     site_idx idx_neigh_eo;
-    
+
     // U_nu(x+mu)
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir1);
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3(out, U);
-    
+
     // U_mu(x+nu)^dagger
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir1, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // square(x+nu)
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir2);
     idx_neigh_eo = get_eo_site_idx_from_st_idx(idx_neigh);
     out = multiply_matrixsu3(out, square(X, Y, idx_neigh_eo, dir1, dir2));
-    
+
     // U_nu(x)^dagger
     U = getSU3(field, get_link_idx(dir2, idx_arg));
     out = multiply_matrixsu3_dagger(out, U);
@@ -83,28 +83,28 @@ Matrixsu3 diagram1a_down(__global const Matrixsu3StorageType * const restrict fi
     out = unit_matrixsu3();
     st_idx idx_neigh, idx_neigh1;
     site_idx idx_neigh_eo;
-    
+
     // U_nu(x-nu+mu)^dagger
     idx_neigh1 = get_lower_neighbor_from_st_idx(idx_arg, dir2); // x-nu
     idx_neigh = get_neighbor_from_st_idx(idx_neigh1, dir1); // (x-nu)+mu
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // U_mu(x-nu)^dagger
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir1, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // square(x-nu)
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir2);
     idx_neigh_eo = get_eo_site_idx_from_st_idx(idx_neigh);
     out = multiply_matrixsu3(out, square(X, Y, idx_neigh_eo, dir1, dir2));
-    
+
     // U_nu(x-nu)
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3(out, U);
-    
+
     out = multiply_matrixsu3_by_real (out, -1.);
     return out;
 }
@@ -116,21 +116,21 @@ Matrixsu3 diagram1b_up(__global const Matrixsu3StorageType * const restrict fiel
     out = unit_matrixsu3();
     st_idx idx_neigh;
     //site_idx idx_neigh_eo;
-    
+
     // U_nu(x+mu)
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir1);
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3(out, U);
-    
+
     // U_mu(x+nu)^dagger
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir1, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // U_nu(x)^dagger
     U = getSU3(field, get_link_idx(dir2, idx_arg));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // square(x)
     site_idx idx_arg_eo = get_eo_site_idx_from_st_idx(idx_arg);
     out = multiply_matrixsu3(out, square(X, Y, idx_arg_eo, dir1, dir2));
@@ -143,27 +143,27 @@ Matrixsu3 diagram1b_down(__global const Matrixsu3StorageType * const restrict fi
     out = unit_matrixsu3();
     st_idx idx_neigh, idx_neigh1;
     //site_idx idx_neigh_eo;
-    
+
     // U_nu(x-nu+mu)^dagger
     idx_neigh1 = get_lower_neighbor_from_st_idx(idx_arg, dir2); // x-nu
     idx_neigh = get_neighbor_from_st_idx(idx_neigh1, dir1); // (x-nu)+mu
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // U_mu(x-nu)^dagger
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir1, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // U_nu(x-nu)
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3(out, U);
-    
+
     // square(x)
     site_idx idx_arg_eo = get_eo_site_idx_from_st_idx(idx_arg);
     out = multiply_matrixsu3(out, square(X, Y, idx_arg_eo, dir1, dir2));
-    
+
     out = multiply_matrixsu3_by_real (out, -1.);
     return out;
 }
@@ -175,22 +175,22 @@ Matrixsu3 diagram1c_up(__global const Matrixsu3StorageType * const restrict fiel
     out = unit_matrixsu3();
     st_idx idx_neigh;
     site_idx idx_neigh_eo;
-    
+
     // square(x+mu)
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir1);
     idx_neigh_eo = get_eo_site_idx_from_st_idx(idx_neigh);
     out = multiply_matrixsu3(out, square(X, Y, idx_neigh_eo, dir1, dir2));
-    
+
     // U_nu(x+mu)
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir1);
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3(out, U);
-    
+
     // U_mu(x+nu)^dagger
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir1, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // U_nu(x)^dagger
     U = getSU3(field, get_link_idx(dir2, idx_arg));
     out = multiply_matrixsu3_dagger(out, U);
@@ -203,28 +203,28 @@ Matrixsu3 diagram1c_down(__global const Matrixsu3StorageType * const restrict fi
     out = unit_matrixsu3();
     st_idx idx_neigh, idx_neigh1;
     site_idx idx_neigh_eo;
-    
+
     // square(x+mu)
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir1);
     idx_neigh_eo = get_eo_site_idx_from_st_idx(idx_neigh);
     out = multiply_matrixsu3(out, square(X, Y, idx_neigh_eo, dir1, dir2));
-    
+
     // U_nu(x-nu+mu)^dagger
     idx_neigh1 = get_lower_neighbor_from_st_idx(idx_arg, dir2); // x-nu
     idx_neigh = get_neighbor_from_st_idx(idx_neigh1, dir1); // (x-nu)+mu
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // U_mu(x-nu)^dagger
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir1, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // U_nu(x-nu)
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3(out, U);
-    
+
     out = multiply_matrixsu3_by_real (out, -1.);
     return out;
 }
@@ -237,7 +237,7 @@ Matrixsu3 diagram1d_up(__global const Matrixsu3StorageType * const restrict fiel
     out = unit_matrixsu3();
     st_idx idx_neigh, idx_neigh1;
     site_idx idx_neigh_eo;
-    
+
     // U_nu(x+mu)
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir1);
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
@@ -248,12 +248,12 @@ Matrixsu3 diagram1d_up(__global const Matrixsu3StorageType * const restrict fiel
     idx_neigh = get_neighbor_from_st_idx(idx_neigh1, dir1); // (x+nu)+mu
     idx_neigh_eo = get_eo_site_idx_from_st_idx(idx_neigh);
     out = multiply_matrixsu3(out, square(X, Y, idx_neigh_eo, dir1, dir2));
-    
+
     // U_mu(x+nu)^dagger
     idx_neigh = get_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir1, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // U_nu(x)^dagger
     U = getSU3(field, get_link_idx(dir2, idx_arg));
     out = multiply_matrixsu3_dagger(out, U);
@@ -266,19 +266,19 @@ Matrixsu3 diagram1d_down(__global const Matrixsu3StorageType * const restrict fi
     out = unit_matrixsu3();
     st_idx idx_neigh, idx_neigh1;
     site_idx idx_neigh_eo;
-    
+
     // U_nu(x-nu+mu)^dagger
     idx_neigh1 = get_lower_neighbor_from_st_idx(idx_arg, dir2); // x-nu
     idx_neigh = get_neighbor_from_st_idx(idx_neigh1, dir1); // (x-nu)+mu
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3_dagger(out, U);
-    
+
     // square(x-nu+mu)
     idx_neigh1 = get_lower_neighbor_from_st_idx(idx_arg, dir2); // x-nu
     idx_neigh = get_neighbor_from_st_idx(idx_neigh1, dir1); // (x-nu)+mu
     idx_neigh_eo = get_eo_site_idx_from_st_idx(idx_neigh);
     out = multiply_matrixsu3(out, square(X, Y, idx_neigh_eo, dir1, dir2));
-    
+
     // U_mu(x-nu)^dagger
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir1, idx_neigh));
@@ -288,7 +288,7 @@ Matrixsu3 diagram1d_down(__global const Matrixsu3StorageType * const restrict fi
     idx_neigh = get_lower_neighbor_from_st_idx(idx_arg, dir2);
     U = getSU3(field, get_link_idx(dir2, idx_neigh));
     out = multiply_matrixsu3(out, U);
-    
+
     out = multiply_matrixsu3_by_real (out, -1.);
     return out;
 }
@@ -297,7 +297,7 @@ Matrix3x3 add_up_diagrams(__global const Matrixsu3StorageType * const restrict f
 {
     Matrixsu3 tmp;
     Matrix3x3 out = zero_matrix3x3();
-    
+
     tmp = diagram1a_up(field, X, Y, idx_arg, dir1, dir2);
     out = add_matrix3x3(matrix_su3to3x3(tmp), out);
     tmp = diagram1a_down(field, X, Y, idx_arg, dir1, dir2);
@@ -314,7 +314,7 @@ Matrix3x3 add_up_diagrams(__global const Matrixsu3StorageType * const restrict f
     out = add_matrix3x3(matrix_su3to3x3(tmp), out);
     tmp = diagram1d_down(field, X, Y, idx_arg, dir1, dir2);
     out = add_matrix3x3(matrix_su3to3x3(tmp), out);
-    
+
     return out;
 }
 
@@ -341,11 +341,11 @@ __kernel void fermion_force_clover1_eo_0(__global const Matrixsu3StorageType * c
         ///////////////////////////////////
         dir1 = 0;
         global_link_pos = get_link_pos(dir1, n, t);
-        
+
         //the 2 here comes from Tr(lambda_ij) = 2delta_ij
         hmc_float c_0_hat = 1.;///(1. + 64. * kappa_in * kappa_in);
         hmc_float factor = - 0.25 * kappa_in * c_0_hat * csw;
-        
+
         v1 = zero_matrix3x3();
         //add up diagrams for all nu unequal mu
         /////////////////////////////////
@@ -353,19 +353,19 @@ __kernel void fermion_force_clover1_eo_0(__global const Matrixsu3StorageType * c
         dir2 = 1;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         /////////////////////////////////
         // nu = 2
         dir2 = 2;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         /////////////////////////////////
         // nu = 3
         dir2 = 3;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         U = getSU3(field, get_link_idx(dir1, pos));
         tmp = matrix_su3to3x3(U);
         v2 = multiply_matrix3x3(tmp,v1);
@@ -391,19 +391,19 @@ __kernel void fermion_force_clover1_eo_1(__global const Matrixsu3StorageType * c
         int global_link_pos;
         int n = pos.space;
         int t = pos.time;
-        
+
         //go through the different directions
         ///////////////////////////////////
         // mu = 1
         ///////////////////////////////////
         dir1 = 1;
         global_link_pos = get_link_pos(dir1, n, t);
-        
+
         //the 2 here comes from Tr(lambda_ij) = 2delta_ij
         hmc_float c_0_hat = 1.;///(1. + 64. * kappa_in * kappa_in);
         hmc_float factor = - 0.25 * kappa_in * c_0_hat * csw;
-        
-        
+
+
         v1 = zero_matrix3x3();
         //add up diagrams for all nu unequal mu
         /////////////////////////////////
@@ -411,19 +411,19 @@ __kernel void fermion_force_clover1_eo_1(__global const Matrixsu3StorageType * c
         dir2 = 0;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         /////////////////////////////////
         // nu = 2
         dir2 = 2;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         /////////////////////////////////
         // nu = 3
         dir2 = 3;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         U = getSU3(field, get_link_idx(dir1, pos));
         tmp = matrix_su3to3x3(U);
         v2 = multiply_matrix3x3(tmp,v1);
@@ -448,19 +448,19 @@ __kernel void fermion_force_clover1_eo_2(__global const Matrixsu3StorageType * c
         int global_link_pos;
         int n = pos.space;
         int t = pos.time;
-        
+
         //go through the different directions
         ///////////////////////////////////
         // mu = 2
         ///////////////////////////////////
         dir1 = 2;
         global_link_pos = get_link_pos(dir1, n, t);
-        
+
         //the 2 here comes from Tr(lambda_ij) = 2delta_ij
         hmc_float c_0_hat = 1.;///(1. + 64. * kappa_in * kappa_in);
         hmc_float factor = - 0.25 * kappa_in * c_0_hat * csw;
-        
-        
+
+
         v1 = zero_matrix3x3();
         //add up diagrams for all nu unequal mu
         /////////////////////////////////
@@ -468,19 +468,19 @@ __kernel void fermion_force_clover1_eo_2(__global const Matrixsu3StorageType * c
         dir2 = 0;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         /////////////////////////////////
         // nu = 1
         dir2 = 1;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         /////////////////////////////////
         // nu = 3
         dir2 = 3;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         U = getSU3(field, get_link_idx(dir1, pos));
         tmp = matrix_su3to3x3(U);
         v2 = multiply_matrix3x3(tmp,v1);
@@ -505,19 +505,19 @@ __kernel void fermion_force_clover1_eo_3(__global const Matrixsu3StorageType * c
         int global_link_pos;
         int n = pos.space;
         int t = pos.time;
-        
+
         //go through the different directions
         ///////////////////////////////////
         // mu = 3
         ///////////////////////////////////
         dir1 = 3;
         global_link_pos = get_link_pos(dir1, n, t);
-        
+
         //the 2 here comes from Tr(lambda_ij) = 2delta_ij
         hmc_float c_0_hat = 1.;///(1. + 64. * kappa_in * kappa_in);
         hmc_float factor = - 0.25 * kappa_in * c_0_hat * csw;
-        
-        
+
+
         v1 = zero_matrix3x3();
         //add up diagrams for all nu unequal mu
         /////////////////////////////////
@@ -525,19 +525,19 @@ __kernel void fermion_force_clover1_eo_3(__global const Matrixsu3StorageType * c
         dir2 = 0;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         /////////////////////////////////
         // nu = 1
         dir2 = 1;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         /////////////////////////////////
         // nu = 2
         dir2 = 2;
         v2 = add_up_diagrams(field,X,Y,pos,dir1,dir2);
         v1 = add_matrix3x3(v1, v2);
-        
+
         U = getSU3(field, get_link_idx(dir1, pos));
         tmp = matrix_su3to3x3(U);
         v2 = multiply_matrix3x3(tmp,v1);

@@ -10,11 +10,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "matrix6x6Field.hpp"
@@ -210,18 +210,18 @@ void hardware::code::matrix6x6Field::exportMatrix6x6Field(Matrix6x6 * const dest
     if(!out->is_soa()) {
         throw std::invalid_argument("Destination buffer must be a SOA buffer");
     }
-    
+
     size_t ls2, gs2;
     cl_uint num_groups;
     this->get_work_sizes(convertMatrix6x6FieldToSOA, &ls2, &gs2, &num_groups);
-    
+
     //set arguments
     int clerr = clSetKernelArg(convertMatrix6x6FieldToSOA, 0, sizeof(cl_mem), out->get_cl_buffer());
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(convertMatrix6x6FieldToSOA, 1, sizeof(cl_mem), in->get_cl_buffer());
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     get_device()->enqueue_kernel(convertMatrix6x6FieldToSOA, gs2, ls2);
 }
 
@@ -230,18 +230,18 @@ void hardware::code::matrix6x6Field::convertMatrix6x6FieldFromSOA_device(const h
     if(!in->is_soa()) {
         throw std::invalid_argument("Source buffer must be a SOA buffer");
     }
-    
+
     size_t ls2, gs2;
     cl_uint num_groups;
     this->get_work_sizes(convertMatrix6x6FieldFromSOA, &ls2, &gs2, &num_groups);
-    
+
     //set arguments
     int clerr = clSetKernelArg(convertMatrix6x6FieldFromSOA, 0, sizeof(cl_mem), out->get_cl_buffer());
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(convertMatrix6x6FieldFromSOA, 1, sizeof(cl_mem), in->get_cl_buffer());
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     get_device()->enqueue_kernel(convertMatrix6x6FieldFromSOA, gs2, ls2);
 }*/
 
@@ -261,4 +261,3 @@ ClSourcePackage hardware::code::matrix6x6Field::get_sources() const noexcept
 {
 	return basic_opencl_code;
 }
-
