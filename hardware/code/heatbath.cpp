@@ -1,6 +1,9 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011,2012,2014,2015 Christopher Pinke
+ * Copyright (c) 2011-2013 Matthias Bach
+ * Copyright (c) 2011 Lars Zeidlewicz
+ * Copyright (c) 2013,2018 Alessandro Sciarra
+ * Copyright (c) 2015 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -11,11 +14,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "heatbath.hpp"
@@ -31,10 +34,10 @@ using namespace std;
 
 void hardware::code::Heatbath::fill_kernels()
 {
-	ClSourcePackage sources = get_basic_sources() << get_device()->getPrngCode()->get_sources() << "operations_geometry.cl" << "operations_complex.h" << "operations_matrix_su3.cl" << "operations_matrix.cl" << "operations_gaugefield.cl";
+	ClSourcePackage sources = get_basic_sources() << get_device()->getPrngCode()->get_sources() << "operations_geometry.cl" << "operations_complex.hpp" << "operations_matrix_su3.cl" << "operations_matrix.cl" << "operations_gaugefield.cl";
 
 	logger.debug() << "Creating Heatbath kernels...";
-	
+
 	heatbath_even = createKernel("heatbath_even") << sources << "operations_heatbath.cl" << "heatbath_even.cl";
 	heatbath_odd = createKernel("heatbath_odd") << sources << "operations_heatbath.cl" << "heatbath_odd.cl";
 
@@ -63,7 +66,7 @@ void hardware::code::Heatbath::clear_kernels()
 void hardware::code::Heatbath::run_heatbath(const hardware::buffers::SU3 * gaugefield, const hardware::buffers::PRNGBuffer * prng) const
 {
 	cl_int clerr = CL_SUCCESS;
-	
+
 	logger.debug() << "Clearing Heatbath kernels...";
 
 	size_t global_work_size, ls;

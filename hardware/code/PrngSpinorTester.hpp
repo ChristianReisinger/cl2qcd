@@ -1,5 +1,8 @@
 /*
- * Copyright 2015 Christopher Pinke
+ * Copyright (c) 2015 Christopher Pinke
+ * Copyright (c) 2016 Francesca Cuteri
+ * Copyright (c) 2016 Tim Breitenfelder
+ * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *
@@ -10,21 +13,21 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #pragma once
 
+#include "../../host_functionality/host_random.hpp" //@todo: remove this in the end!
 #include "SpinorTester.hpp"
 #include "SpinorStaggeredTester.hpp"
 #include "prng.hpp"
-#include "../../host_functionality/host_random.h" //@todo: remove this in the end!
-#include "Kolmogorov_Smirnov.h"
-#include "Normal_RNG_tests.h"
+#include "Kolmogorov_Smirnov.hpp"
+#include "Normal_RNG_tests.hpp"
 
 struct PrngSpinorTestParameters : public SpinorTestParameters
 {

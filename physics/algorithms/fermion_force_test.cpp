@@ -1,7 +1,10 @@
 /** @file
  * Tests of the fermion force algorithms
  *
- * Copyright (c) 2013 Matthias Bach <bach@compeng.uni-frankfurt.de>
+ * Copyright (c) 2013,2015,2016,2018 Alessandro Sciarra
+ * Copyright (c) 2013 Matthias Bach
+ * Copyright (c) 2015 Christopher Czaban
+ * Copyright (c) 2015 Christopher Pinke
  *
  * This file is part of CL2QCD.
  *
@@ -12,11 +15,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "fermion_force.hpp"
@@ -306,14 +309,3 @@ BOOST_AUTO_TEST_CASE(calc_detratio_forces_eo)
 		BOOST_CHECK_CLOSE(squarenorm(gm), 33313.511647643441, 0.01);
 	}
 }
-
-
-
-
-
-
-
-
-
-
-

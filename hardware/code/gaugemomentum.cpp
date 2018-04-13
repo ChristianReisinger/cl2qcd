@@ -1,8 +1,10 @@
 /** @file
  * Implementation of the hardware::code::Gaugemomentum class
  *
- * Copyright (c) 2012 Christopher Pinke <pinke@compeng.uni-frankfurt.de>
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2012,2013 Matthias Bach
+ * Copyright (c) 2012-2015 Christopher Pinke
+ * Copyright (c) 2013,2014,2018 Alessandro Sciarra
+ * Copyright (c) 2015,2016 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -13,11 +15,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "gaugemomentum.hpp"
@@ -46,13 +48,13 @@ hardware::code::Gaugemomentum::~Gaugemomentum()
 
 void hardware::code::Gaugemomentum::fill_kernels()
 {
-	basic_gaugemomentum_code = get_basic_sources() << "operations_geometry.cl" << "operations_complex.h" << "types_hmc.h" << "operations_gaugemomentum.cl";
-	
+	basic_gaugemomentum_code = get_basic_sources() << "operations_geometry.cl" << "operations_complex.hpp" << "types_hmc.hpp" << "operations_gaugemomentum.cl";
+
 	ClSourcePackage prng_code = get_device()->getPrngCode()->get_sources();
-	
+
 	logger.debug() << "Creating Gaugemomentum kernels...";
 
-	gaugemomentum_squarenorm_reduction = createKernel("global_squarenorm_reduction")  << ClSourcePackage("-I " + std::string(SOURCEDIR) + " -D _INKERNEL_" + ((kernelParameters->getPrecision() == 64) ? (std::string(" -D _USEDOUBLEPREC_") + " -D _DEVICE_DOUBLE_EXTENSION_KHR_") : "")) << "types.h" << "gaugemomentum_squarenorm_reduction.cl";
+	gaugemomentum_squarenorm_reduction = createKernel("global_squarenorm_reduction")  << ClSourcePackage("-I " + std::string(SOURCEDIR) + " -D _INKERNEL_" + ((kernelParameters->getPrecision() == 64) ? (std::string(" -D _USEDOUBLEPREC_") + " -D _DEVICE_DOUBLE_EXTENSION_KHR_") : "")) << "types.hpp" << "gaugemomentum_squarenorm_reduction.cl";
 
 	_set_zero_gaugemomentum = createKernel("set_zero_gaugemomentum") << basic_gaugemomentum_code <<  "gaugemomentum_zero.cl";
 	generate_gaussian_gaugemomenta = createKernel("generate_gaussian_gaugemomenta") << basic_gaugemomentum_code << prng_code << "gaugemomentum_gaussian.cl";
@@ -70,9 +72,9 @@ void hardware::code::Gaugemomentum::fill_kernels()
 void hardware::code::Gaugemomentum::clear_kernels()
 {
 	cl_uint clerr = CL_SUCCESS;
-	
+
 	logger.debug() << "Clearing Gaugemomentum kernels...";
-	
+
 	clerr = clReleaseKernel(gaugemomentum_squarenorm_reduction);
 	if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clReleaseKernel", __FILE__, __LINE__);
 	clerr = clReleaseKernel(generate_gaussian_gaugemomenta);
@@ -101,7 +103,7 @@ void hardware::code::Gaugemomentum::get_work_sizes(const cl_kernel kernel, size_
 			*gs = hardware::buffers::get_prng_buffer_size(get_device(), kernelParameters->getUseSameRndNumbers());
 		}
 	} else if(kernel == gaugemomentum_squarenorm) {
-		if(*ls != 1) { 
+		if(*ls != 1) {
 		  *ls = 128;
 		  *num_groups = *gs / *ls;
 		}

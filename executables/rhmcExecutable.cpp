@@ -1,6 +1,8 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2014,2015,2017,2018 Alessandro Sciarra
+ * Copyright (c) 2014 Christopher Pinke
+ * Copyright (c) 2015,2017 Francesca Cuteri
+ * Copyright (c) 2015 Christopher Czaban
  *
  * This file is part of CL2QCD.
  *
@@ -11,14 +13,14 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "rhmcExecutable.h"
+#include "rhmcExecutable.hpp"
 
 static int getRationalApproximationNumerator(double numTastes, int numTastesDecimalDigits);
 static int getRationalApproximationDenominator(std::string whichRationalApproximation, int numTastesDecimalDigits, int numPseudoFermions);
@@ -170,7 +172,7 @@ void rhmcExecutable::printRhmcObservablesToFile(const std::string& filename)
 
 void rhmcExecutable::printRhmcObservablesToScreen()
 {
-	logger.info() << "\tRHMC [OBS]:\t" << iteration << std::setw(8) << std::setfill(' ') << "\t" << std::setprecision(15) 
+	logger.info() << "\tRHMC [OBS]:\t" << iteration << std::setw(8) << std::setfill(' ') << "\t" << std::setprecision(15)
 		      << observables.plaq << "\t" << observables.poly.re << "\t" << observables.poly.im;
 }
 
@@ -228,6 +230,3 @@ static int getRationalApproximationDenominator(std::string whichRationalApproxim
     else
         throw Print_Error_Message("Invalid call to \"getRationalApproximationDenominator\" function!");
 }
-
-
-

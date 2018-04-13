@@ -1,6 +1,7 @@
 /** @file
  *
- * Copyright 2014, Christopher Pinke
+ * Copyright (c) 2014,2015 Christopher Pinke
+ * Copyright (c) 2015,2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *
@@ -11,18 +12,18 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "limeFileWriter.hpp"
 
 #include "../host_functionality/logger.hpp"
 #include <boost/lexical_cast.hpp>
-#include "../executables/exceptions.h"
+#include "../executables/exceptions.hpp"
 //http://www.ridgesolutions.ie/index.php/2013/05/30/boost-link-error-undefined-reference-to-boostfilesystemdetailcopy_file/
 #define BOOST_NO_CXX11_SCOPED_ENUMS
 #include <boost/filesystem.hpp>
@@ -47,7 +48,7 @@ LimeFileWriter::LimeFileWriter(std::string filenameIn) : LimeFile_basic(filename
 	ME_flag = 1;
 	writtenBytes = 0;
 	writer = NULL;
-	
+
 	outputfile = fopen(filename.c_str(), "w");
 	writer = limeCreateWriter(outputfile);
 }
@@ -71,7 +72,7 @@ LimeFileWriter::~LimeFileWriter()
 void writeLimeHeaderToLimeFile(LimeRecordHeader * header, LimeWriter * writer)
 {
 	int returnCode = 0;
-	
+
 	returnCode = limeWriteRecordHeader(header, writer);
 	if ( returnCode != LIME_SUCCESS )
 	{
@@ -85,12 +86,12 @@ void LimeFileWriter::writeMemoryToLimeFile(void * memoryPointer, n_uint64_t byte
 
 	n_uint64_t bytesToBeWritten = bytes;
 	int returnCode = 0;
-	
+
 	LimeRecordHeader * header = limeCreateHeader(this->MB_flag, this->ME_flag, (char*) description.c_str(), bytesToBeWritten);
 	this->ME_flag++;
 	writeLimeHeaderToLimeFile(header, this->writer);
 	limeDestroyHeader(header);
-	
+
 	returnCode = limeWriteRecordData( memoryPointer, &bytesToBeWritten, this->writer);
 	if ( returnCode != LIME_SUCCESS )
 	{

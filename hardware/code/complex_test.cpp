@@ -1,6 +1,7 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2014,2018 Alessandro Sciarra
+ * Copyright (c) 2015,2016 Christopher Pinke
+ * Copyright (c) 2015,2016 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -11,11 +12,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // use the boost test framework
@@ -74,14 +75,14 @@ struct ComplexTester : public KernelTester
 		alpha->load(&tP.alpha);
 		beta->load(&tP.beta);
 	}
-	
+
 	void storeResultAsComplex(){
 		hmc_complex tmp;
 		result->dump(&tmp);
 		kernelResult.at(0) = tmp.re;
 		kernelResult.at(1) = tmp.im;
 	}
-	
+
 	virtual ~ComplexTester(){
 		storeResultAsComplex();
 		delete alpha;
@@ -89,7 +90,7 @@ struct ComplexTester : public KernelTester
 		delete result;
 		code = nullptr;
 	}
-    
+
    protected:
 	const hardware::code::Complex * code;
 	hardware::buffers::Plain<hmc_complex> *alpha;

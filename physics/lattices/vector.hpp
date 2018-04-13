@@ -1,7 +1,8 @@
 /** @file
  * Declaration and implementation of the physics::lattices::Vector template
  *
- * Copyright (c) 2014 Alessandro Sciarra <sciarra@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2014,2018 Alessandro Sciarra
+ * Copyright (c) 2016 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -12,11 +13,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _PHYSICS_LATTICES_VECTOR_
@@ -71,7 +72,7 @@ namespace physics {
 			 * Store values
 			 */
 			void store(const std::vector<SCALAR> val) const;
-			
+
 			/**
 			 * Retrieve the number of elements of each buffer
 			 */

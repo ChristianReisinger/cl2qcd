@@ -1,6 +1,9 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011 Lars Zeidlewicz
+ * Copyright (c) 2012-2014 Matthias Bach
+ * Copyright (c) 2013,2018 Alessandro Sciarra
+ * Copyright (c) 2014,2015 Christopher Pinke
+ * Copyright (c) 2015 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -11,11 +14,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "kappa.hpp"
@@ -28,17 +31,17 @@ using namespace std;
 
 void hardware::code::Kappa::fill_kernels()
 {
-	ClSourcePackage sources = get_basic_sources() << "operations_geometry.cl" << "operations_complex.h" << "operations_matrix_su3.cl" << "operations_matrix.cl" << "operations_gaugefield.cl";
+	ClSourcePackage sources = get_basic_sources() << "operations_geometry.cl" << "operations_complex.hpp" << "operations_matrix_su3.cl" << "operations_matrix.cl" << "operations_gaugefield.cl";
 
 	logger.debug() << "Creating TK clover kernels...";
-	
+
 	kappa_clover_gpu = createKernel("kappa_clover_gpu") << sources << "opencl_tk_kappa.cl";
 }
 
 void hardware::code::Kappa::run_kappa_clover(const hardware::buffers::Plain<hmc_float> * kappa, const hardware::buffers::SU3 * gaugefield, const hmc_float beta) const
 {
 	cl_int clerr = CL_SUCCESS;
-	
+
 	logger.debug() << "Clearing TK clover kernels...";
 
 	size_t local_work_size;

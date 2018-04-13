@@ -1,7 +1,8 @@
 /** @file
  * Testcases for lime utilities
  *
- * Copyright (c) 2014 Christopher Pinke <pinke@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2014 Christopher Pinke
+ * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *
@@ -12,11 +13,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 // use the boost test framework
@@ -26,7 +27,7 @@
 
 #include "limeFileReader.hpp"
 
-#include "../executables/exceptions.h"
+#include "../executables/exceptions.hpp"
 
 int expectedPrecision = 64;
 std::string nameOfExistingGaugefieldFile = std::string(SOURCEDIR) + "/ildg_io/conf.00200";
@@ -34,7 +35,7 @@ std::string nameOfExistingGaugefieldFile = std::string(SOURCEDIR) + "/ildg_io/co
 BOOST_AUTO_TEST_CASE(readInLimeFile_failureWithFileException)
 {
   std::string nameOfNonexistingLimeFile = "thisfileshouldnotbethere";
-	
+
 	BOOST_CHECK_THROW(LimeFileReader srcFileParams(nameOfNonexistingLimeFile, expectedPrecision), File_Exception);
 }
 

@@ -1,19 +1,22 @@
 # Script to locate the MPFR library
 #
-# This script is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by
+# Copyright (c) 2013 Matthias Bach
+# Copyright (c) 2018 Alessandro Sciarra
+#
+# This file is part of CL2QCD.
+#
+# CL2QCD is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# This script is distributed in the hope that it will be useful,
+# CL2QCD is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Lesser General Public License for more details.
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
 #
-# You should have received a copy of the GNU Lesser General Public License
-# along with this script.  If not, see <http://www.gnu.org/licenses/>.
-#
-# Copyright 2013 Matthias Bach <bach@compeng.uni-frankfurt.de>
+# You should have received a copy of the GNU General Public License
+# along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
 
 FIND_PACKAGE(PackageHandleStandardArgs)
 

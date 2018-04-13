@@ -1,10 +1,11 @@
 /** @file
  * Tests of the fermion force algorithms
  *
- * Copyright (c) 2013 Matthias Bach <bach@compeng.uni-frankfurt.de>
- * Copyright (c) 2012-2013 Christopher Pinke <pinke@th.physik.uni-frankfurt.de>
- * Copyright (c) 2013, 2017 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
- * Copyright (c) 2017 Francesca Cuteri <cuteri@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2013-2016,2018 Alessandro Sciarra
+ * Copyright (c) 2013 Matthias Bach
+ * Copyright (c) 2015,2016 Christopher Czaban
+ * Copyright (c) 2015 Christopher Pinke
+ * Copyright (c) 2016,2017 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -15,11 +16,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "forces.hpp"
@@ -224,25 +225,25 @@ BOOST_AUTO_TEST_CASE(calc_tot_stagg_force_eo)
         hardware::System system(hP, kP);
 		physics::PrngParametersImplementation prngParameters{params};
 		physics::PRNG prng{system, &prngParameters};
-		
+
 		Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 		Rooted_Staggeredfield_eo sf1(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(), approx);
 		Rooted_Staggeredfield_eo sf2(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(), approx);
 		Gaugemomenta gm(system, interfacesHandler.getInterface<physics::lattices::Gaugemomenta>());
-		
+
 		//These are the same fields of the excplicit test D_KS_eo (second test)
 		pseudo_randomize<Staggeredfield_eo, su3vec>(sf1[0].get(), 123); //it will be A
 		pseudo_randomize<Staggeredfield_eo, su3vec>(sf2[0].get(), 321); //it will be B
-		
+
 		gm.zero();
 		calc_total_force(&gm, gf, sf1, system, interfacesHandler, interfacesHandler.getAdditionalParameters<Rooted_Staggeredfield_eo>());
 		BOOST_CHECK_CLOSE(squarenorm(gm), 58639.680325374203676, 1.e-6);
-		
+
 		gm.zero();
 		calc_total_force(&gm, gf, sf2, system, interfacesHandler, interfacesHandler.getAdditionalParameters<Rooted_Staggeredfield_eo>());
 		BOOST_CHECK_CLOSE(squarenorm(gm), 57864.102469501536689, 1.e-6);
 	}
-	
+
 	{
 		const char * _params[] = {"foo", "--ntime=4", "--theta_fermion_temporal=1", "--fermact=rooted_stagg", "--mass=0.125", "--num_dev=1"};
 		meta::Inputparameters params(6, _params);
@@ -252,25 +253,25 @@ BOOST_AUTO_TEST_CASE(calc_tot_stagg_force_eo)
         hardware::System system(hP, kP);
 		physics::PrngParametersImplementation prngParameters{params};
 		physics::PRNG prng{system, &prngParameters};
-		
+
 		Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 		Rooted_Staggeredfield_eo sf1(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(), approx);
 		Rooted_Staggeredfield_eo sf2(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(), approx);
 		Gaugemomenta gm(system, interfacesHandler.getInterface<physics::lattices::Gaugemomenta>());
-		
+
 		//These are the same fields of the excplicit test D_KS_eo (second test)
 		pseudo_randomize<Staggeredfield_eo, su3vec>(sf1[0].get(), 123); //it will be A
 		pseudo_randomize<Staggeredfield_eo, su3vec>(sf2[0].get(), 321); //it will be B
-		
+
 		gm.zero();
 		calc_total_force(&gm, gf, sf1, system, interfacesHandler, interfacesHandler.getAdditionalParameters<Rooted_Staggeredfield_eo>());
 		BOOST_CHECK_CLOSE(squarenorm(gm), 58424.656915726853185, 1.e-6);
-		
+
 		gm.zero();
 		calc_total_force(&gm, gf, sf2, system, interfacesHandler, interfacesHandler.getAdditionalParameters<Rooted_Staggeredfield_eo>());
 		BOOST_CHECK_CLOSE(squarenorm(gm), 58492.589653369606822, 1.e-6);
 	}
-	
+
 	{
 		const char * _params[] = {"foo", "--ntime=4", "--theta_fermion_temporal=1", "--fermact=rooted_stagg",
 		                          "--use_chem_pot_im=true", "--chem_pot_im=0.5678", "--mass=0.125", "--num_dev=1"};
@@ -281,23 +282,23 @@ BOOST_AUTO_TEST_CASE(calc_tot_stagg_force_eo)
         hardware::System system(hP, kP);
 		physics::PrngParametersImplementation prngParameters{params};
 		physics::PRNG prng{system, &prngParameters};
-		
+
 		Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 		Rooted_Staggeredfield_eo sf1(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(), approx);
 		Rooted_Staggeredfield_eo sf2(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(), approx);
 		Gaugemomenta gm(system, interfacesHandler.getInterface<physics::lattices::Gaugemomenta>());
-		
+
 		//These are the same fields of the excplicit test D_KS_eo (second test)
 		pseudo_randomize<Staggeredfield_eo, su3vec>(sf1[0].get(), 123); //it will be A
 		pseudo_randomize<Staggeredfield_eo, su3vec>(sf2[0].get(), 321); //it will be B
-		
+
 		gm.zero();
 		calc_total_force(&gm, gf, sf1, system, interfacesHandler, interfacesHandler.getAdditionalParameters<Rooted_Staggeredfield_eo>());
 		BOOST_CHECK_CLOSE(squarenorm(gm), 57415.997451495910354, 1.e-6);
-		
+
 		gm.zero();
 		calc_total_force(&gm, gf, sf2, system, interfacesHandler, interfacesHandler.getAdditionalParameters<Rooted_Staggeredfield_eo>());
 		BOOST_CHECK_CLOSE(squarenorm(gm), 57338.140878283666098, 1.e-6);
 	}
-	
+
 }

@@ -1,4 +1,5 @@
-# Copyright 2012, 2013 Matthias Bach
+# Copyright (c) 2011-2013 Matthias Bach
+# Copyright (c) 2018 Alessandro Sciarra
 #
 # This file is part of CL2QCD.
 #
@@ -9,11 +10,11 @@
 #
 # CL2QCD is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+# along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
 
 set(DOXYGEN_LANGUAGE "English" CACHE STRING "Language used by doxygen")
 mark_as_advanced(DOXYGEN_LANGUAGE)
@@ -33,4 +34,3 @@ set(HTML_TARGET ${DOXYGEN_OUTPUT_DIR}/html/index.html)
 add_custom_target(doc
                   COMMAND ${DOXYGEN} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
                   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-

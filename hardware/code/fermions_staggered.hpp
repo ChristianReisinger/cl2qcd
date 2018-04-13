@@ -1,7 +1,10 @@
 /** @file
  * Fermions_staggered OpenCL functionality
  *
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2013,2015 Christopher Pinke
+ * Copyright (c) 2013,2018 Alessandro Sciarra
+ * Copyright (c) 2013 Matthias Bach
+ * Copyright (c) 2015 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -12,22 +15,22 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _HARDWARE_CODE_FERMIONS_STAGGERED_
 #define _HARDWARE_CODE_FERMIONS_STAGGERED_
 
+#include "../../host_functionality/host_use_timer.hpp"
 #include "opencl_module.hpp"
 
 #include "../buffers/plain.hpp"
 #include "../buffers/su3.hpp"
 #include "../buffers/su3vec.hpp"
-#include "../../host_functionality/host_use_timer.h"
 
 namespace hardware {
 
@@ -50,7 +53,7 @@ public:
 	/*********************************************************************************************/
 	/**************************  NON EVEN-ODD PRECONDITIONING METHODS  ***************************/
 	/*********************************************************************************************/
-	
+
 	/**
 	 * This function apply the standard staggered Dirac operator M = D_KS + m
 	 * to a staggered field on the whole lattice.
@@ -64,28 +67,28 @@ public:
 	/*********************************************************************************************/
 	/****************************  EVEN-ODD PRECONDITIONING METHODS  *****************************/
 	/*********************************************************************************************/
-	
+
 	/**
 	 * This function apply the operator D_KS to a staggered field on half lattice.
 	 * Actually, depending on the value of the variable evenodd, either the operator Doe
 	 * or the operator Deo is selected and applied: if evenodd==EVEN then the staggered
-	 * field in must be an ODD field and out=Deo*in is returned; if evenodd==ODD then 
-	 * the staggered field in must be an EVEN field and out=Doe*in is returned. 
+	 * field in must be an ODD field and out=Deo*in is returned; if evenodd==ODD then
+	 * the staggered field in must be an EVEN field and out=Doe*in is returned.
 	 * @note Since there cannot be any check in the code, if one invoke this function with
 	 *       evenodd equal to the parity of the field, there will be no error thrown.
-	 *       By the programming point of you both an even field and an odd field are 
+	 *       By the programming point of you both an even field and an odd field are
 	 *       vectors with VOL4D/2 components.
 	 * \par
 	 * @note This function does not require the mass of the fermions as an input, because
 	 *       in the staggered formulation the mass appear only in the diagonal part of the
 	 *       Dirac operator.
-	 *       
+	 *
 	 *  @param in The even/odd input staggered field
 	 *  @param out The odd/even output staggered field out=D_KS*in
 	 *  @param gf The gauge configuration
 	 */
 	void D_KS_eo_device(const hardware::buffers::SU3vec * in, const hardware::buffers::SU3vec * out, const hardware::buffers::SU3 * gf, int evenodd) const;
-	
+
 	////////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Print the profiling information to a file.

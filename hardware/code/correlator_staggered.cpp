@@ -3,7 +3,9 @@
  *@file
  * Implementation of the staggered two flavour correlator calculation.
  *
- * Copyright 2016 Alessandro Sciarra, Tim Breitenfelder
+ * Copyright (c) 2014,2016,2018 Alessandro Sciarra
+ * Copyright (c) 2015 Francesca Cuteri
+ * Copyright (c) 2016 Tim Breitenfelder
  *
  * This file is part of CL2QCD.
  *
@@ -14,11 +16,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -37,14 +39,14 @@ void hardware::code::Correlator_staggered::fill_kernels()
 	if(kernelParameters->getFermact() != common::action::rooted_stagg){
 		throw Print_Error_Message("Correlator_staggered module asked to be built but action set not to rooted_stagg! Aborting... ", __FILE__, __LINE__);
 	}
-	
+
 	//When some noneo method will be introduced, remove this check!
 	if(!kernelParameters->getUseEo()){
 		throw Print_Error_Message("Correlator_staggered module asked to be built but without even-odd preconditionig! Aborting... ", __FILE__, __LINE__);
 	}
-  
-	basic_correlator_code = get_basic_sources() << "operations_geometry.cl" << "operations_complex.h" << "types_fermions.h" << "operations_su3vec.cl" << "spinorfield_staggered_eo.cl";
-	
+
+	basic_correlator_code = get_basic_sources() << "operations_geometry.cl" << "operations_complex.hpp" << "types_fermions.hpp" << "operations_su3vec.cl" << "spinorfield_staggered_eo.cl";
+
 	ClSourcePackage prng_code = get_device()->getPrngCode()->get_sources();
 
 	logger.debug() << "Creating Correlator_staggered kernels...";
@@ -65,7 +67,7 @@ void hardware::code::Correlator_staggered::fill_kernels()
 void hardware::code::Correlator_staggered::clear_kernels()
 {
 	int clerr = CL_SUCCESS;
-	
+
 	logger.debug() << "Clearing Correlator_staggered kernels...";
 
 	if(create_volume_source_stagg_eoprec) {

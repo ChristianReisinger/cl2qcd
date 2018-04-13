@@ -1,8 +1,10 @@
 /** @file
  * Implementation of the hardware::code::Molecular_Dynamics class
  *
- * Copyright (c) 2012 Christopher Pinke <pinke@compeng.uni-frankfurt.de>
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.phys.uni-frankfurt.de>
+ * Copyright (c) 2012,2014,2015 Christopher Pinke
+ * Copyright (c) 2012-2014 Matthias Bach
+ * Copyright (c) 2013,2018 Alessandro Sciarra
+ * Copyright (c) 2015,2016 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -13,11 +15,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "molecular_dynamics.hpp"
@@ -40,10 +42,10 @@ static bool use_multipass_gauge_force_tlsym(const hardware::Device * device)
 
 void hardware::code::Molecular_Dynamics::fill_kernels()
 {
-	basic_molecular_dynamics_code = get_basic_sources() << "operations_geometry.cl" << "operations_complex.cl" << "operations_complex.h" << "types_fermions.h" << "types_hmc.h" << "operations_matrix_su3.cl" << "operations_matrix.cl" << "operations_gaugefield.cl" << "operations_su3vec.cl" << "operations_spinor.cl" << "spinorfield.cl" << "operations_gaugemomentum.cl";
-	
+	basic_molecular_dynamics_code = get_basic_sources() << "operations_geometry.cl" << "operations_complex.hpp" << "types_fermions.hpp" << "types_hmc.hpp" << "operations_matrix_su3.cl" << "operations_matrix.cl" << "operations_gaugefield.cl" << "operations_su3vec.cl" << "operations_spinor.cl" << "spinorfield.cl" << "operations_gaugemomentum.cl";
+
 	ClSourcePackage prng_code = get_device()->getPrngCode()->get_sources();
-	
+
 	logger.debug() << "Creating Molecular_Dynamics kernels...";
 
 	//init kernels for HMC
@@ -95,7 +97,7 @@ void hardware::code::Molecular_Dynamics::clear_kernels()
 	cl_uint clerr = CL_SUCCESS;
 
 	logger.debug() << "Clearing Molecular_Dynamics kernels.." ;
-	
+
 	if(kernelParameters->getUseEo() == true) {
 		clerr = clReleaseKernel(fermion_force_eo_3);
 		clerr = clReleaseKernel(fermion_force_eo_2);
@@ -675,10 +677,10 @@ void hardware::code::Molecular_Dynamics::fermion_staggered_partial_force_device(
 	cl_uint num_groups;
 	this->get_work_sizes(fermion_stagg_partial_force_eo, &ls2, &gs2, &num_groups);
 	//set arguments
-	
+
 	int clerr = clSetKernelArg(fermion_stagg_partial_force_eo, 0, sizeof(cl_mem), gf->get_cl_buffer());
 	if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-	
+
 	clerr = clSetKernelArg(fermion_stagg_partial_force_eo, 1, sizeof(cl_mem), A->get_cl_buffer());
 	if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
 
@@ -690,7 +692,7 @@ void hardware::code::Molecular_Dynamics::fermion_staggered_partial_force_device(
 
 	clerr = clSetKernelArg(fermion_stagg_partial_force_eo, 4, sizeof(int), &evenodd);
 	if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-	
+
 	get_device()->enqueue_kernel(fermion_stagg_partial_force_eo, gs2, ls2);
 
 	if(logger.beDebug()) {

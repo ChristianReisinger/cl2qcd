@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # coding=utf8
 #
-# Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
-# Matthias Bach, Christian Schaefer, Stefano Lottini, Alessandro Sciarra
+# Copyright (c) 2012,2013 Matthias Bach
+# Copyright (c) 2014 Christopher Pinke
+# Copyright (c) 2018 Alessandro Sciarra
 #
 # This file is part of CL2QCD.
 #
@@ -13,11 +14,11 @@
 #
 # CL2QCD is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+# along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
 
 from subprocess import *
 import argparse
@@ -34,9 +35,9 @@ NT = (4, 8, 12, 16, 24, 32, 48)
 
 INPUT_TEMPLATE = """
 ##################################################################
-##	This is 
+##	This is
 ##		heatbach_bench_input_{0}_{1}
-##	It should reproduce the data obtained in 
+##	It should reproduce the data obtained in
 ##		hep-lat/9602007
 ##	There, NT=16, NS=16, beta=6.0 is reported to give
 ##		P: 0.593678 (24)

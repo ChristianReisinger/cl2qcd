@@ -3,7 +3,8 @@
  *@file
  * Implementation of the staggered two flavour correlator calculation.
  *
- * Copyright 2016 Alessandro Sciarra, Tim Breitenfelder
+ * Copyright (c) 2016,2018 Alessandro Sciarra
+ * Copyright (c) 2016 Tim Breitenfelder
  *
  * This file is part of CL2QCD.
  *
@@ -14,11 +15,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "staggeredTwoFlavourCorrelators.hpp"
@@ -116,5 +117,3 @@ BOOST_AUTO_TEST_CASE(point_source)
 	test_staggered_correlator(params, referenceValueZero, false);
 	test_staggered_correlator(params, referenceValueCold, true);
 }
-
-

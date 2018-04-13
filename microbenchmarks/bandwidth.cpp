@@ -2,8 +2,10 @@
  * A simple microbenchmark to check device bandwidth for different
  * numbers of threada and streaming.
  *
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011-2013 Matthias Bach
+ * Copyright (c) 2014 Christopher Pinke
+ * Copyright (c) 2015 Francesca Cuteri
+ * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
  *
@@ -14,11 +16,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <string>
@@ -30,10 +32,10 @@
 #include "../hardware/device.hpp"
 #include "../hardware/code/gaugefield.hpp"
 #include "../host_functionality/logger.hpp"
-#include "../executables/exceptions.h"
+#include "../executables/exceptions.hpp"
 #include "../klepsydra/klepsydra.hpp"
 
-#include "../common_header_files/types_fermions.h"
+#include "../common_header_files/types_fermions.hpp"
 
 
 namespace po = boost::program_options;
@@ -262,15 +264,15 @@ void Test::fill_buffers()
 void Device::fill_kernels()
 {
 	ClSourcePackage basic_opencl_code = get_device()->getGaugefieldCode()->get_sources();
-	floatKernel = createKernel("copyFloat") << basic_opencl_code << "types_fermions.h" << "../microbenchmarks/bandwidth.cl";
-	su3Kernel = createKernel("copySU3") << basic_opencl_code << "types_fermions.h" << "../microbenchmarks/bandwidth.cl";
-	su3SOAKernel = createKernel("copySU3SOA") << basic_opencl_code << "types_fermions.h" << "../microbenchmarks/bandwidth.cl";
-	su3SOcplxAKernel = createKernel("copySU3SOcplxA") << basic_opencl_code << "types_fermions.h" << "../microbenchmarks/bandwidth.cl";
-	spinorKernel = createKernel("copySpinor") << basic_opencl_code << "types_fermions.h" << "../microbenchmarks/bandwidth.cl";
-	spinorSOAKernel = createKernel("copySpinorSOA") << basic_opencl_code << "types_fermions.h" << "../microbenchmarks/bandwidth.cl";
-	spinorSOApyKernel = createKernel("copyDpSpinorFullestSOARestricted") << basic_opencl_code << "types_fermions.h" << "../microbenchmarks/bandwidth_spinorSOApy.cl";
-	spinorSOcplxAKernel = createKernel("copySpinorSOcplxA") << basic_opencl_code << "types_fermions.h" << "../microbenchmarks/bandwidth.cl";
-	spinorLocalKernel = createKernel("copySpinorLocal") << basic_opencl_code << "types_fermions.h" << "../microbenchmarks/bandwidth.cl";
+	floatKernel = createKernel("copyFloat") << basic_opencl_code << "types_fermions.hpp" << "../microbenchmarks/bandwidth.cl";
+	su3Kernel = createKernel("copySU3") << basic_opencl_code << "types_fermions.hpp" << "../microbenchmarks/bandwidth.cl";
+	su3SOAKernel = createKernel("copySU3SOA") << basic_opencl_code << "types_fermions.hpp" << "../microbenchmarks/bandwidth.cl";
+	su3SOcplxAKernel = createKernel("copySU3SOcplxA") << basic_opencl_code << "types_fermions.hpp" << "../microbenchmarks/bandwidth.cl";
+	spinorKernel = createKernel("copySpinor") << basic_opencl_code << "types_fermions.hpp" << "../microbenchmarks/bandwidth.cl";
+	spinorSOAKernel = createKernel("copySpinorSOA") << basic_opencl_code << "types_fermions.hpp" << "../microbenchmarks/bandwidth.cl";
+	spinorSOApyKernel = createKernel("copyDpSpinorFullestSOARestricted") << basic_opencl_code << "types_fermions.hpp" << "../microbenchmarks/bandwidth_spinorSOApy.cl";
+	spinorSOcplxAKernel = createKernel("copySpinorSOcplxA") << basic_opencl_code << "types_fermions.hpp" << "../microbenchmarks/bandwidth.cl";
+	spinorLocalKernel = createKernel("copySpinorLocal") << basic_opencl_code << "types_fermions.hpp" << "../microbenchmarks/bandwidth.cl";
 }
 
 Test::~Test()

@@ -1,6 +1,10 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011,2012,2014-2016 Christopher Pinke
+ * Copyright (c) 2011-2013 Matthias Bach
+ * Copyright (c) 2011 Lars Zeidlewicz
+ * Copyright (c) 2013,2016,2018 Alessandro Sciarra
+ * Copyright (c) 2015 Francesca Cuteri
+ * Copyright (c) 2015 Paul Frederik Depta
  *
  * This file is part of CL2QCD.
  *
@@ -11,11 +15,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "correlator.hpp"
@@ -29,8 +33,8 @@ using namespace std;
 
 void hardware::code::Correlator::fill_kernels()
 {
-	basic_correlator_code = get_basic_sources() << "operations_geometry.cl" << "operations_complex.h" << "types_fermions.h" << "operations_su3vec.cl" << "operations_spinor.cl" << "spinorfield.cl";
-	
+	basic_correlator_code = get_basic_sources() << "operations_geometry.cl" << "operations_complex.hpp" << "types_fermions.hpp" << "operations_su3vec.cl" << "operations_spinor.cl" << "spinorfield.cl";
+
 	ClSourcePackage prng_code = get_device()->getPrngCode()->get_sources();
 
 	logger.debug() << "Creating Correlator kernels...";
@@ -110,9 +114,9 @@ void hardware::code::Correlator::fill_kernels()
 void hardware::code::Correlator::clear_kernels()
 {
 	int clerr = CL_SUCCESS;
-	
+
 	logger.debug() << "Clearing Correlator kernels...";
-	
+
 	if(correlator_ps)
 		clerr = clReleaseKernel(correlator_ps);
 	if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clReleaseKernel", __FILE__, __LINE__);

@@ -2,6 +2,12 @@
  * Functionality common to all Opencl_Modules
  * Basically just a utility for keeping the device and input parameters references as well as some profiling utilities.
  *
+ * Copyright (c) 2011,2012,2014-2016 Christopher Pinke
+ * Copyright (c) 2011-2013 Matthias Bach
+ * Copyright (c) 2011 Lars Zeidlewicz
+ * Copyright (c) 2013,2018 Alessandro Sciarra
+ * Copyright (c) 2015 Francesca Cuteri
+ *
  * This file is part of CL2QCD.
  *
  * CL2QCD is free software: you can redistribute it and/or modify
@@ -11,17 +17,17 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _HARDWARE_CODE_OPENCLMODULE_
 #define _HARDWARE_CODE_OPENCLMODULE_
 
-#include "../../common_header_files/types.h"
+#include "../../common_header_files/types.hpp"
 
 #include "../openClKernelParameters.hpp"
 #include "../opencl_compiler.hpp"
@@ -71,7 +77,7 @@ public:
 	 * @param number task-id
 	 */
 	void virtual print_profiling(const std::string& filename, int number) const;
-	
+
 	/**
 	 * Returns the sources for all children modules.
 	 * @return basic_sources
@@ -143,7 +149,7 @@ private:
 	 * The device used by this module
 	 */
 	const hardware::Device * device;
-	
+
 	/**
 	 * The basic source used by all modules (children classes of this)
 	 */

@@ -1,6 +1,9 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011,2012,2015 Christopher Pinke
+ * Copyright (c) 2011-2014 Matthias Bach
+ * Copyright (c) 2011 Lars Zeidlewicz
+ * Copyright (c) 2013,2018 Alessandro Sciarra
+ * Copyright (c) 2015,2016 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -11,11 +14,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "opencl_module.hpp"
@@ -52,7 +55,7 @@ static std::string collect_build_options(const hardware::Device * device, const 
 
 	std::ostringstream options;
 	options.precision(16);
-	
+
 	options << "-I " << SOURCEDIR;
 	options << " -D _INKERNEL_";
 	options << " -D NSPACE=" << kernelParameters.getNs();
@@ -128,11 +131,11 @@ static std::string collect_build_options(const hardware::Device * device, const 
 	options << " -D SPINORFIELDSIZE_GLOBAL=" << kernelParameters.getSpinorFieldSize();
 	options << " -D SPINORFIELDSIZE_LOCAL=" << get_vol4d(local_size);
 	options << " -D SPINORFIELDSIZE_MEM=" << get_vol4d(mem_size);
-	
+
 	options << " -D GAUGEMOMENTASIZE_GLOBAL=" << kernelParameters.getLatticeVolume() * NDIM;
 	options << " -D GAUGEMOMENTASIZE_LOCAL=" << get_vol4d(local_size) * NDIM;
 	options << " -D GAUGEMOMENTASIZE_MEM=" << get_vol4d(mem_size) * NDIM;
-	
+
 	if(check_Gaugemomentum_for_SOA(device)) {
 		options << " -D GAUGEMOMENTA_STRIDE=" << get_Gaugemomentum_buffer_stride(get_vol4d(mem_size)*NDIM, device);
 	}
@@ -178,7 +181,7 @@ static std::string collect_build_options(const hardware::Device * device, const 
 
 	//This is mainly for molecular dynamics
 	options <<  " -D BETA=" << kernelParameters.getBeta();
-	
+
 	//Options for correlators
 	if(kernelParameters.getFermact() != common::action::rooted_stagg){
 		hmc_float kappa_tmp = kernelParameters.getKappa();
@@ -188,13 +191,13 @@ static std::string collect_build_options(const hardware::Device * device, const 
 	options << " -D NUM_SOURCES=" << kernelParameters.getNumSources();
 	//CP: give content of sources as compile parameters
 	options << " -D SOURCE_CONTENT=" << kernelParameters.getSourceContent();
-	
+
 	//Options for heatbath
 	if(kernelParameters.getUseAniso() == true) {
 		options << " -D _ANISO_";
 		options << " -D XI_0=" << kernelParameters.getXi0();
 	}
-	
+
 	return options.str();
 }
 
@@ -202,8 +205,8 @@ static std::vector<std::string> collect_build_files()
 {
 	std::vector<std::string> out;
 	out.push_back("opencl_header.cl");
-	out.push_back("globaldefs.h");
-	out.push_back("types.h");
+	out.push_back("globaldefs.hpp");
+	out.push_back("types.hpp");
 
 	return out;
 }

@@ -1,6 +1,9 @@
 /*
- * Copyright 2012, 2013 Lars Zeidlewicz, Christopher Pinke,
- * Matthias Bach, Christian Schäfer, Stefano Lottini, Alessandro Sciarra
+ * Copyright (c) 2011 Lars Zeidlewicz
+ * Copyright (c) 2012,2013 Matthias Bach
+ * Copyright (c) 2013-2015 Christopher Pinke
+ * Copyright (c) 2013,2018 Alessandro Sciarra
+ * Copyright (c) 2015 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -11,11 +14,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "prng.hpp"
@@ -42,7 +45,7 @@ hardware::code::Prng::Prng(const hardware::code::OpenClKernelParametersInterface
 	logger.debug() << "Creating PRNG kernels...";
 	// the ranluxcl lies in the main directory, other than the remaining kernel
 	prng_code = ClSourcePackage(collect_build_options(get_device(), kernelParameters)) << "../ranluxcl/ranluxcl.cl" << "random.cl";
-	init_kernel = createKernel("prng_ranlux_init") << ClSourcePackage("-I " + std::string(SOURCEDIR) + " -D _INKERNEL_") << "globaldefs.h" << "types.h" << "opencl_header.cl" <<  prng_code << "random_ranlux_init.cl";
+	init_kernel = createKernel("prng_ranlux_init") << ClSourcePackage("-I " + std::string(SOURCEDIR) + " -D _INKERNEL_") << "globaldefs.hpp" << "types.hpp" << "opencl_header.cl" <<  prng_code << "random_ranlux_init.cl";
 #else // USE_PRNG_XXX
 #error No implemented PRNG selected
 #endif // USE_PRNG_XXX

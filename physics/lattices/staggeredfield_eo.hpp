@@ -1,7 +1,9 @@
 /** @file
  * Declaration of the physics::lattices::Staggeredfield_eo class
  *
- * Copyright (c) 2013 Alessandro Sciarra <sciarra@th.physik.uni-frankfurt.de>
+ * Copyright (c) 2013-2018 Alessandro Sciarra
+ * Copyright (c) 2013 Matthias Bach
+ * Copyright (c) 2016 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -12,11 +14,11 @@
  *
  * CL2QCD is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CL2QCD.  If not, see <http://www.gnu.org/licenses/>.
+ * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _PHYSICS_LATTICES_STAGGEREDFIELD_EO_
@@ -28,7 +30,7 @@
 #include "../prng.hpp"
 #include "scalar.hpp"
 #include "vector.hpp"
-#include "../../common_header_files/types_fermions.h"
+#include "../../common_header_files/types_fermions.hpp"
 #include "latticesInterfaces.hpp"
 #include "../interfacesHandler.hpp"
 //This is to make the template pseudo_randomize friend of this class
@@ -89,7 +91,7 @@ public:
 	 * Update the halos of the spinorfield buffers.
 	 */
 	void update_halo() const;
-	
+
 	/**
 	 * Get the number of elements of the field, namely the lattice volume.
 	 */
@@ -216,4 +218,3 @@ void log_squarenorm(const std::string& msg, const physics::lattices::Staggeredfi
 }
 
 #endif /*_PHYSICS_LATTICES_SPINORFIELD_EO_ */
-
