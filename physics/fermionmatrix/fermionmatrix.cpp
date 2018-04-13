@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2012,2014 Christopher Pinke
  * Copyright (c) 2013 Matthias Bach
- * Copyright (c) 2014,2015 Francesca Cuteri
+ * Copyright (c) 2014-2016 Francesca Cuteri
  * Copyright (c) 2015,2016,2018 Alessandro Sciarra
+ * Copyright (c) 2016 Max Theilig
  *
  * This file is part of CL2QCD.
  *

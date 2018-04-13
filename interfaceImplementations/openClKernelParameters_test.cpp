@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2015 Francesca Cuteri
+ * Copyright (c) 2016 Max Theilig
  * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.

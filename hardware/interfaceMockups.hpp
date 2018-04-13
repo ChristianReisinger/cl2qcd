@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2015,2016 Christopher Pinke
  * Copyright (c) 2015,2016 Francesca Cuteri
+ * Copyright (c) 2016 Max Theilig
  * Copyright (c) 2016 Tim Breitenfelder
  * Copyright (c) 2018 Alessandro Sciarra
  *
@@ -557,7 +558,7 @@ namespace hardware
 			common::action fermact;
 			const bool useMergedKernels;
 		};
-        
+
         class OpenClKernelParametersMockupForCloverEvenOdd : public OpenClKernelParametersMockupForSpinorTests
         {
         public:
@@ -593,7 +594,7 @@ namespace hardware
             double csw;
             double kappa;
         };
-        
+
 		class OpenClKernelParametersMockupForDslashEvenOdd : public OpenClKernelParametersMockupForSpinorTests
 		{
 		public:

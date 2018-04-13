@@ -3,7 +3,8 @@
  * Copyright (c) 2011-2013 Matthias Bach
  * Copyright (c) 2011 Lars Zeidlewicz
  * Copyright (c) 2013,2018 Alessandro Sciarra
- * Copyright (c) 2014,2015 Francesca Cuteri
+ * Copyright (c) 2014-2016 Francesca Cuteri
+ * Copyright (c) 2016 Max Theilig
  *
  * This file is part of CL2QCD.
  *
@@ -210,7 +211,7 @@ void hardware::code::Fermions::clover_eo_device(const hardware::buffers::Spinor 
     hmc_float csw_tmp;
     if(csw == ARG_DEF) csw_tmp = kernelParameters->getCsw();
     else csw_tmp = csw;
-    
+
     cl_int eo = evenodd;
     //query work-sizes for kernel
     size_t ls2, gs2;
@@ -219,22 +220,22 @@ void hardware::code::Fermions::clover_eo_device(const hardware::buffers::Spinor 
     //set arguments
     int clerr = clSetKernelArg(clover_eo, 0, sizeof(cl_mem), in->get_cl_buffer());
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(clover_eo, 1, sizeof(cl_mem), out->get_cl_buffer());
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(clover_eo, 2, sizeof(cl_mem), gf->get_cl_buffer());
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(clover_eo, 3, sizeof(cl_int), &eo);
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(clover_eo, 4, sizeof(hmc_float), &kappa_tmp);
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(clover_eo, 5, sizeof(hmc_float), &csw_tmp);
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     get_device()->enqueue_kernel( clover_eo, gs2, ls2);
 }
 
@@ -248,7 +249,7 @@ void hardware::code::Fermions::clover_eo_inverse_device(const hardware::buffers:
     hmc_float csw_tmp;
     if(csw == ARG_DEF) csw_tmp = kernelParameters->getCsw();
     else csw_tmp = csw;
-    
+
     cl_int eo = evenodd;
     //query work-sizes for kernel
     size_t ls2, gs2;
@@ -257,22 +258,22 @@ void hardware::code::Fermions::clover_eo_inverse_device(const hardware::buffers:
     //set arguments
     int clerr = clSetKernelArg(clover_eo_inverse, 0, sizeof(cl_mem), in->get_cl_buffer());
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(clover_eo_inverse, 1, sizeof(cl_mem), out->get_cl_buffer());
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(clover_eo_inverse, 2, sizeof(cl_mem), gf->get_cl_buffer());
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(clover_eo_inverse, 3, sizeof(cl_int), &eo);
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(clover_eo_inverse, 4, sizeof(hmc_float), &kappa_tmp);
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     clerr = clSetKernelArg(clover_eo_inverse, 5, sizeof(hmc_float), &csw_tmp);
     if(clerr != CL_SUCCESS) throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
-    
+
     get_device()->enqueue_kernel( clover_eo_inverse, gs2, ls2);
 }
 

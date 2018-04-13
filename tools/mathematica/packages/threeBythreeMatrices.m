@@ -119,6 +119,3 @@ diracTraceOf12x12Matrix[a_]:=
 End []
 
 EndPackage[]
-
-
-

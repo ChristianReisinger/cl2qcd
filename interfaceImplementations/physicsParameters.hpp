@@ -2,6 +2,7 @@
  * physicsParameters.hpp
  *
  * Copyright (c) 2016,2018 Alessandro Sciarra
+ * Copyright (c) 2016 Max Theilig
  *
  * This file is part of CL2QCD.
  *

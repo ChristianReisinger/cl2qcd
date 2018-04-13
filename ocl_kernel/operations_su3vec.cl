@@ -2,6 +2,7 @@
  * Copyright (c) 2011,2013 Matthias Bach
  * Copyright (c) 2011 Christopher Pinke
  * Copyright (c) 2013,2014,2018 Alessandro Sciarra
+ * Copyright (c) 2016 Max Theilig
  *
  * This file is part of CL2QCD.
  *
@@ -34,22 +35,22 @@ void print_su3vec(su3vec in)
 su3vec matrix3x3_times_su3vec(Matrix3x3 u, su3vec in)
 {
     su3vec tmp;
-    
+
     tmp.e0.re = u.e00.re * in.e0.re + u.e01.re * in.e1.re + u.e02.re * in.e2.re
     - u.e00.im * in.e0.im - u.e01.im * in.e1.im - u.e02.im * in.e2.im;
     tmp.e0.im = u.e00.re * in.e0.im + u.e01.re * in.e1.im + u.e02.re * in.e2.im
     + u.e00.im * in.e0.re + u.e01.im * in.e1.re + u.e02.im * in.e2.re;
-    
+
     tmp.e1.re = u.e10.re * in.e0.re + u.e11.re * in.e1.re + u.e12.re * in.e2.re
     - u.e10.im * in.e0.im - u.e11.im * in.e1.im - u.e12.im * in.e2.im;
     tmp.e1.im = u.e10.re * in.e0.im + u.e11.re * in.e1.im + u.e12.re * in.e2.im
     + u.e10.im * in.e0.re + u.e11.im * in.e1.re + u.e12.im * in.e2.re;
-    
+
     tmp.e2.re = u.e20.re * in.e0.re + u.e21.re * in.e1.re + u.e22.re * in.e2.re
     - u.e20.im * in.e0.im - u.e21.im * in.e1.im - u.e22.im * in.e2.im;
     tmp.e2.im = u.e20.re * in.e0.im + u.e21.re * in.e1.im + u.e22.re * in.e2.im
     + u.e20.im * in.e0.re + u.e21.im * in.e1.re + u.e22.im * in.e2.re;
-    
+
     return tmp;
 }
 

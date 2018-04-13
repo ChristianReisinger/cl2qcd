@@ -4,7 +4,7 @@
  * Copyright (c) 2012,2013 Matthias Bach
  * Copyright (c) 2013-2015 Christopher Pinke
  * Copyright (c) 2014,2015,2018 Alessandro Sciarra
- * Copyright (c) 2016 Francesca Cuteri
+ * Copyright (c) 2016,2018 Francesca Cuteri
  * Copyright (c) 2016 Max Theilig
  *
  * This file is part of CL2QCD.
@@ -41,7 +41,7 @@ namespace physics {
 	namespace lattices {
 
 		class Matrix6x6Field;
-		
+
 		/**
 		 * Representation of a gaugefield.
 		 */
@@ -122,7 +122,7 @@ namespace physics {
 			const physics::PRNG * getPrng() const;
 			const hardware::System * getSystem() const;
 			const GaugefieldParametersInterface * getParameters() const;
-			
+
 			Matrix6x6Field * get_clover_eo_inverse_upper_left() const;
 			Matrix6x6Field * get_clover_eo_inverse_lower_right() const;
 
