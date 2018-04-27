@@ -184,7 +184,7 @@ if [ ${#listOfFilesToBeChecked[@]} -ne 0 ]; then
             rm "${newfile}"
         done
         if [ ${#filesWithCodeStyleErrors[@]} -ne 0 ]; then
-            echo; AbortCommit "Code style error found!" PrintReportOnFilesWithStyleErrors "${filesWithCodeStyleErrors[@]}"
+            : #echo; AbortCommit "Code style error found!" PrintReportOnFilesWithStyleErrors "${filesWithCodeStyleErrors[@]}"
         else
             errecho " done!\n" 39
         fi
