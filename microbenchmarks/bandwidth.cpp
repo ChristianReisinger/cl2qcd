@@ -85,7 +85,7 @@ protected:
 	};
 
 public:
-	Device(const meta::Inputparameters& params, hardware::Device * device) : Opencl_Module(params, device) {
+	Device(const hardware::code::OpenClKernelParametersInterface& params, hardware::Device * device) : Opencl_Module(params, device) {
 		fill_kernels();
 	};
 	virtual ~Device() {
@@ -99,7 +99,7 @@ class Test {
 
 public:
 	Test(const hardware::System& system, size_t maxMemSize)
-		: maxMemSize(maxMemSize), device(system.get_devices().at(0)), code(system.get_inputparameters(), device) {
+		: maxMemSize(maxMemSize), device(system.get_devices().at(0)), code(*(system.getOpenClParameters()), device) {
 		fill_buffers();
 	};
 
@@ -118,6 +118,7 @@ private:
 int main(int argc, char** argv)
 {
 	po::options_description desc("Allowed options");
+	// clang-format off
 	desc.add_options()
 	("help,h", "Produce this help message")
 	("elements,e", po::value<cl_ulong>()->default_value(100000), "How many elements to use.") // conflicts with single
@@ -127,6 +128,7 @@ int main(int argc, char** argv)
 	("stepthreads,st", po::value<cl_ulong>()->default_value(0), "Step size for thread per group sweeping")
 	("single", "Copy only a single element per thread")
 	("type,d", po::value<std::string>()->default_value("float"), "The data type to copy");
+	// clang-format on
 
 	po::variables_map vm;
 	po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -162,7 +164,7 @@ int main(int argc, char** argv)
 	}
 
 	meta::Inputparameters params(0, 0);
-	hardware::System system(params, true);
+	hardware::System system(params);
 
 	if(vm.count("stepelements")) {
 		logger.info() << "Sweeping element count for fixed thread count.";
@@ -362,7 +364,7 @@ template<typename T> void Device::runKernel(size_t groups, cl_ulong threads_per_
 
 	size_t num_meas = 10;
 
-	hardware::Device * dev = get_device();
+	const hardware::Device * dev = get_device();
 	dev->enqueue_kernel(kernel, total_threads, local_threads);
 	dev->synchronize();
 	klepsydra::Monotonic timer;
