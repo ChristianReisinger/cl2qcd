@@ -108,6 +108,7 @@ bool meta::ParametersFermion::get_use_only_clover() const noexcept
 meta::ParametersFermion::ParametersFermion()
 	: options("Fermion options")
 {
+    // clang-format off
 	options.add_options()
 	("fermact", po::value<std::string>()->default_value("wilson"))
 	("fermact_mp", po::value<std::string>()->default_value("wilson"))
@@ -129,6 +130,7 @@ meta::ParametersFermion::ParametersFermion()
 	("use_merge_kernels_spinor", po::value<bool>(&use_merge_kernels_spinor)->default_value(false), "Use kernel merging for spinor kernels")
 	("use_merge_kernels_fermion", po::value<bool>(&use_merge_kernels_fermion)->default_value(false), "Use kernel merging for fermion kernels")
 	("use_only_clover", po::value<bool>(&use_only_clover)->default_value(false), "Use only clover term");
+	// clang-format on
 }
 
 meta::ParametersFermion::~ParametersFermion() = default;
