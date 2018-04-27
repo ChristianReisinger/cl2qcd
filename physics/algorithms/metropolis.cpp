@@ -426,7 +426,6 @@ template<class SPINORFIELD> static hmc_observables metropolis(const hmc_float rn
         tmp.splaq = splaq_new;
         tmp.poly = poly_new;
         tmp.deltaH = deltaH;
-        tmp.prob = compare_prob;
         if(parametersInterface.getUseRectangles())
             tmp.rectangles = rect_new / parametersInterface.getRectanglesNormalization();
     } else {
@@ -436,10 +435,10 @@ template<class SPINORFIELD> static hmc_observables metropolis(const hmc_float rn
         tmp.splaq = splaq;
         tmp.poly = poly;
         tmp.deltaH = deltaH;
-        tmp.prob = compare_prob;
         if(parametersInterface.getUseRectangles())
             tmp.rectangles = rect / parametersInterface.getRectanglesNormalization();
     }
+    tmp.timeTrajectory = 0.0; //time is filled in the caller of this function
 
     return tmp;
 }
