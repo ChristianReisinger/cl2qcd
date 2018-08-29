@@ -3,6 +3,7 @@
 # Copyright (c) 2012,2013 Matthias Bach
 # Copyright (c) 2013,2014 Christopher Pinke
 # Copyright (c) 2016,2018 Alessandro Sciarra
+# Copyright (c) 2018 Francesca Cuteri
 #
 # This file is part of CL2QCD.
 #
@@ -24,30 +25,31 @@
 #
 
 add_library(meta
-	parametersConfig.cpp
-	parametersIo.cpp
-	parametersGauge.cpp
-	parametersFermion.cpp
-	parametersSources.cpp
-	parametersSolver.cpp
-	parametersObs.cpp
-	parametersHmc.cpp
-	parametersHeatbath.cpp
-	parametersRhmc.cpp
-	parametersTest.cpp
-	inputparameters.cpp
-	util.cpp
-	util_io.cpp
-	counter.cpp
-	config_file_normalizer.cpp
-	type_ops.cpp
-	../host_functionality/logger.cpp
+    parametersBasic.cpp
+    parametersConfig.cpp
+    parametersIo.cpp
+    parametersGauge.cpp
+    parametersFermion.cpp
+    parametersSources.cpp
+    parametersSolver.cpp
+    parametersObs.cpp
+    parametersIntegrator.cpp
+    parametersRationalApproximation.cpp
+    parametersMonteCarlo.cpp
+    parametersTest.cpp
+    inputparameters.cpp
+    util.cpp
+    util_io.cpp
+    counter.cpp
+    config_file_normalizer.cpp
+    type_ops.cpp
+    ../host_functionality/logger.cpp
 )
 add_dependencies(meta git_commit_id_header)
 target_link_libraries(meta
     exceptions
-	einhard
-	${Boost_LIBRARIES}
+    einhard
+    ${Boost_LIBRARIES}
 )
 
 #

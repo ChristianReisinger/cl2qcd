@@ -26,7 +26,7 @@
 #define _HARDWARE_BUFFERS_6x6_
 
 #include "buffer.hpp"
-#include "../../common_header_files/types.h"
+#include "../../common_header_files/types.hpp"
 #include "../../geometry/latticeExtents.hpp"
 
 namespace hardware {

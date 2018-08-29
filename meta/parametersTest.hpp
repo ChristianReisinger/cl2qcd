@@ -3,6 +3,7 @@
  * Copyright (c) 2014 Christopher Pinke
  * Copyright (c) 2014 Matthias Bach
  * Copyright (c) 2018 Alessandro Sciarra
+ * Copyright (c) 2018 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -26,25 +27,24 @@
 #include "parametersBasic.hpp"
 
 namespace meta {
-class ParametersTest {
-public:
-	double get_test_ref_value() const noexcept;
-	double get_test_ref_value2() const noexcept;
+    class ParametersTest {
+      public:
+        double get_test_ref_value() const noexcept;
+        double get_test_ref_value2() const noexcept;
 
-private:
-	po::options_description options;
+      private:
+        double test_ref_value;
+        double test_ref_value2;
 
-	double test_ref_value;
-	double test_ref_value2;
+      protected:
+        ParametersTest();
+        virtual ~ParametersTest()             = default;
+        ParametersTest(ParametersTest const&) = delete;
+        ParametersTest& operator=(ParametersTest const&) = delete;
 
-protected:
-	ParametersTest();
-	virtual ~ParametersTest();
-	ParametersTest(ParametersTest const&) = delete;
-	ParametersTest & operator=(ParametersTest const&) = delete;
-	po::options_description & getOptions();
-};
+        InputparametersOptions options;
+    };
 
-}
+}  // namespace meta
 
 #endif

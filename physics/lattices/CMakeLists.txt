@@ -25,36 +25,32 @@
 #
 
 add_library(gaugefield
-	gaugefield.cpp
-	matrix6x6Field.cpp
-# 	../../hardware/lattices/gaugefield.cpp
-# 	../../hardware/lattices/gaugemomenta.cpp
-# 	../../hardware/lattices/spinorfield.cpp
-# 	../../hardware/lattices/prng.cpp
+    gaugefield.cpp
+    matrix6x6Field.cpp
 )
 
 target_link_libraries(gaugefield
-	hardware_lattices
+    hardware_lattices
 )
 
 add_library(lattices
-	matrix6x6Field.cpp
-	spinorfield.cpp
-	spinorfield_eo.cpp
-	scalar_complex.cpp
-	algebra_real.cpp
-	swappable_spinorfield.cpp
-	gaugemomenta.cpp
-	staggeredfield_eo.cpp
-	rooted_staggeredfield_eo.cpp
+    matrix6x6Field.cpp
+    spinorfield.cpp
+    spinorfield_eo.cpp
+    scalar_complex.cpp
+    algebra_real.cpp
+    swappable_spinorfield.cpp
+    gaugemomenta.cpp
+    staggeredfield_eo.cpp
+    rooted_staggeredfield_eo.cpp
 )
 target_link_libraries(lattices
-	hardware
-	gaugefield
-	ildg_io
-	host_functionality
-	prng
-	observables
+    hardware
+    gaugefield
+    ildg_io
+    host_functionality
+    prng
+    observables
 )
 
 #

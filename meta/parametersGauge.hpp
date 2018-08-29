@@ -2,7 +2,7 @@
  *
  * Copyright (c) 2014 Christopher Pinke
  * Copyright (c) 2014 Matthias Bach
- * Copyright (c) 2015 Francesca Cuteri
+ * Copyright (c) 2015,2018 Francesca Cuteri
  * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
@@ -27,31 +27,32 @@
 #include "parametersBasic.hpp"
 
 namespace meta {
-class ParametersGauge {
-public:
-	double get_beta() const noexcept;
-	double get_rho() const noexcept;
-	int get_rho_iter() const noexcept;
-	common::action get_gaugeact() const noexcept;
-	bool get_use_smearing() const noexcept;
+    class ParametersGauge {
+      public:
+        double get_beta() const noexcept;
+        double get_rho() const noexcept;
+        int get_rho_iter() const noexcept;
+        common::action get_gaugeact() const noexcept;
+        bool get_use_smearing() const noexcept;
 
-private:
-	po::options_description options;
-	double beta;
-	double rho;
-	int rho_iter;
-	bool use_smearing;
+      private:
+        double beta;
+        double rho;
+        int rho_iter;
+        bool use_smearing;
 
-protected:
-	ParametersGauge();
-	virtual ~ParametersGauge();
-	ParametersGauge(ParametersGauge const&) = delete;
-	ParametersGauge & operator=(ParametersGauge const&) = delete;
-	po::options_description & getOptions();
+      protected:
+        ParametersGauge();
+        virtual ~ParametersGauge()              = default;
+        ParametersGauge(ParametersGauge const&) = delete;
+        ParametersGauge& operator=(ParametersGauge const&) = delete;
+        void makeNeededTranslations();
 
-	common::action gaugeact;
-};
+        InputparametersOptions options;
+        std::string gaugeactString;
+        common::action gaugeact;
+    };
 
-}
+}  // namespace meta
 
 #endif
