@@ -24,79 +24,76 @@
 #ifndef _PHYSICS_LATTICES_MATRIX6X6FIELD_
 #define _PHYSICS_LATTICES_MATRIX6X6FIELD_
 
-#include "../../hardware/system.hpp"
 #include "../../hardware/buffers/6x6.hpp"
-#include "../prng.hpp"
-#include "scalar.hpp"
-#include "latticesInterfaces.hpp"
 #include "../../hardware/lattices/matrix6x6Field.hpp"
+#include "../../hardware/system.hpp"
+#include "../prng.hpp"
 #include "gaugefield.hpp"
+#include "latticesInterfaces.hpp"
+#include "scalar.hpp"
 
 /**
  * This namespace contains the lattices of the various kind,
  * that is storage of the lattice values as a whole.
  */
 namespace physics {
-	namespace lattices {
+    namespace lattices {
 
-		class Gaugefield;
+        class Gaugefield;
 
-		/**
-		 * Representation of a Matrix6x6Field.
-		 */
-		class Matrix6x6Field {
+        /**
+         * Representation of a Matrix6x6Field.
+         */
+        class Matrix6x6Field {
+          public:
+            /**
+             * Construct a Matrix6x6Field based on the gaugefield configuration
+             */
+            Matrix6x6Field(const hardware::System&, const GaugefieldParametersInterface* parameters);
 
-		public:
-			/**
-			 * Construct a Matrix6x6Field based on the gaugefield configuration
-			 */
-			Matrix6x6Field(const hardware::System&, const GaugefieldParametersInterface * parameters);
+            /**
+             * Release resources
+             */
+            ~Matrix6x6Field();
 
-			/**
-			 * Release resources
-			 */
-			~Matrix6x6Field();
+            /*
+             * Matrix6x6Field cannot be copied
+             */
+            Matrix6x6Field& operator=(const Matrix6x6Field&) = delete;
+            Matrix6x6Field(const Matrix6x6Field&)            = delete;
+            Matrix6x6Field()                                 = delete;
 
-			/*
-			 * Matrix6x6Field cannot be copied
-			 */
-			Matrix6x6Field& operator=(const Matrix6x6Field&) = delete;
-			Matrix6x6Field(const Matrix6x6Field&) = delete;
-			Matrix6x6Field() = delete;
+            void setField(const physics::lattices::Gaugefield* gaugefield, const bool upperOrLower);
 
-			void setField(const physics::lattices::Gaugefield * gaugefield, const bool upperOrLower);
+            /**
+             * Get the buffers containing the matrix6x6Field state on the devices.
+             */
+            const std::vector<const hardware::buffers::matrix6x6*> get_buffers() const noexcept;
 
-			/**
-			 * Get the buffers containing the matrix6x6Field state on the devices.
-			 */
-			const std::vector<const hardware::buffers::matrix6x6 *> get_buffers() const noexcept;
+            /**
+             * Update the halo cells of each buffer from its neighbours.
+             * On a single device this will be a no-op.
+             */
+            void update_halo() const;
 
-			/**
-			 * Update the halo cells of each buffer from its neighbours.
-			 * On a single device this will be a no-op.
-			 */
-			void update_halo() const;
+            const hardware::System* getSystem() const;
+            const GaugefieldParametersInterface* getParameters() const;
 
-			const hardware::System * getSystem() const;
-			const GaugefieldParametersInterface * getParameters() const;
+          private:
+            hardware::System const& system;
+            const GaugefieldParametersInterface* latticeObjectParameters;
+            hardware::lattices::Matrix6x6Field matrix6x6Field;
 
-		private:
-			hardware::System const& system;
-			const GaugefieldParametersInterface * latticeObjectParameters;
-			hardware::lattices::Matrix6x6Field matrix6x6Field;
+            friend hmc_float count_Matrix6x6Field(const Matrix6x6Field&);
 
-			friend hmc_float count_Matrix6x6Field(const Matrix6x6Field&);
+            friend hmc_float S_det(const Gaugefield&, const hmc_float kappa, const hmc_float csw);
+        };
 
-			friend hmc_float S_det(const Gaugefield&, const hmc_float kappa, const hmc_float csw);
-		};
+        hmc_float count_Matrix6x6Field(const Matrix6x6Field& field);
 
-		hmc_float count_Matrix6x6Field(const Matrix6x6Field& field);
-
-		hmc_float S_det(const Gaugefield& field, const hmc_float kappa, const hmc_float csw);
-		void S_det(const Scalar<hmc_float>* res, const Gaugefield& field, const hmc_float kappa, const hmc_float csw);
-	}
-}
-
-
+        hmc_float S_det(const Gaugefield& field, const hmc_float kappa, const hmc_float csw);
+        void S_det(const Scalar<hmc_float>* res, const Gaugefield& field, const hmc_float kappa, const hmc_float csw);
+    }  // namespace lattices
+}  // namespace physics
 
 #endif /*_PHYSICS_LATTICES_MATRIX6X6FIELD_ */

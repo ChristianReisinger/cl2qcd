@@ -138,7 +138,7 @@ typedef struct {
     hmc_complex e21;
     hmc_complex e22;
 } Matrixsu3;
-//a generic 6x6 matrix
+// a generic 6x6 matrix
 typedef struct {
     hmc_complex e00;
     hmc_complex e01;
@@ -201,7 +201,7 @@ struct Matrix3x3 {
     hmc_complex e21;
     hmc_complex e22;
 };
-//a generic 6x6 matrix
+// a generic 6x6 matrix
 struct Matrix6x6 {
     hmc_complex e00;
     hmc_complex e01;
@@ -240,7 +240,7 @@ struct Matrix6x6 {
     hmc_complex e54;
     hmc_complex e55;
 };
-#endif // ifdef _INKERNEL_
+#endif  // ifdef _INKERNEL_
 
 #ifdef _USE_SOA_
 typedef hmc_complex Matrix6x6StorageType;

@@ -21,117 +21,124 @@
 #ifndef _HARDWARE_CODE_MATRIX6X6FIELD_
 #define _HARDWARE_CODE_MATRIX6X6FIELD_
 
-#include "opencl_module.hpp"
-#include "../lattices/matrix6x6Field.hpp"
 #include "../buffers/plain.hpp"
+#include "../lattices/matrix6x6Field.hpp"
+#include "opencl_module.hpp"
 
 namespace hardware {
 
-namespace code {
+    namespace code {
 
-/**
-* An OpenCL device
-*
-* This class wraps all matrix6x6 operations on a device. Each kernel
-* has it's own wrapper function.
-*
-* @todo Everything is public to faciliate inheritance. Actually, more parts should be private.
-*/
+        /**
+         * An OpenCL device
+         *
+         * This class wraps all matrix6x6 operations on a device. Each kernel
+         * has it's own wrapper function.
+         *
+         * @todo Everything is public to faciliate inheritance. Actually, more parts should be private.
+         */
 
-class matrix6x6Field : public Opencl_Module {
+        class matrix6x6Field : public Opencl_Module {
+          public:
+            friend hardware::Device;
 
-public:
-    friend hardware::Device;
+            virtual ~matrix6x6Field();
 
-    virtual ~matrix6x6Field();
+            matrix6x6Field(const hardware::code::OpenClKernelParametersInterface& kernelParameters,
+                           const hardware::Device* device);
 
-    matrix6x6Field(const hardware::code::OpenClKernelParametersInterface& kernelParameters, const hardware::Device * device);
+            void clover_eo_inverse_explicit_upper_left_device(const hardware::buffers::matrix6x6* out,
+                                                              const hardware::buffers::SU3* gf, hmc_float kappa,
+                                                              hmc_float csw) const;
+            void clover_eo_inverse_explicit_lower_right_device(const hardware::buffers::matrix6x6* out,
+                                                               const hardware::buffers::SU3* gf, hmc_float kappa,
+                                                               hmc_float csw) const;
+            void S_det_device(const hardware::buffers::SU3* gf, const hardware::buffers::Plain<hmc_float>* out,
+                              hmc_float kappa, hmc_float csw) const;
 
+            /**
+             * Import the matrix6x6Field data into the OpenCL buffer using the device
+             * specific storage format.
+             *
+             * @param[out] matrix6x6Field The OpenCL buffer to writ the gaugefield data to in the device specific format
+             * @param[in]  data       The matrix6x6Field data to import into the OpenCL buffer
+             *
+             * @todo should not be public
+             */
+            void
+            importMatrix6x6Field(const hardware::buffers::matrix6x6* matrix6x6Field, const Matrix6x6* const data) const;
 
-    void clover_eo_inverse_explicit_upper_left_device(const hardware::buffers::matrix6x6 * out, const hardware::buffers::SU3 * gf, hmc_float kappa, hmc_float csw) const;
-    void clover_eo_inverse_explicit_lower_right_device(const hardware::buffers::matrix6x6 * out, const hardware::buffers::SU3 * gf, hmc_float kappa, hmc_float csw) const;
-    void S_det_device(const hardware::buffers::SU3 * gf, const hardware::buffers::Plain<hmc_float> * out, hmc_float kappa, hmc_float csw) const;
+            /**
+             * Export the matrix6x6Field from the OpenCL buffer, that uses a device
+             * specific storage format, into the given pointer using the generic
+             * storage format.
+             *
+             * @param[out] dest The array to store the matrix6x6Field in
+             */
+            void exportMatrix6x6Field(Matrix6x6* const dest, const hardware::buffers::matrix6x6* matrix6x6Field) const;
 
+            /**
+             * Get the code required to use the matrix6x6Field from kernels.
+             */
+            ClSourcePackage get_sources() const noexcept;
 
-    /**
-     * Import the matrix6x6Field data into the OpenCL buffer using the device
-     * specific storage format.
-     *
-     * @param[out] matrix6x6Field The OpenCL buffer to writ the gaugefield data to in the device specific format
-     * @param[in]  data       The matrix6x6Field data to import into the OpenCL buffer
-     *
-     * @todo should not be public
-     */
-    void importMatrix6x6Field(const hardware::buffers::matrix6x6 * matrix6x6Field, const Matrix6x6 * const data) const;
+          protected:
+            /**
+             * comutes work-sizes for a kernel
+             * @todo autotune
+             * @param ls local-work-size
+             * @param gs global-work-size
+             * @param num_groups number of work groups
+             * @param dev_type type of device on which the kernel should be executed
+             * @param name name of the kernel for possible autotune-usage, not yet used!!
+             */
+            virtual void
+            get_work_sizes(const cl_kernel kernel, size_t* ls, size_t* gs, cl_uint* num_groups) const override;
 
-    /**
-     * Export the matrix6x6Field from the OpenCL buffer, that uses a device
-     * specific storage format, into the given pointer using the generic
-     * storage format.
-     *
-     * @param[out] dest The array to store the matrix6x6Field in
-     */
-    void exportMatrix6x6Field(Matrix6x6 * const dest, const hardware::buffers::matrix6x6 * matrix6x6Field) const;
+            /**
+             * Return amount of Floating point operations performed by a specific kernel per call.
+             * NOTE: this is meant to be the "netto" amount in order to be comparable.
+             *
+             * @param in Name of the kernel under consideration.
+             */
+            virtual uint64_t get_flop_size(const std::string& in) const override;
 
-	/**
-	 * Get the code required to use the matrix6x6Field from kernels.
-	 */
-	ClSourcePackage get_sources() const noexcept;
-protected:
-	/**
-	 * comutes work-sizes for a kernel
-	 * @todo autotune
-	 * @param ls local-work-size
-	 * @param gs global-work-size
-	 * @param num_groups number of work groups
-	 * @param dev_type type of device on which the kernel should be executed
-	 * @param name name of the kernel for possible autotune-usage, not yet used!!
-	 */
-	virtual void get_work_sizes(const cl_kernel kernel, size_t * ls, size_t * gs, cl_uint * num_groups) const override;
+            /**
+             * Return amount of bytes read and written by a specific kernel per call.
+             *
+             * @param in Name of the kernel under consideration.
+             */
+            virtual size_t get_read_write_size(const std::string& in) const override;
 
-	/**
-	 * Return amount of Floating point operations performed by a specific kernel per call.
-	 * NOTE: this is meant to be the "netto" amount in order to be comparable.
-	 *
-	 * @param in Name of the kernel under consideration.
-	 */
-	virtual uint64_t get_flop_size(const std::string& in) const override;
+          private:
+            /**
+             * A set of source files used by all kernels.
+             */
+            ClSourcePackage basic_opencl_code;
 
-	/**
-	 * Return amount of bytes read and written by a specific kernel per call.
-	 *
-	 * @param in Name of the kernel under consideration.
-	 */
-	virtual size_t get_read_write_size(const std::string& in) const override;
+            cl_kernel clover_eo_inverse_explicit_upper_left;
+            cl_kernel clover_eo_inverse_explicit_lower_right;
+            cl_kernel S_det;
 
-private:
-	/**
-	 * A set of source files used by all kernels.
-	 */
-	ClSourcePackage basic_opencl_code;
+            // cl_kernel convertMatrix6x6FieldToSOA;
+            // cl_kernel convertMatrix6x6FieldFromSOA;
 
-	cl_kernel clover_eo_inverse_explicit_upper_left;
-	cl_kernel clover_eo_inverse_explicit_lower_right;
-	cl_kernel S_det;
+            // void convertMatrix6x6FieldToSOA_device(const hardware::buffers::matrix6x6 * out, const
+            // hardware::buffers::Plain<Matrix6x6> * in) const; void convertMatrix6x6FieldFromSOA_device(const
+            // hardware::buffers::Plain<Matrix6x6> * out, const hardware::buffers::matrix6x6 * in) const;
 
-    //cl_kernel convertMatrix6x6FieldToSOA;
-    //cl_kernel convertMatrix6x6FieldFromSOA;
+            /**
+             * Collect the kernels for OpenCL.
+             */
+            void fill_kernels();
+            /**
+             * Clear out the kernels,
+             */
+            void clear_kernels();
+        };
 
-    //void convertMatrix6x6FieldToSOA_device(const hardware::buffers::matrix6x6 * out, const hardware::buffers::Plain<Matrix6x6> * in) const;
-    //void convertMatrix6x6FieldFromSOA_device(const hardware::buffers::Plain<Matrix6x6> * out, const hardware::buffers::matrix6x6 * in) const;
+    }  // namespace code
 
-    /**
-     * Collect the kernels for OpenCL.
-     */
-    void fill_kernels();
-    /**
-     * Clear out the kernels,
-     */
-    void clear_kernels();
-};
-
-}
-
-}
+}  // namespace hardware
 
 #endif /* _HARDWARE_CODE_MATRIX6X6FIELD_ */

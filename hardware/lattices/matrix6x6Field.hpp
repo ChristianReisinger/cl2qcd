@@ -21,44 +21,41 @@
 #ifndef _HARDWARE_LATTICES_MATRIX6X6_
 #define _HARDWARE_LATTICES_MATRIX6X6_
 
-#include "../system.hpp"
 #include "../buffers/6x6.hpp"
 #include "../buffers/plain.hpp"
 #include "../code/matrix6x6Field.hpp"
-
+#include "../system.hpp"
 
 namespace hardware {
 
     namespace lattices {
 
-        class Matrix6x6Field
-        {
-        public:
-
+        class Matrix6x6Field {
+          public:
             virtual ~Matrix6x6Field();
 
             Matrix6x6Field(const hardware::System& system);
 
-            const std::vector<const hardware::buffers::matrix6x6 *> get_buffers() const noexcept;
-            std::vector<const hardware::buffers::matrix6x6 *> allocate_buffers();
-            void release_buffers(std::vector<const hardware::buffers::matrix6x6 *>* buffers);
-            void send_matrix6x6_to_buffers(const Matrix6x6 * const gf_host);
-            void fetch_matrix6x6_from_buffers( Matrix6x6 * const gf_host);
+            const std::vector<const hardware::buffers::matrix6x6*> get_buffers() const noexcept;
+            std::vector<const hardware::buffers::matrix6x6*> allocate_buffers();
+            void release_buffers(std::vector<const hardware::buffers::matrix6x6*>* buffers);
+            void send_matrix6x6_to_buffers(const Matrix6x6* const gf_host);
+            void fetch_matrix6x6_from_buffers(Matrix6x6* const gf_host);
 
             void update_halo() const;
 
-
-        private:
+          private:
             hardware::System const& system;
-            std::vector<const hardware::buffers::matrix6x6 *> buffers;
+            std::vector<const hardware::buffers::matrix6x6*> buffers;
 
-            void update_halo_soa(std::vector<const hardware::buffers::matrix6x6 *> buffers, const hardware::System& system) const;
-            void update_halo_aos(std::vector<const hardware::buffers::matrix6x6 *> buffers, const hardware::System& system) const;
-
+            void update_halo_soa(std::vector<const hardware::buffers::matrix6x6*> buffers,
+                                 const hardware::System& system) const;
+            void update_halo_aos(std::vector<const hardware::buffers::matrix6x6*> buffers,
+                                 const hardware::System& system) const;
         };
 
-    }
+    }  // namespace lattices
 
-}
+}  // namespace hardware
 
 #endif /* _HARDWARE_LATTICES_MATRIX6X6_ */

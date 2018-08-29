@@ -108,7 +108,7 @@ bool meta::ParametersFermion::get_use_merge_kernels_spinor() const noexcept
 
 bool meta::ParametersFermion::get_use_only_clover() const noexcept
 {
-	return use_only_clover;
+    return use_only_clover;
 }
 
 meta::ParametersFermion::ParametersFermion()

@@ -102,9 +102,9 @@ namespace hardware {
                                  const hardware::buffers::SU3* gf, int evenodd, hmc_float kappa = ARG_DEF) const;
             //        merged
             //	void Aee_AND_gamma5_eo(const hardware::buffers::Spinor * in, const hardware::buffers::Spinor * out,
-            //const hardware::buffers::SU3 * gf, hmc_float kappa = ARG_DEF, hmc_float mubar = ARG_DEF); 	void
-            //Aee_minus_AND_gamma5_eo(const hardware::buffers::Spinor * in, const hardware::buffers::Spinor * out, const
-            //hardware::buffers::SU3 * gf, hmc_float kappa = ARG_DEF, hmc_float mubar = ARG_DEF);
+            // const hardware::buffers::SU3 * gf, hmc_float kappa = ARG_DEF, hmc_float mubar = ARG_DEF); 	void
+            // Aee_minus_AND_gamma5_eo(const hardware::buffers::Spinor * in, const hardware::buffers::Spinor * out,
+            // const hardware::buffers::SU3 * gf, hmc_float kappa = ARG_DEF, hmc_float mubar = ARG_DEF);
             void dslash_AND_M_tm_inverse_sitediagonal_eo_device(const hardware::buffers::Spinor* in,
                                                                 const hardware::buffers::Spinor* out,
                                                                 const hardware::buffers::SU3* gf, int evenodd,

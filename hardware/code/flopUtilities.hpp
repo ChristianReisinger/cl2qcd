@@ -28,7 +28,6 @@
 #include <sstream>
 #include <string.h>
 #include <utility>
-//#include "../../host_functionality/host_geometry.h"
 
 namespace hardware {
     namespace code {

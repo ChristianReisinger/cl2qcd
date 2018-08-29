@@ -68,15 +68,16 @@ inline hmc_complex complexdivide(const hmc_complex numerator, const hmc_complex 
 
 inline hmc_float complexabssquared(const hmc_complex in)
 {
-	hmc_float out = in.re * in.re + in.im * in.im;
-	return out;
+    hmc_float out = in.re * in.re + in.im * in.im;
+    return out;
 }
 
 inline hmc_complex convertfloattocomplex(const hmc_float in)
 {
-	hmc_complex out;
-	out.re = in; out.im = 0;
-	return out;
+    hmc_complex out;
+    out.re = in;
+    out.im = 0;
+    return out;
 }
 
 #ifdef _INKERNEL_
