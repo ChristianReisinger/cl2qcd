@@ -82,7 +82,7 @@ hmc_float log_det_matrix6x6_squared_qr(Matrix6x6 a)
         for(unsigned int j=0; j<cols; ++j){
             N1[i][j] = hmc_complex_zero;
             for(unsigned int l=0; l<rows; ++l){
-                N1[i][j] = complex_add(N1[i][j], complex_mult(T[i][l], T[l][j]));
+                N1[i][j] = complexadd(N1[i][j], complexmult(T[i][l], T[l][j]));
             }}}
     for(unsigned int i=0; i<rows; ++i){
         for(unsigned int j=0; j<cols; ++j){
@@ -94,23 +94,23 @@ hmc_float log_det_matrix6x6_squared_qr(Matrix6x6 a)
         for(int l=0; l<rows; ++l){ //vector u according to Lüscher-OpenQCD doc
             if(l<k){u[l] = hmc_complex_zero;}
             else if(l==k){hmc_float r = 0.0;
-                for(unsigned int j=k; j<rows; ++j){r = r + complex_abs_value(T[j][k]) * complex_abs_value(T[j][k]);}
+                for(unsigned int j=k; j<rows; ++j){r = r + complexabs(T[j][k]) * complexabs(T[j][k]);}
                 if(T[l][k].re == 0 && T[l][k].im == 0){u[l].re = - sqrt(r);} // 0/abs(0)!=1
-                else{u[l] = complex_add(T[k][k], complex_mult(complex_divid(T[k][k], convert_float_to_complex(complex_abs_value(T[k][k]))), convertfloattocomplex(sqrt(r))));}}
+                else{u[l] = complexadd(T[k][k], complexmult(complexdivide(T[k][k], convertfloattocomplex(complexabs(T[k][k]))), convertfloattocomplex(sqrt(r))));}}
             else{u[l] = T[l][k];}
             //printf("(%f,%f)", u[l]);
-            norm_u_squared = norm_u_squared + complex_abs_value(u[l]) * complex_abs_value(u[l]);}
+            norm_u_squared = norm_u_squared + complexabs(u[l]) * complexabs(u[l]);}
 
     // build up R_k by u_k und perform R_k * R_k-1*...*R_1*T
     for(unsigned int m=0; m<rows; ++m){
         for(unsigned int n=0; n<cols; ++n){
-            R[k][m][n] = complex_mult(convert_float_to_complex(-2./norm_u_squared), complex_mult(u[m], complex_conj(u[n])));
-            if(m==n){R[k][m][n] = complex_add(hmc_complex_one, R[k][m][n]);}}}
+            R[k][m][n] = complexmult(convertfloattocomplex(-2./norm_u_squared), complexmult(u[m], complexconj(u[n])));
+            if(m==n){R[k][m][n] = complexadd(hmc_complex_one, R[k][m][n]);}}}
     for(unsigned int m=0; m<rows; ++m){
         for(unsigned int n=0; n<cols; ++n){
             N1[m][n] = hmc_complex_zero;
             for(unsigned int l=0; l<rows; ++l){
-                N1[m][n] = complex_add(N1[m][n], complex_mult(R[k][m][l], T[l][n]));
+                N1[m][n] = complexadd(N1[m][n], complexmult(R[k][m][l], T[l][n]));
             }}}
     for(unsigned int m=0; m<rows; ++m){
         for(unsigned int n=0; n<cols; ++n){
@@ -126,7 +126,7 @@ hmc_float log_det_matrix6x6_squared_qr(Matrix6x6 a)
 	for(unsigned int i=0; i<rows; ++i){
 		//printf("%f", T[i][i]);
 		//printf("\n");
-		det = complex_mult(det, T[i][i]);
+		det = complexmult(det, T[i][i]);
 	//printf("(%f,%f)", det.re, det.im);
 	//printf("\n");
 	}
@@ -199,7 +199,7 @@ hmc_float log_det_matrix6x6_squared(Matrix6x6 a)
         for(unsigned int j=0; j<=n; ++j){
             N1[i][j] = hmc_complex_zero;
             for(unsigned int l=0; l<=n; ++l){
-                N1[i][j] = complex_add(N1[i][j], complex_mult(T[i][l], T[l][j]));
+                N1[i][j] = complexadd(N1[i][j], complexmult(T[i][l], T[l][j]));
             }}}
     for(unsigned int i=0; i<=n; ++i){
         for(unsigned int j=0; j<=n; ++j){
@@ -208,34 +208,34 @@ hmc_float log_det_matrix6x6_squared(Matrix6x6 a)
     for(unsigned int k=0; k<n; ++k) {
         s = 0.;
         for(unsigned int j=k+1; j<=n; ++j) {
-            s += complex_abs_value(T[j][k]) * complex_abs_value(T[j][k]);
+            s += complexabs(T[j][k]) * complexabs(T[j][k]);
         }
-        s = sqrt(1. + s / (complex_abs_value(T[k][k]) * complex_abs_value(T[k][k])));
-        sigma = complex_mult(convert_float_to_complex(s), T[k][k]);
+        s = sqrt(1. + s / (complexabs(T[k][k]) * complexabs(T[k][k])));
+        sigma = complexmult(convertfloattocomplex(s), T[k][k]);
 
         /* determinant */
-        det = complex_mult(det, sigma);
-        q = complex_mult(sigma, complex_conj(T[k][k]));
+        det = complexmult(det, sigma);
+        q = complexmult(sigma, complexconj(T[k][k]));
 
-        T[k][k] = complex_add(T[k][k], sigma);
-        p[k] = complex_mult(sigma, complex_conj(T[k][k]));
+        T[k][k] = complexadd(T[k][k], sigma);
+        p[k] = complexmult(sigma, complexconj(T[k][k]));
 
         /* reflect all columns to the right */
         for(unsigned int j=k+1; j<=n; j++) {
             z = hmc_complex_zero;
             for(unsigned int i=k; i<=n; i++) {
-                z = complex_add(z, complex_mult(complex_conj(T[i][k]), T[i][j]));
+                z = complexadd(z, complexmult(complexconj(T[i][k]), T[i][j]));
             }
-            z = complex_divid(z, p[k]);
+            z = complexdivide(z, p[k]);
             for(unsigned int i=k; i<=n; i++) {
-                T[i][j] = complex_sub(T[i][j], complex_mult(z, T[i][k]));
+                T[i][j] = complexsubtract(T[i][j], complexmult(z, T[i][k]));
             }
         }
     }
     sigma = T[n][n];
 
     /* determinant */
-    det = complex_mult(det, sigma);
+    det = complexmult(det, sigma);
 	/* logarithm */
     hmc_float result = log(det.re);
     return result;

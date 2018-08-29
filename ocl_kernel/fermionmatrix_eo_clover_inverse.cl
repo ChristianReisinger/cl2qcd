@@ -82,23 +82,23 @@ Matrix6x6 inverse_6x6_via_Householder_triangularization(Matrix6x6 a)
         for(int l=0; l<rows; ++l){ //vector u according to Lüscher-OpenQCD doc
             if(l<k){u[l] = hmc_complex_zero;}
             else if(l==k){hmc_float r = 0.0;
-                for(unsigned int j=k; j<rows; ++j){r = r + complex_abs_value(T[j][k]) * complex_abs_value(T[j][k]);}
+                for(unsigned int j=k; j<rows; ++j){r = r + complexabs(T[j][k]) * complexabs(T[j][k]);}
                 if(T[l][k].re == 0 && T[l][k].im == 0){u[l].re = - sqrt(r);} // 0/abs(0)!=1
-                else{u[l] = complex_add(T[k][k], complex_mult(complex_divid(T[k][k], convert_float_to_complex(complex_abs_value(T[k][k]))), convertfloattocomplex(sqrt(r))));}}
+                else{u[l] = complexadd(T[k][k], complexmult(complexdivide(T[k][k], convertfloattocomplex(complexabs(T[k][k]))), convertfloattocomplex(sqrt(r))));}}
             else{u[l] = T[l][k];}
             //printf("(%f,%f)", u[l]);
-            norm_u_squared = norm_u_squared + complex_abs_value(u[l]) * complex_abs_value(u[l]);}
+            norm_u_squared = norm_u_squared + complexabs(u[l]) * complexabs(u[l]);}
 
     // build up R_k by u_k und perform R_k * R_k-1*...*R_1*T
     for(unsigned int m=0; m<rows; ++m){
         for(unsigned int n=0; n<cols; ++n){
-            R[k][m][n] = complex_mult(convert_float_to_complex(-2./norm_u_squared), complex_mult(u[m], complex_conj(u[n])));
-            if(m==n){R[k][m][n] = complex_add(hmc_complex_one, R[k][m][n]);}}}
+            R[k][m][n] = complexmult(convertfloattocomplex(-2./norm_u_squared), complexmult(u[m], complexconj(u[n])));
+            if(m==n){R[k][m][n] = complexadd(hmc_complex_one, R[k][m][n]);}}}
     for(unsigned int m=0; m<rows; ++m){
         for(unsigned int n=0; n<cols; ++n){
             N1[m][n] = hmc_complex_zero;
             for(unsigned int l=0; l<rows; ++l){
-                N1[m][n] = complex_add(N1[m][n], complex_mult(R[k][m][l], T[l][n]));
+                N1[m][n] = complexadd(N1[m][n], complexmult(R[k][m][l], T[l][n]));
             }}}
     for(unsigned int m=0; m<rows; ++m){
         for(unsigned int n=0; n<cols; ++n){
@@ -109,14 +109,14 @@ Matrix6x6 inverse_6x6_via_Householder_triangularization(Matrix6x6 a)
     //note: inverse of upper triangular matrix is upper triangular aswell
     hmc_complex S[6][6] = {0.};
     for(unsigned int j=0; j<cols; j=j+1){ //diagonal part: S_jj = T_jj^(-1)
-        S[j][j] = complex_divid(hmc_complex_one, T[j][j]);
+        S[j][j] = complexdivide(hmc_complex_one, T[j][j]);
     }
     for(int k=rows-1; k>0; k=k-1){ //
         for(int i=k-1; i>=0; i=i-1){
             hmc_complex r = hmc_complex_zero;
             for(int j=i+1; j<=k; j=j+1){
-                r = complex_add(r, complex_mult(T[i][j], S[j][k]));}
-            S[i][k] = complex_mult(hmc_complex_minusone, complex_mult(S[i][i], r));}
+                r = complexadd(r, complexmult(T[i][j], S[j][k]));}
+            S[i][k] = complexmult(hmc_complex_minusone, complexmult(S[i][i], r));}
     }
 
     //R_prod = R_n-1,...,R_1
@@ -130,7 +130,7 @@ Matrix6x6 inverse_6x6_via_Householder_triangularization(Matrix6x6 a)
             for(unsigned int n=0; n<cols; ++n){
                 N1[m][n] = hmc_complex_zero;
                 for(unsigned int l=0; l<rows; ++l){
-                    N1[m][n] = complex_add(N1[m][n], complex_mult(R[k][m][l], R_prod[l][n]));}}}
+                    N1[m][n] = complexadd(N1[m][n], complexmult(R[k][m][l], R_prod[l][n]));}}}
         for(unsigned int m=0; m<rows; ++m){
             for(unsigned int n=0; n<cols; ++n){
                 R_prod[m][n] = N1[m][n];}}
@@ -142,7 +142,7 @@ Matrix6x6 inverse_6x6_via_Householder_triangularization(Matrix6x6 a)
         for(unsigned int n=0; n<cols; ++n){
             r[m][n] = hmc_complex_zero;
             for(unsigned int l=0; l<rows; ++l){
-                r[m][n] = complex_add(r[m][n], complex_mult(S[m][l], R_prod[l][n]));}}
+                r[m][n] = complexadd(r[m][n], complexmult(S[m][l], R_prod[l][n]));}}
     }
 
 

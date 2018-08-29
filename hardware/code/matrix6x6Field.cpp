@@ -32,7 +32,6 @@ using namespace std;
 void hardware::code::matrix6x6Field::fill_kernels()
 {
     basic_opencl_code = get_basic_sources() << "operations_geometry.cl"
-                                            << "operations_complex.cl"
                                             << "operations_complex.h"
                                             << "types_fermions.h"
                                             << "types_hmc.h"

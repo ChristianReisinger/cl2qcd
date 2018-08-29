@@ -25,6 +25,8 @@
 
 #ifndef _INKERNEL_
 #    include "types.hpp"  //in #ifndef not to break the OpenCL code which uses this file!
+
+#    include <cmath>
 #endif
 
 inline hmc_complex complexconj(hmc_complex in)
@@ -64,6 +66,18 @@ inline hmc_complex complexdivide(const hmc_complex numerator, const hmc_complex 
     res.re = (numerator.re * denominator.re + numerator.im * denominator.im) / norm;
     res.im = (numerator.im * denominator.re - numerator.re * denominator.im) / norm;
     return res;
+}
+
+inline hmc_float complexabs(hmc_complex in)
+{
+    hmc_float out, tmp;
+    if (in.re == 0. && in.im == 0.) {
+        return 0.;
+    } else {
+        tmp = in.re * in.re + in.im * in.im;
+        out = sqrt(tmp);
+        return out;
+    }
 }
 
 inline hmc_float complexabssquared(const hmc_complex in)
