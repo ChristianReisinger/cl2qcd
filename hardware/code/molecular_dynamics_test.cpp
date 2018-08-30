@@ -996,12 +996,14 @@ BOOST_AUTO_TEST_SUITE(F_FERMION_CLOVER1_EO)
 
     BOOST_AUTO_TEST_CASE(F_FERMION_CLOVER1_EO_1)
     {
+        logger.error() << "This tests fails due to constants conventions in kernels which have not been yet fixed!";
         testEvenOddClover1FermionForce(LatticeExtents{ns4, nt4}, GaugefieldFillType::ascendingInTDirNonTrivialInSpatial,
                                        GaugeMomentumFilltype::One, SpinorFillType::ascendingComplex, EVEN,
                                        CloverParameters{nonTrivialParameter, nonTrivialParameter});
     }
     BOOST_AUTO_TEST_CASE(F_FERMION_CLOVER1_EO_2)
     {
+        logger.error() << "This tests fails due to constants conventions in kernels which have not been yet fixed!";
         testEvenOddClover1FermionForce(LatticeExtents{ns4, nt4}, GaugefieldFillType::ascendingInTDirNonTrivialInSpatial,
                                        GaugeMomentumFilltype::Ascending, SpinorFillType::ascendingComplex, ODD,
                                        CloverParameters{nonTrivialParameter, nonTrivialParameter});
@@ -1025,12 +1027,14 @@ BOOST_AUTO_TEST_SUITE(F_FERMION_CLOVER2_EO)
     }
     BOOST_AUTO_TEST_CASE(F_FERMION_CLOVER2_EO_3)
     {
+        logger.error() << "This tests fails due to constants conventions in kernels which have not been yet fixed!";
         testEvenOddClover2FermionForce(LatticeExtents{ns4, nt4}, GaugefieldFillType::ascendingInTDirNonTrivialInSpatial,
                                        GaugeMomentumFilltype::One, Matrix6x6FieldFillType::ascendingReal6x6, ODD,
                                        CloverParameters{nonTrivialParameter, nonTrivialParameter});
     }
     BOOST_AUTO_TEST_CASE(F_FERMION_CLOVER2_EO_4)
     {
+        logger.error() << "This tests fails due to constants conventions in kernels which have not been yet fixed!";
         testEvenOddClover2FermionForce(LatticeExtents{ns4, nt4}, GaugefieldFillType::ascendingInTDirNonTrivialInSpatial,
                                        GaugeMomentumFilltype::Ascending, Matrix6x6FieldFillType::ascendingReal6x6, EVEN,
                                        CloverParameters{nonTrivialParameter, nonTrivialParameter});
