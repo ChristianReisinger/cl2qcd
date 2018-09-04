@@ -24,56 +24,57 @@
 #ifndef _PHYSICS_LATTICES_ROOTED_SPINORFIELD_EO_
 #define _PHYSICS_LATTICES_ROOTED_SPINORFIELD_EO_
 
-
 #include "../../hardware/system.hpp"
 #include "../algorithms/rational_approximation.hpp"
 #include "spinorfield_eo.hpp"
-#include "util.hpp" //This is to make the template pseudo_randomize friend of this class
+#include "util.hpp"  //This is to make the template pseudo_randomize friend of this class
 
 namespace physics {
-	namespace lattices {
-		namespace wilson {
-			//Representation of a rooted spinorfield with eo preconditioning
-		    class Rooted_Spinorfield_eo {
+    namespace lattices {
+        namespace wilson {
+            // Representation of a rooted spinorfield with eo preconditioning
+            class Rooted_Spinorfield_eo {
+              public:
+                Rooted_Spinorfield_eo(const hardware::System&, const RootedSpinorfieldEoParametersInterface&);
+                Rooted_Spinorfield_eo(const hardware::System&, const RootedSpinorfieldEoParametersInterface&,
+                                      const physics::algorithms::Rational_Approximation& approx);
 
-			public:
-				Rooted_Spinorfield_eo(const hardware::System&, const RootedSpinorfieldEoParametersInterface&);
-				Rooted_Spinorfield_eo(const hardware::System&, const RootedSpinorfieldEoParametersInterface&, const physics::algorithms::Rational_Approximation& approx);
+                ~Rooted_Spinorfield_eo(){};
 
-				~Rooted_Spinorfield_eo(){};
+                // Rescale coefficients on the basis of a Rational_Approximation objects
+                void Rescale_Coefficients(const physics::algorithms::Rational_Approximation& approx,
+                                          const hmc_float minEigenvalue, const hmc_float maxEigenvalue);
 
-				//Rescale coefficients on the basis of a Rational_Approximation objects
-				void Rescale_Coefficients(const physics::algorithms::Rational_Approximation& approx, const hmc_float minEigenvalue, const hmc_float maxEigenvalue);
-
-				Rooted_Spinorfield_eo& operator=(const Rooted_Spinorfield_eo&) = delete;
-				Rooted_Spinorfield_eo(const Rooted_Spinorfield_eo&) = delete;
-				Rooted_Spinorfield_eo() = delete;
+                Rooted_Spinorfield_eo& operator=(const Rooted_Spinorfield_eo&) = delete;
+                Rooted_Spinorfield_eo(const Rooted_Spinorfield_eo&)            = delete;
+                Rooted_Spinorfield_eo()                                        = delete;
 
                 unsigned int getOrder() const;
                 hmc_float get_a0() const;
                 std::vector<hmc_float> get_a() const;
                 std::vector<hmc_float> get_b() const;
-			    /**
-			     * This method returns the asked pseudofermion field
-			     */
-			    const std::unique_ptr<physics::lattices::Spinorfield_eo>& operator[](unsigned int) const;
+                /**
+                 * This method returns the asked pseudofermion field
+                 */
+                const std::unique_ptr<physics::lattices::Spinorfield_eo>& operator[](unsigned int) const;
 
-			    /*
-			     * Methods to be able to make range based for loops on Rooted_Staggeredfield_eo objects
-			     */
-			    std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo> >::iterator begin();
-			    std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo> >::const_iterator begin() const;
-			    std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo> >::iterator end();
-			    std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo> >::const_iterator end() const;
+                /*
+                 * Methods to be able to make range based for loops on Rooted_Staggeredfield_eo objects
+                 */
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo>>::iterator begin();
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo>>::const_iterator begin() const;
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo>>::iterator end();
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo>>::const_iterator end() const;
 
-			private:
-			    std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo> > pseudofermions;
-				physics::algorithms::Rational_Coefficients rationalCoefficients;
+              private:
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo>> pseudofermions;
+                physics::algorithms::Rational_Coefficients rationalCoefficients;
 
-//				friend void pseudo_randomize<Rooted_Spinorfield_eo, spinor>(const Rooted_Spinorfield_eo* to, int seed);
-			};
-		}
-	}
-}
+                // friend void pseudo_randomize<Rooted_Spinorfield_eo, spinor>(const Rooted_Spinorfield_eo* to, int
+                // seed);
+            };
+        }  // namespace wilson
+    }      // namespace lattices
+}  // namespace physics
 
 #endif /*_PHYSICS_LATTICES_ROOTED_SPINORFIELD_EO_ */

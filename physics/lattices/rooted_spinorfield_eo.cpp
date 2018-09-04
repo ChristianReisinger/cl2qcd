@@ -23,78 +23,90 @@
 
 #include "rooted_spinorfield_eo.hpp"
 
-physics::lattices::wilson::Rooted_Spinorfield_eo::Rooted_Spinorfield_eo(const hardware::System& system
-																	, const RootedSpinorfieldEoParametersInterface& rootedSpinorfieldEoParametersInterface)
-	: rationalCoefficients(std::max(rootedSpinorfieldEoParametersInterface.getMetropolisRationalApproximationOrder()
-		, rootedSpinorfieldEoParametersInterface.getMolecularDynamicsRationalApproximationOrder()))
+physics::lattices::wilson::Rooted_Spinorfield_eo::Rooted_Spinorfield_eo(
+    const hardware::System& system,
+    const RootedSpinorfieldEoParametersInterface& rootedSpinorfieldEoParametersInterface)
+    : rationalCoefficients(
+          std::max(rootedSpinorfieldEoParametersInterface.getMetropolisRationalApproximationOrder(),
+                   rootedSpinorfieldEoParametersInterface.getMolecularDynamicsRationalApproximationOrder()))
 {
     const unsigned int numberOfPseudofermions = rootedSpinorfieldEoParametersInterface.getNumberOfPseudofermions();
     pseudofermions.reserve(numberOfPseudofermions);
-    for(unsigned int j=0; j<numberOfPseudofermions; j++){
-        pseudofermions.emplace_back(new physics::lattices::Spinorfield_eo(system, rootedSpinorfieldEoParametersInterface));
+    for (unsigned int j = 0; j < numberOfPseudofermions; j++) {
+        pseudofermions.emplace_back(
+            new physics::lattices::Spinorfield_eo(system, rootedSpinorfieldEoParametersInterface));
     }
 }
 
-physics::lattices::wilson::Rooted_Spinorfield_eo::Rooted_Spinorfield_eo(const hardware::System& system
-																	, const RootedSpinorfieldEoParametersInterface& rootedSpinorfieldEoParametersInterface
-																	, const physics::algorithms::Rational_Approximation& approx)
-	: rationalCoefficients(approx.Get_order(), approx.Get_a0(), approx.Get_a(), approx.Get_b())
+physics::lattices::wilson::Rooted_Spinorfield_eo::Rooted_Spinorfield_eo(
+    const hardware::System& system,
+    const RootedSpinorfieldEoParametersInterface& rootedSpinorfieldEoParametersInterface,
+    const physics::algorithms::Rational_Approximation& approx)
+    : rationalCoefficients(approx.Get_order(), approx.Get_a0(), approx.Get_a(), approx.Get_b())
 {
     const unsigned int numberOfPseudofermions = rootedSpinorfieldEoParametersInterface.getNumberOfPseudofermions();
     pseudofermions.reserve(numberOfPseudofermions);
-    for(unsigned int j=0; j<numberOfPseudofermions; j++){
-        pseudofermions.emplace_back(new physics::lattices::Spinorfield_eo(system, rootedSpinorfieldEoParametersInterface));
+    for (unsigned int j = 0; j < numberOfPseudofermions; j++) {
+        pseudofermions.emplace_back(
+            new physics::lattices::Spinorfield_eo(system, rootedSpinorfieldEoParametersInterface));
     }
 }
 
-void physics::lattices::wilson::Rooted_Spinorfield_eo::Rescale_Coefficients(const physics::algorithms::Rational_Approximation& approx, const hmc_float minEigenvalue, const hmc_float maxEigenvalue)
+void physics::lattices::wilson::Rooted_Spinorfield_eo::Rescale_Coefficients(
+    const physics::algorithms::Rational_Approximation& approx, const hmc_float minEigenvalue,
+    const hmc_float maxEigenvalue)
 {
-//	physics::algorithms::Rational_Coefficients aux = ;
-//	rationalCoefficients.Set_coeff(aux.Get_a0(), aux.Get_a(), aux.Get_b());
-	rationalCoefficients = std::move(approx.Rescale_Coefficients(minEigenvalue, maxEigenvalue));
+    //	physics::algorithms::Rational_Coefficients aux = ;
+    //	rationalCoefficients.Set_coeff(aux.Get_a0(), aux.Get_a(), aux.Get_b());
+    rationalCoefficients = std::move(approx.Rescale_Coefficients(minEigenvalue, maxEigenvalue));
 }
 
 unsigned int physics::lattices::wilson::Rooted_Spinorfield_eo::getOrder() const
 {
-	return rationalCoefficients.Get_order();
+    return rationalCoefficients.Get_order();
 }
 
 hmc_float physics::lattices::wilson::Rooted_Spinorfield_eo::get_a0() const
 {
-	return rationalCoefficients.Get_a0();
+    return rationalCoefficients.Get_a0();
 }
 
 std::vector<hmc_float> physics::lattices::wilson::Rooted_Spinorfield_eo::get_a() const
 {
-	return rationalCoefficients.Get_a();
+    return rationalCoefficients.Get_a();
 }
 
 std::vector<hmc_float> physics::lattices::wilson::Rooted_Spinorfield_eo::get_b() const
 {
-	return rationalCoefficients.Get_b();
+    return rationalCoefficients.Get_b();
 }
 
-const std::unique_ptr<physics::lattices::Spinorfield_eo>& physics::lattices::wilson::Rooted_Spinorfield_eo::operator[](unsigned int index) const
+const std::unique_ptr<physics::lattices::Spinorfield_eo>& physics::lattices::wilson::Rooted_Spinorfield_eo::
+operator[](unsigned int index) const
 {
     return pseudofermions[index];
 }
 
-std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo> >::iterator physics::lattices::wilson::Rooted_Spinorfield_eo::begin()
+std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo>>::iterator
+physics::lattices::wilson::Rooted_Spinorfield_eo::begin()
 {
     return pseudofermions.begin();
 }
 
-std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo> >::const_iterator physics::lattices::wilson::Rooted_Spinorfield_eo::begin() const
+std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo>>::const_iterator
+physics::lattices::wilson::Rooted_Spinorfield_eo::begin() const
 {
     return pseudofermions.begin();
 }
 
-std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo> >::iterator physics::lattices::wilson::Rooted_Spinorfield_eo::end()
+std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo>>::iterator
+physics::lattices::wilson::Rooted_Spinorfield_eo::end()
 {
     return pseudofermions.end();
 }
 
-std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo> >::const_iterator physics::lattices::wilson::Rooted_Spinorfield_eo::end() const
+std::vector<std::unique_ptr<physics::lattices::Spinorfield_eo>>::const_iterator
+physics::lattices::wilson::Rooted_Spinorfield_eo::end() const
 {
     return pseudofermions.end();
 }

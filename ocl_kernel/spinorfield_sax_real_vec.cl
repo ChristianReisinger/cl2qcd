@@ -19,13 +19,14 @@
  */
 
 // out = alpha*x
-__kernel void sax_real_vec(__global const spinor * const restrict x, __global const hmc_float * const restrict alpha, const int index_alpha, __global spinor * const restrict out)
+__kernel void sax_real_vec(__global const spinor* const restrict x, __global const hmc_float* const restrict alpha,
+                           const int index_alpha, __global spinor* const restrict out)
 {
-	int id = get_global_id(0);
-	int global_size = get_global_size(0);
+    int id          = get_global_id(0);
+    int global_size = get_global_size(0);
 
-	for(int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
-		spinor x_tmp = x[id_mem];
-		out[id_mem] = real_multiply_spinor(x_tmp, alpha[index_alpha]);
-	}
+    for (int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
+        spinor x_tmp = x[id_mem];
+        out[id_mem]  = real_multiply_spinor(x_tmp, alpha[index_alpha]);
+    }
 }

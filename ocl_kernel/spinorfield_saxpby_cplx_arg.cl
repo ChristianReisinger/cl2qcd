@@ -27,25 +27,22 @@
 //  - beta:  The complex number by which y has to be multiplied
 //  - out: The output spinor field: alpha*x+beta*y (site by site)
 
-
-
-
-__kernel void saxpby_cplx_arg(__global const spinor * const x, __global const spinor * const y, const hmc_float alpha_re, const hmc_float alpha_im, const hmc_float beta_re, const hmc_float beta_im, __global spinor * const out)
+__kernel void saxpby_cplx_arg(__global const spinor* const x, __global const spinor* const y, const hmc_float alpha_re,
+                              const hmc_float alpha_im, const hmc_float beta_re, const hmc_float beta_im,
+                              __global spinor* const out)
 {
+    const int id          = get_global_id(0);
+    const int global_size = get_global_size(0);
 
-	const int id = get_global_id(0);
-	const int global_size = get_global_size(0);
+    const hmc_complex alpha = (hmc_complex){alpha_re, alpha_im};
+    const hmc_complex beta  = (hmc_complex){beta_re, beta_im};
 
-	const hmc_complex alpha = (hmc_complex) {alpha_re, alpha_im};
-	const hmc_complex beta = (hmc_complex) { beta_re,  beta_im};
+    for (int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
+        const spinor x_tmp     = x[id_mem];
+        const spinor x_tmp_tmp = spinor_times_complex(x_tmp, alpha);
+        const spinor y_tmp     = y[id_mem];
+        const spinor y_tmp_tmp = spinor_times_complex(y_tmp, beta);
 
-	for(int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
-		const spinor x_tmp = x[id_mem];
-		const spinor x_tmp_tmp = spinor_times_complex(x_tmp, alpha);
-		const spinor y_tmp = y[id_mem];
-		const spinor y_tmp_tmp = spinor_times_complex(y_tmp, beta);
-
-		out[id_mem] = spinor_acc(y_tmp_tmp, x_tmp_tmp);
-	}
-
+        out[id_mem] = spinor_acc(y_tmp_tmp, x_tmp_tmp);
+    }
 }

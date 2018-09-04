@@ -27,17 +27,19 @@
 //  - index_beta: Constant beta to be used
 //  - out: The output spinor field: alpha*x+beta*y (site by site)
 
-__kernel void saxpby_real_vec(__global const spinor * const x, __global const spinor * const y, __global const hmc_float * const alpha, __global hmc_float * beta, const int index_alpha, const int index_beta, __global spinor * const out)
+__kernel void saxpby_real_vec(__global const spinor* const x, __global const spinor* const y,
+                              __global const hmc_float* const alpha, __global hmc_float* beta, const int index_alpha,
+                              const int index_beta, __global spinor* const out)
 {
-	const int id = get_global_id(0);
-	const int global_size = get_global_size(0);
+    const int id          = get_global_id(0);
+    const int global_size = get_global_size(0);
 
-	for(int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
-		const spinor x_tmp = x[id_mem];
-		const spinor x_tmp_tmp = real_multiply_spinor(x_tmp, alpha[index_alpha]);
-		const spinor y_tmp = y[id_mem];
-		const spinor y_tmp_tmp = real_multiply_spinor(y_tmp, beta[index_beta]);
+    for (int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
+        const spinor x_tmp     = x[id_mem];
+        const spinor x_tmp_tmp = real_multiply_spinor(x_tmp, alpha[index_alpha]);
+        const spinor y_tmp     = y[id_mem];
+        const spinor y_tmp_tmp = real_multiply_spinor(y_tmp, beta[index_beta]);
 
         out[id_mem] = spinor_acc(x_tmp_tmp, y_tmp_tmp);
-	}
+    }
 }

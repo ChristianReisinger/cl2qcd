@@ -27,27 +27,28 @@
 #include "../../hardware/system.hpp"
 #include "../algorithms/rational_approximation.hpp"
 #include "spinorfield.hpp"
-#include "util.hpp" //This is to make the template pseudo_randomize friend of this class
+#include "util.hpp"  //This is to make the template pseudo_randomize friend of this class
 
 namespace physics {
-	namespace lattices {
-		namespace wilson {
+    namespace lattices {
+        namespace wilson {
 
-			//Representation of a rooted spinorfield without eo preconditioning
-		    class Rooted_Spinorfield {
+            // Representation of a rooted spinorfield without eo preconditioning
+            class Rooted_Spinorfield {
+              public:
+                Rooted_Spinorfield(const hardware::System&, const RootedSpinorfieldParametersInterface&);
+                Rooted_Spinorfield(const hardware::System&, const RootedSpinorfieldParametersInterface&,
+                                   const physics::algorithms::Rational_Approximation& approx);
 
-				public:
-				Rooted_Spinorfield(const hardware::System&, const RootedSpinorfieldParametersInterface&);
-				Rooted_Spinorfield(const hardware::System&, const RootedSpinorfieldParametersInterface&, const physics::algorithms::Rational_Approximation& approx);
+                ~Rooted_Spinorfield(){};
 
-				~Rooted_Spinorfield(){};
+                // Rescale coefficients on the basis of a Rational_Approximation objects
+                void Rescale_Coefficients(const physics::algorithms::Rational_Approximation& approx,
+                                          const hmc_float minEigenvalue, const hmc_float maxEigenvalue);
 
-				//Rescale coefficients on the basis of a Rational_Approximation objects
-				void Rescale_Coefficients(const physics::algorithms::Rational_Approximation& approx, const hmc_float minEigenvalue, const hmc_float maxEigenvalue);
-
-				Rooted_Spinorfield& operator=(const Rooted_Spinorfield&) = delete;
-				Rooted_Spinorfield(const Rooted_Spinorfield&) = delete;
-				Rooted_Spinorfield() = delete;
+                Rooted_Spinorfield& operator=(const Rooted_Spinorfield&) = delete;
+                Rooted_Spinorfield(const Rooted_Spinorfield&)            = delete;
+                Rooted_Spinorfield()                                     = delete;
 
                 unsigned int getOrder() const;
                 hmc_float get_a0() const;
@@ -61,19 +62,19 @@ namespace physics {
                 /*
                  * Methods to be able to make range based for loops on Rooted_Staggeredfield_eo objects
                  */
-                std::vector<std::unique_ptr<physics::lattices::Spinorfield> >::iterator begin();
-                std::vector<std::unique_ptr<physics::lattices::Spinorfield> >::const_iterator begin() const;
-                std::vector<std::unique_ptr<physics::lattices::Spinorfield> >::iterator end();
-                std::vector<std::unique_ptr<physics::lattices::Spinorfield> >::const_iterator end() const;
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield>>::iterator begin();
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield>>::const_iterator begin() const;
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield>>::iterator end();
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield>>::const_iterator end() const;
 
-				private:
-                std::vector<std::unique_ptr<physics::lattices::Spinorfield> > pseudofermions;
-				physics::algorithms::Rational_Coefficients rationalCoefficients;
+              private:
+                std::vector<std::unique_ptr<physics::lattices::Spinorfield>> pseudofermions;
+                physics::algorithms::Rational_Coefficients rationalCoefficients;
 
-				friend void pseudo_randomize<Rooted_Spinorfield, spinor>(const Rooted_Spinorfield* to, int seed);
-			};
-		}
-	}
-}
+                friend void pseudo_randomize<Rooted_Spinorfield, spinor>(const Rooted_Spinorfield* to, int seed);
+            };
+        }  // namespace wilson
+    }      // namespace lattices
+}  // namespace physics
 
 #endif /*_PHYSICS_LATTICES_ROOTED_SPINORFIELD_ */
