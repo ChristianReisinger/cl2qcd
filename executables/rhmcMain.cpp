@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2014,2018 Alessandro Sciarra
  * Copyright (c) 2016 Christopher Czaban
+ * Copyright (c) 2018 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -28,26 +29,25 @@
 
 int main(int argc, const char* argv[])
 {
-	try {
-	  rhmcExecutable rhmcInstance(argc, argv);
-	  rhmcInstance.generateConfigurations();
-	} //try
-	//exceptions from Opencl classes
-	catch (Opencl_Error& e) {
-		logger.fatal() << e.what();
-		exit(1);
-	} catch (File_Exception& fe) {
-		logger.fatal() << "Could not open file: " << fe.get_filename();
-		logger.fatal() << "Aborting.";
-		exit(1);
-	} catch (Print_Error_Message& em) {
-		logger.fatal() << em.what();
-		exit(1);
-	} catch (Invalid_Parameters& es) {
-		logger.fatal() << es.what();
-		exit(1);
-	}
+    try {
+        rhmcExecutable rhmcInstance(argc, argv);
+        rhmcInstance.generateConfigurations();
+    }  // try
+    // exceptions from Opencl classes
+    catch (Opencl_Error& e) {
+        logger.fatal() << e.what();
+        exit(1);
+    } catch (File_Exception& fe) {
+        logger.fatal() << "Could not open file: " << fe.get_filename();
+        logger.fatal() << "Aborting.";
+        exit(1);
+    } catch (Print_Error_Message& em) {
+        logger.fatal() << em.what();
+        exit(1);
+    } catch (Invalid_Parameters& es) {
+        logger.fatal() << es.what();
+        exit(1);
+    }
 
-	return 0;
-
+    return 0;
 }

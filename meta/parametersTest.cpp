@@ -3,6 +3,7 @@
  * Copyright (c) 2014 Christopher Pinke
  * Copyright (c) 2014 Matthias Bach
  * Copyright (c) 2018 Alessandro Sciarra
+ * Copyright (c) 2018 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -24,26 +25,18 @@
 
 double meta::ParametersTest::get_test_ref_value() const noexcept
 {
-	return test_ref_value;
+    return test_ref_value;
 }
 double meta::ParametersTest::get_test_ref_value2() const noexcept
 {
-	return test_ref_value2;
+    return test_ref_value2;
 }
 
-meta::ParametersTest::ParametersTest()
-	: options("Test options")
+meta::ParametersTest::ParametersTest() : test_ref_value(0.), test_ref_value2(0.), options("Test options")
 {
     // clang-format off
-	options.add_options()
-	("test_ref_val", po::value<double>(&test_ref_value)->default_value(0.))
-	("test_ref_val2", po::value<double>(&test_ref_value2)->default_value(0.));
-	// clang-format on
-}
-
-meta::ParametersTest::~ParametersTest() = default;
-
-po::options_description & meta::ParametersTest::getOptions()
-{
-	return options;
+    options.add_options()
+    ("testRefVal", po::value<double>(&test_ref_value)->default_value(test_ref_value), "The reference value for the test.")
+    ("testRefVal2", po::value<double>(&test_ref_value2)->default_value(test_ref_value2), "Another reference value for the test.");
+    // clang-format on
 }

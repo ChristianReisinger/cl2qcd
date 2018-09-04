@@ -3,7 +3,7 @@
  * Copyright (c) 2014,2018 Alessandro Sciarra
  * Copyright (c) 2014 Christopher Pinke
  * Copyright (c) 2014 Matthias Bach
- * Copyright (c) 2015 Francesca Cuteri
+ * Copyright (c) 2015,2018 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -27,37 +27,36 @@
 #include "parametersBasic.hpp"
 
 namespace meta {
-class ParametersObs {
-public:
+    class ParametersObs {
+      public:
+        bool get_measure_transportcoefficient_kappa() const noexcept;
+        bool get_measure_rectangles() const noexcept;
+        bool get_measure_correlators() const noexcept;
+        bool get_measure_pbp() const noexcept;
+        common::pbp_version get_pbp_version() const noexcept;
+        int get_corr_dir() const noexcept;
+        int get_pbp_measurements() const noexcept;
 
-	bool get_measure_transportcoefficient_kappa() const noexcept;
-	bool get_measure_rectangles() const noexcept;
-	bool get_measure_correlators() const noexcept;
-	bool get_measure_pbp() const noexcept;
-	common::pbp_version get_pbp_version() const noexcept;
-	int get_corr_dir() const noexcept;
-	int get_pbp_measurements() const noexcept;
+      private:
+        bool measure_transportcoefficient_kappa;
+        bool measure_rectangles;
+        bool measure_correlators;
+        bool measure_pbp;
+        int corr_dir;
+        int pbp_measurements;
 
-private:
-	po::options_description options;
+      protected:
+        ParametersObs();
+        virtual ~ParametersObs()            = default;
+        ParametersObs(ParametersObs const&) = delete;
+        ParametersObs& operator=(ParametersObs const&) = delete;
+        void makeNeededTranslations();
 
-	bool measure_transportcoefficient_kappa;
-	bool measure_rectangles;
-	bool measure_correlators;
-	bool measure_pbp;
-	int corr_dir;
-	int pbp_measurements;
+        InputparametersOptions options;
+        std::string pbp_version_String;
+        common::pbp_version pbp_version_;
+    };
 
-protected:
-	ParametersObs();
-	virtual ~ParametersObs();
-	ParametersObs(ParametersObs const&) = delete;
-	ParametersObs & operator=(ParametersObs const&) = delete;
-	po::options_description & getOptions();
-
-	common::pbp_version pbp_version_;
-};
-
-}
+}  // namespace meta
 
 #endif

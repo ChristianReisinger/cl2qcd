@@ -2,7 +2,7 @@
  *
  * Copyright (c) 2014 Christopher Pinke
  * Copyright (c) 2014 Matthias Bach
- * Copyright (c) 2015 Francesca Cuteri
+ * Copyright (c) 2015,2018 Francesca Cuteri
  * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
@@ -27,58 +27,59 @@
 #include "parametersBasic.hpp"
 
 namespace meta {
-class ParametersFermion {
-public:
-	common::action get_fermact() const noexcept;
-	common::action get_fermact_mp() const noexcept;
-	double get_kappa() const noexcept;
-	double get_mass() const noexcept;
-	double get_mu() const noexcept;
-	double get_csw() const noexcept;
-	double get_kappa_mp() const noexcept;
-	double get_mu_mp() const noexcept;
-	double get_csw_mp() const noexcept;
-	double get_theta_fermion_spatial() const noexcept;
-	double get_theta_fermion_temporal() const noexcept;
-	double get_chem_pot_re() const noexcept;
-	double get_chem_pot_im() const noexcept;
-	bool get_use_chem_pot_re() const noexcept;
-	bool get_use_chem_pot_im() const noexcept;
-	bool get_use_eo() const noexcept;
-	bool get_use_merge_kernels_fermion() const noexcept;
-	bool get_use_merge_kernels_spinor() const noexcept;
+    class ParametersFermion {
+      public:
+        common::action get_fermact() const noexcept;
+        common::action get_fermact_mp() const noexcept;
+        double get_kappa() const noexcept;
+        double get_mass() const noexcept;
+        double get_mu() const noexcept;
+        double get_csw() const noexcept;
+        double get_kappa_mp() const noexcept;
+        double get_mu_mp() const noexcept;
+        double get_csw_mp() const noexcept;
+        double get_theta_fermion_spatial() const noexcept;
+        double get_theta_fermion_temporal() const noexcept;
+        double get_chem_pot_re() const noexcept;
+        double get_chem_pot_im() const noexcept;
+        bool get_use_chem_pot_re() const noexcept;
+        bool get_use_chem_pot_im() const noexcept;
+        bool get_use_eo() const noexcept;
+        bool get_use_merge_kernels_fermion() const noexcept;
+        bool get_use_merge_kernels_spinor() const noexcept;
 
-private:
-	po::options_description options;
+      private:
+        double kappa;
+        double mass;  // staggered quark mass
+        double mu;
+        double csw;
+        double kappa_mp;
+        double mu_mp;
+        double csw_mp;
+        double theta_fermion_spatial;
+        double theta_fermion_temporal;
+        bool use_chem_pot_re;
+        bool use_chem_pot_im;
+        double chem_pot_re;
+        double chem_pot_im;
+        bool use_eo;
+        bool use_merge_kernels_fermion;
+        bool use_merge_kernels_spinor;
 
-	double kappa;
-	double mass; //staggered quark mass
-	double mu;
-	double csw;
-	double kappa_mp;
-	double mu_mp;
-	double csw_mp;
-	double theta_fermion_spatial;
-	double theta_fermion_temporal;
-	bool use_chem_pot_re;
-	bool use_chem_pot_im;
-	double chem_pot_re;
-	double chem_pot_im;
-	bool use_eo;
-	bool use_merge_kernels_fermion;
-	bool use_merge_kernels_spinor;
+      protected:
+        ParametersFermion();
+        virtual ~ParametersFermion()                = default;
+        ParametersFermion(ParametersFermion const&) = delete;
+        ParametersFermion& operator=(ParametersFermion const&) = delete;
+        void makeNeededTranslations();
 
-protected:
-	ParametersFermion();
-	virtual ~ParametersFermion();
-	ParametersFermion(ParametersFermion const&) = delete;
-	ParametersFermion & operator=(ParametersFermion const&) = delete;
-	po::options_description & getOptions();
+        InputparametersOptions options;
+        std::string fermactString;
+        std::string fermactMPString;
+        common::action fermact;
+        common::action fermactMP;
+    };
 
-	common::action fermact;
-	common::action fermact_mp;
-};
-
-}
+}  // namespace meta
 
 #endif

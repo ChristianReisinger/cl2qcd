@@ -3,6 +3,7 @@
  * Copyright (c) 2014,2015 Christopher Pinke
  * Copyright (c) 2014 Matthias Bach
  * Copyright (c) 2018 Alessandro Sciarra
+ * Copyright (c) 2018 Francesca Cuteri
  *
  * This file is part of CL2QCD.
  *
@@ -22,157 +23,200 @@
 
 #include "parametersConfig.hpp"
 
+#include "../executables/exceptions.hpp"
+
+#include <boost/algorithm/string.hpp>
+
+static common::startcondition translateStartConditionToEnum(std::string);
+
 size_t meta::ParametersConfig::get_precision() const noexcept
 {
-	return precision;
+    return precision;
 }
 
 const std::vector<int> meta::ParametersConfig::get_selected_devices() const noexcept
 {
-	return selected_devices;
+    return selected_devices;
 }
 int meta::ParametersConfig::get_device_count() const noexcept
 {
-	return device_count;
+    return device_count;
 }
 bool meta::ParametersConfig::get_use_gpu() const noexcept
 {
-	return use_gpu;
+    return use_gpu;
 }
 bool meta::ParametersConfig::get_use_cpu() const noexcept
 {
-	return use_cpu;
+    return use_cpu;
 }
 bool meta::ParametersConfig::get_enable_profiling() const noexcept
 {
-	return enable_profiling;
-}
-
-bool meta::ParametersConfig::get_use_aniso() const noexcept
-{
-	return use_aniso;
+    return enable_profiling;
 }
 
 int meta::ParametersConfig::get_nspace() const noexcept
 {
-	return nspace;
+    return nspace;
 }
 int meta::ParametersConfig::get_ntime() const noexcept
 {
-	return ntime;
+    return ntime;
 }
 
 common::startcondition meta::ParametersConfig::get_startcondition() const noexcept
 {
-	return _startcondition;
+    return _startcondition;
 }
 
 std::string meta::ParametersConfig::get_sourcefile() const noexcept
 {
-	return sourcefile;
+    return sourcefile;
 }
 bool meta::ParametersConfig::get_ignore_checksum_errors() const noexcept
 {
-	return ignore_checksum_errors;
+    return ignore_checksum_errors;
 }
 bool meta::ParametersConfig::get_print_to_screen() const noexcept
 {
-	return print_to_screen;
+    return print_to_screen;
 }
 uint32_t meta::ParametersConfig::get_host_seed() const noexcept
 {
-	return host_seed;
+    return host_seed;
 }
 std::string meta::ParametersConfig::get_initial_prng_state() const noexcept
 {
-	return initial_prng_state;
+    return initial_prng_state;
 }
 
 int meta::ParametersConfig::get_benchmarksteps() const noexcept
 {
-	return benchmarksteps;
+    return benchmarksteps;
 }
 
 bool meta::ParametersConfig::get_use_same_rnd_numbers() const noexcept
 {
-	return use_same_rnd_numbers;
+    return use_same_rnd_numbers;
 }
 
 bool meta::ParametersConfig::is_ocl_compiler_opt_disabled() const noexcept
 {
-	return ocl_compiler_opt_disabled;
+    return ocl_compiler_opt_disabled;
 }
 
 std::string meta::ParametersConfig::get_log_level() const noexcept
 {
-	return log_level;
+    return log_level;
 }
 
-//parameters to read in gauge configurations
+// parameters to read in gauge configurations
 bool meta::ParametersConfig::get_read_multiple_configs() const noexcept
 {
-	return read_multiple_configs;
+    return read_multiple_configs;
 }
 int meta::ParametersConfig::get_config_read_start() const noexcept
 {
-	return config_read_start;
+    return config_read_start;
 }
 int meta::ParametersConfig::get_config_read_end() const noexcept
 {
-	return config_read_end;
+    return config_read_end;
 }
 int meta::ParametersConfig::get_config_read_incr() const noexcept
 {
-	return config_read_incr;
+    return config_read_incr;
 }
 
 bool meta::ParametersConfig::get_use_rec12() const noexcept
 {
-	return use_rec12;
+    return use_rec12;
 }
 
 bool meta::ParametersConfig::get_split_cpu() const noexcept
 {
-	return split_cpu;
+    return split_cpu;
 }
 
 meta::ParametersConfig::ParametersConfig()
-	: options("Configuration options")
+    : precision(sizeof(double) * 8)
+    , selected_devices(0)
+    , device_count(0)
+    , use_gpu(true)
+    , use_cpu(true)
+    , enable_profiling(false)
+    , nspace(4)
+    , ntime(8)
+    , read_multiple_configs(false)
+    , config_read_start(0)
+    , config_read_end(1)
+    , config_read_incr(1)
+    , sourcefile("conf.00000")
+    , ignore_checksum_errors(false)
+    , print_to_screen(false)
+    , host_seed(4815)
+    , initial_prng_state("")
+    , benchmarksteps(500)
+    , use_same_rnd_numbers(false)
+    , use_rec12(false)
+    , ocl_compiler_opt_disabled(false)
+    , log_level("ALL")
+    , split_cpu(false)
+    , options("Hardware and lattice options")
+    , _startconditionString("cold")
+    , _startcondition(common::startcondition::cold_start)
 {
     // clang-format off
-	options.add_options()
-	("prec", po::value<size_t>(&precision)->default_value(sizeof(double) * 8))
-	("device,d", po::value<std::vector<int>>(&selected_devices), "ID of a device to use. Can be specified multiple times.")
-	("num_dev", po::value<int>(&device_count)->default_value(0), "Maximum number of devices to use.")
-	("use_gpu", po::value<bool>(&use_gpu)->default_value(true), "Use GPUs")
-	("use_cpu", po::value<bool>(&use_cpu)->default_value(true), "Use CPUs")
-	("enable_profiling", po::value<bool>(&enable_profiling)->default_value(false), "Enable profiling of kernel execution. Implies slower performance due to synchronization after each kernel call.")
-	("nspace", po::value<int>(&nspace)->default_value(4))
-	("ntime", po::value<int>(&ntime)->default_value(8))
-	("startcondition", po::value<std::string>()->default_value("cold_start"))
-	("sourcefile", po::value<std::string>(&sourcefile)->default_value("conf.00000"))
-	("print_to_screen", po::value<bool>(&print_to_screen)->default_value(false))
-	("host_seed", po::value<uint32_t>(&host_seed)->default_value(4815))
-	("initial_prng_state", po::value<std::string>(&initial_prng_state)->default_value(""))
-	("use_same_rnd_numbers", po::value<bool>(&use_same_rnd_numbers)->default_value(false), "Use random numbers compatible with a scalar version. SLOW!")
-	("disable-ocl-compiler-opt", po::value<bool>(&ocl_compiler_opt_disabled)->default_value(false), "Disable OpenCL compiler from performing optimizations (adds -cl-disable-opt)")
-	("use_rec12", po::value<bool>(&use_rec12)->default_value(false), "Use reconstruct 12 compression for SU3 matrices")
-	("log-level", po::value<std::string>(&log_level)->default_value("ALL"), "Minimum output log level: ALL TRACE DEBUG INFO WARN ERROR FATAL OFF")
-	("read_multiple_configs", po::value<bool>(&read_multiple_configs)->default_value(false), "Read in more than one gaugefield configuration")
-	("config_read_start", po::value<int>(&config_read_start)->default_value(0), "Number to begin with when reading in more than one gaugefield configuration")
-	("config_read_end", po::value<int>(&config_read_end)->default_value(1), "Number to end with when reading in more than one gaugefield configuration")
-	("config_read_incr", po::value<int>(&config_read_incr)->default_value(1), "Increment for gaugefield configuration number when reading in more than one gaugefield configuration")
-	("split_cpu", po::value<bool>(&split_cpu)->default_value(false), "Split the CPU into multiple devices to avoid numa issues. (Requires OpenCL 1.2 at least)")
-	("benchmarksteps", po::value<int>(&benchmarksteps)->default_value(500))
-	("ignore_checksum_errors", po::value<bool>(&ignore_checksum_errors)->default_value(false))
-	//todo: this is not used ?!
-	("use_aniso", po::value<bool>(&use_aniso)->default_value(false));
-	// clang-format on
+    options.add_options()
+    ("precision", po::value<size_t>(&precision)->default_value(precision), "The precision in bit of any I/O storage operation and device calculation.")
+    ("deviceId", po::value<std::vector<int>>(&selected_devices), "The ID number of a device to use. Can be specified multiple times to use multiple devices.")
+    ("nDevices", po::value<int>(&device_count)->default_value(device_count), "The maximum number of devices to use. By default all available devices of selected type are used.")
+    ("useGPU", po::value<bool>(&use_gpu)->default_value(use_gpu), "Whether to use GPUs.")
+    ("useCPU", po::value<bool>(&use_cpu)->default_value(use_cpu), "Whether to use CPUs.")
+    ("enableProfiling", po::value<bool>(&enable_profiling)->default_value(enable_profiling), "Whether to profile kernel execution. This option implies slower performance due to synchronization after each kernel call.")
+    ("nSpace", po::value<int>(&nspace)->default_value(nspace), "The spatial extent of the lattice.")
+    ("nTime", po::value<int>(&ntime)->default_value(ntime), "The temporal extent of the lattice.")
+    ("startCondition", po::value<std::string>(&_startconditionString)->default_value(_startconditionString), "The gaugefield starting condition (e.g. cold, hot, continue).")
+    ("initialConf", po::value<std::string>(&sourcefile)->default_value(sourcefile), "The path of the file containing the gauge configuration to start from.")
+    ("printToScreen", po::value<bool>(&print_to_screen)->default_value(print_to_screen), "Whether to print the onfly measurements to the standard output.")
+    ("hostSeed", po::value<uint32_t>(&host_seed)->default_value(host_seed),"The random seed to initialize the pseudo random number generator.")
+    ("initialPRNG", po::value<std::string>(&initial_prng_state)->default_value(initial_prng_state),"The path of the file containing the pseudo random number generator state to start from.")
+    ("useSameRandomNumbers", po::value<bool>(&use_same_rnd_numbers)->default_value(use_same_rnd_numbers), "Whether to use random numbers compatible with a scalar version. If it is set to 'true', then the number of random states is one instead of being equal to the number of global threads. This option implies a huge loss in performance, hence it should be used with care!")
+    ("disableOclCompilerOptimization", po::value<bool>(&ocl_compiler_opt_disabled)->default_value(ocl_compiler_opt_disabled), "Whether to disable OpenCL compiler from performing optimizations (cf. -cl-disable-opt).")
+    ("useReconstruct12", po::value<bool>(&use_rec12)->default_value(use_rec12), "Whether to use reconstruct 12 compression for SU3 matrices, i.e. consider gauge links stored using 12 complex numbers instead of 18.")
+    ("logLevel", po::value<std::string>(&log_level)->default_value(log_level), "The minimum output log level (one among ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF).")
+    ("readMultipleConfs", po::value<bool>(&read_multiple_configs)->default_value(read_multiple_configs), "Whether to use more than one gaugefield configuration at once.")
+    ("readFromConfNumber", po::value<int>(&config_read_start)->default_value(config_read_start), "The number to begin with when using more than one gaugefield configuration at once.")
+    ("readUntilConfNumber", po::value<int>(&config_read_end)->default_value(config_read_end), "The number to end at when using more than one gaugefield configuration at once.")
+    ("readConfsEvery", po::value<int>(&config_read_incr)->default_value(config_read_incr), "The increment for the gaugefield configuration number when using more than one gaugefield configuration at once.")
+    ("splitCPU", po::value<bool>(&split_cpu)->default_value(split_cpu), "Whether to split the CPU into multiple devices to avoid numa issues. This option requires OpenCL 1.2 at least.")
+    ("nBenchmarkIterations", po::value<int>(&benchmarksteps)->default_value(benchmarksteps), "The number of times a kernel is executed for benchmark purposes.")
+    ("ignoreChecksumErrors", po::value<bool>(&ignore_checksum_errors)->default_value(ignore_checksum_errors), "Whether to ignore checksum errors, e.g. reading conf files.");
+    // clang-format on
 }
 
-meta::ParametersConfig::~ParametersConfig() = default;
-
-po::options_description & meta::ParametersConfig::getOptions()
+static common::startcondition translateStartConditionToEnum(std::string s)
 {
-	return options;
+    boost::algorithm::to_lower(s);
+    std::map<std::string, common::startcondition> m;
+    m["cold_start"]        = common::cold_start;
+    m["cold"]              = common::cold_start;
+    m["hot_start"]         = common::hot_start;
+    m["hot"]               = common::hot_start;
+    m["start_from_source"] = common::start_from_source;
+    m["source"]            = common::start_from_source;
+    m["continue"]          = common::start_from_source;
+
+    common::startcondition a = m[s];
+    if (a) {
+        return a;
+    } else {
+        throw Invalid_Parameters("Unkown start condition!",
+                                 "cold_start, cold, hot_start, hot, start_from_source, source, continue", s);
+    }
+}
+
+void meta::ParametersConfig::makeNeededTranslations()
+{
+    _startcondition = translateStartConditionToEnum(_startconditionString);
 }

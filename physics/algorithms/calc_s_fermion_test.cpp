@@ -21,139 +21,149 @@
  * along with CL2QCD. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "metropolis.hpp"
-#include "../../interfaceImplementations/interfacesHandler.hpp"
 #include "../../interfaceImplementations/hardwareParameters.hpp"
+#include "../../interfaceImplementations/interfacesHandler.hpp"
 #include "../../interfaceImplementations/openClKernelParameters.hpp"
+#include "metropolis.hpp"
 
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MODULE physics::lattice::calc_s_fermion
 #include <boost/test/unit_test.hpp>
 
+BOOST_AUTO_TEST_CASE(calc_s_fermion_staggered)
+{
+    using namespace physics::algorithms;
+    using namespace physics::lattices;
 
-BOOST_AUTO_TEST_CASE(calc_s_fermion_staggered){
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=rooted_stagg", "--nDevices=1"};
+    meta::Inputparameters params(4, _params);
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    hardware::HardwareParametersImplementation hP(&params);
+    hardware::code::OpenClKernelParametersImplementation kP(params);
+    hardware::System system(hP, kP);
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	using namespace physics::algorithms;
-	using namespace physics::lattices;
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    Rational_Approximation approx(15, 1, 4, 1e-5, 1);
+    Rooted_Staggeredfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(),
+                                approx);
 
-	const char * _params[] = {"foo", "--ntime=4", "--fermact=rooted_stagg", "--num_dev=1"};
-	meta::Inputparameters params(4, _params);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	hardware::HardwareParametersImplementation hP(&params);
-	hardware::code::OpenClKernelParametersImplementation kP(params);
-	hardware::System system(hP, kP);
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    pseudo_randomize<Staggeredfield_eo, su3vec>(sf[0].get(), 123);
 
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
-	Rational_Approximation approx(15,1,4,1e-5,1);
-	Rooted_Staggeredfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Rooted_Staggeredfield_eo>(), approx);
+    hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler,
+                                         interfacesHandler.getAdditionalParameters<Rooted_Staggeredfield_eo>());
 
-	pseudo_randomize<Staggeredfield_eo, su3vec>(sf[0].get(), 123);
-
-	hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler, interfacesHandler.getAdditionalParameters<Rooted_Staggeredfield_eo>());
-
-	BOOST_CHECK_CLOSE(s_fermion, 260.29470334599131, 1.e-8);
+    BOOST_CHECK_CLOSE(s_fermion, 260.29470334599131, 1.e-8);
 }
 
-BOOST_AUTO_TEST_CASE(calc_s_fermion_rooted_wilson){
+BOOST_AUTO_TEST_CASE(calc_s_fermion_rooted_wilson)
+{
+    using namespace physics::algorithms;
+    using namespace physics::lattices;
+    std::cout << "Creating parameter string" << std::endl;
+    const char* _params[] = {"foo", "--nTime=4", "--nDevices=1", "--beta=5.69"};
+    meta::Inputparameters params(4, _params);
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    hardware::HardwareParametersImplementation hP(&params);
+    hardware::code::OpenClKernelParametersImplementation kP(params);
+    hardware::System system(hP, kP);
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	using namespace physics::algorithms;
-	using namespace physics::lattices;
-	std::cout << "Creating parameter string" << std::endl;
-	const char * _params[] = {"foo", "--ntime=4", "--num_dev=1", "--beta=5.69"};
-	meta::Inputparameters params(4, _params);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	hardware::HardwareParametersImplementation hP(&params);
-	hardware::code::OpenClKernelParametersImplementation kP(params);
-	hardware::System system(hP, kP);
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // In the following N_f=2 flavours are approximated with a rational approximation
+    Rational_Approximation approx(15, 99999999, 100000000, 1e-5, 1, 1);
+    wilson::Rooted_Spinorfield sf(system, interfacesHandler.getInterface<wilson::Rooted_Spinorfield>(), approx);
 
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
-	//In the following N_f=2 flavours are approximated with a rational approximation
-	Rational_Approximation approx(15,99999999,100000000,1e-5,1,1);
-	wilson::Rooted_Spinorfield sf(system, interfacesHandler.getInterface<wilson::Rooted_Spinorfield>(), approx);
+    pseudo_randomize<Spinorfield, spinor>(sf[0].get(), 123);
 
-	pseudo_randomize<Spinorfield, spinor>(sf[0].get(), 123);
+    hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler,
+                                         interfacesHandler.getAdditionalParameters<wilson::Rooted_Spinorfield>());
 
-	hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler, interfacesHandler.getAdditionalParameters<wilson::Rooted_Spinorfield>());
-
-	//TODO: Result still has to be checked by true analytic test
-	BOOST_CHECK_CLOSE(s_fermion, 2655.639679253864, 1.e-8);
+    // TODO: Result still has to be checked by true analytic test
+    BOOST_CHECK_CLOSE(s_fermion, 2655.639679253864, 1.e-8);
 }
 
-BOOST_AUTO_TEST_CASE(calc_s_fermion_wilson){
+BOOST_AUTO_TEST_CASE(calc_s_fermion_wilson)
+{
+    using namespace physics::algorithms;
+    using namespace physics::lattices;
+    std::cout << "Creating parameter string" << std::endl;
+    const char* _params[] = {"foo", "--nTime=4", "--nDevices=1", "--beta=5.69", "--solver=cg"};
+    meta::Inputparameters params(5, _params);
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    hardware::HardwareParametersImplementation hP(&params);
+    hardware::code::OpenClKernelParametersImplementation kP(params);
+    hardware::System system(hP, kP);
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	using namespace physics::algorithms;
-	using namespace physics::lattices;
-	std::cout << "Creating parameter string" << std::endl;
-	const char * _params[] = {"foo", "--ntime=4", "--num_dev=1", "--beta=5.69", "--solver=cg"};
-	meta::Inputparameters params(5, _params);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	hardware::HardwareParametersImplementation hP(&params);
-	hardware::code::OpenClKernelParametersImplementation kP(params);
-	hardware::System system(hP, kP);
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    Spinorfield sf(system, interfacesHandler.getInterface<physics::lattices::Spinorfield>());
 
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
-	Spinorfield sf(system, interfacesHandler.getInterface<physics::lattices::Spinorfield>());
+    pseudo_randomize<Spinorfield, spinor>(&sf, 123);
 
-	pseudo_randomize<Spinorfield, spinor>(&sf, 123);
+    hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler,
+                                         interfacesHandler.getAdditionalParameters<Spinorfield>());
 
-	hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler, interfacesHandler.getAdditionalParameters<Spinorfield>());
-
-	BOOST_CHECK_CLOSE(s_fermion, 2655.6396963076531, 1.e-8);
+    BOOST_CHECK_CLOSE(s_fermion, 2655.6396963076531, 1.e-8);
 }
 
-BOOST_AUTO_TEST_CASE(calc_s_fermion_wilson_eo){
+BOOST_AUTO_TEST_CASE(calc_s_fermion_wilson_eo)
+{
+    using namespace physics::algorithms;
+    using namespace physics::lattices;
+    std::cout << "Creating parameter string" << std::endl;
+    const char* _params[] = {"foo", "--nTime=4", "--nDevices=1", "--beta=5.69", "--solver=cg"};
+    meta::Inputparameters params(5, _params);
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    hardware::HardwareParametersImplementation hP(&params);
+    hardware::code::OpenClKernelParametersImplementation kP(params);
+    hardware::System system(hP, kP);
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	using namespace physics::algorithms;
-	using namespace physics::lattices;
-	std::cout << "Creating parameter string" << std::endl;
-	const char * _params[] = {"foo", "--ntime=4", "--num_dev=1", "--beta=5.69", "--solver=cg"};
-	meta::Inputparameters params(5, _params);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	hardware::HardwareParametersImplementation hP(&params);
-	hardware::code::OpenClKernelParametersImplementation kP(params);
-	hardware::System system(hP, kP);
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    Spinorfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
 
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
-	Spinorfield_eo sf(system, interfacesHandler.getInterface<physics::lattices::Spinorfield_eo>());
+    pseudo_randomize<Spinorfield_eo, spinor>(&sf, 123);
 
-	pseudo_randomize<Spinorfield_eo, spinor>(&sf, 123);
+    hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler,
+                                         interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
 
-	hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler, interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
-
-	BOOST_CHECK_CLOSE(s_fermion, 1086.431332953646, 1.e-8);
+    BOOST_CHECK_CLOSE(s_fermion, 1086.431332953646, 1.e-8);
 }
 
-BOOST_AUTO_TEST_CASE(calc_s_fermion_rooted_wilson_eo){
+BOOST_AUTO_TEST_CASE(calc_s_fermion_rooted_wilson_eo)
+{
+    using namespace physics::algorithms;
+    using namespace physics::lattices;
+    std::cout << "Creating parameter string" << std::endl;
+    const char* _params[] = {"foo", "--nTime=4", "--nDevices=1", "--beta=5.69"};
+    meta::Inputparameters params(4, _params);
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    hardware::HardwareParametersImplementation hP(&params);
+    hardware::code::OpenClKernelParametersImplementation kP(params);
+    hardware::System system(hP, kP);
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	using namespace physics::algorithms;
-	using namespace physics::lattices;
-	std::cout << "Creating parameter string" << std::endl;
-	const char * _params[] = {"foo", "--ntime=4", "--num_dev=1", "--beta=5.69"};
-	meta::Inputparameters params(4, _params);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	hardware::HardwareParametersImplementation hP(&params);
-	hardware::code::OpenClKernelParametersImplementation kP(params);
-	hardware::System system(hP, kP);
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // In the following N_f=2 flavours are approximated with a rational approximation
+    Rational_Approximation approx(15, 99999999, 100000000, 1e-5, 1, 1);
+    wilson::Rooted_Spinorfield_eo sf(system, interfacesHandler.getInterface<wilson::Rooted_Spinorfield_eo>(), approx);
 
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
-	//In the following N_f=2 flavours are approximated with a rational approximation
-	Rational_Approximation approx(15,99999999,100000000,1e-5,1,1);
-	wilson::Rooted_Spinorfield_eo sf(system, interfacesHandler.getInterface<wilson::Rooted_Spinorfield_eo>(), approx);
+    pseudo_randomize<Spinorfield_eo, spinor>(sf[0].get(), 123);
 
-	pseudo_randomize<Spinorfield_eo, spinor>(sf[0].get(), 123);
+    hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler,
+                                         interfacesHandler.getAdditionalParameters<wilson::Rooted_Spinorfield_eo>());
 
-	hmc_float s_fermion = calc_s_fermion(gf, sf, system, interfacesHandler, interfacesHandler.getAdditionalParameters<wilson::Rooted_Spinorfield_eo>());
-
-	//TODO: Result still has to be checked by true analytic test
-	BOOST_CHECK_CLOSE(s_fermion, 1086.431332953646, 1.e-6);
+    // TODO: Result still has to be checked by true analytic test
+    BOOST_CHECK_CLOSE(s_fermion, 1086.431332953646, 1.e-6);
 }

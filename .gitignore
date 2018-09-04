@@ -32,7 +32,9 @@ README.html
 *.cproject
 *.project
 *.settings/
+*.pydevproject
 
 /Debug/
 
 /_clang-format
+/doc/

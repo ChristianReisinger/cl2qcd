@@ -2,7 +2,7 @@
  *
  * Copyright (c) 2014 Christopher Pinke
  * Copyright (c) 2014 Matthias Bach
- * Copyright (c) 2015 Francesca Cuteri
+ * Copyright (c) 2015,2018 Francesca Cuteri
  * Copyright (c) 2018 Alessandro Sciarra
  *
  * This file is part of CL2QCD.
@@ -27,39 +27,40 @@
 #include "parametersBasic.hpp"
 
 namespace meta {
-class ParametersSources {
-public:
+    class ParametersSources {
+      public:
+        int get_num_sources() const noexcept;
+        int get_source_x() const noexcept;
+        int get_source_y() const noexcept;
+        int get_source_z() const noexcept;
+        int get_source_t() const noexcept;
+        bool get_place_sources_on_host() const noexcept;
+        common::sourcetypes get_sourcetype() const noexcept;
+        common::sourcecontents get_sourcecontent() const noexcept;
 
-	int get_num_sources() const noexcept;
-	int get_source_x() const noexcept;
-	int get_source_y() const noexcept;
-	int get_source_z() const noexcept;
-	int get_source_t() const noexcept;
-	bool get_place_sources_on_host() const noexcept;
-	common::sourcetypes get_sourcetype() const noexcept;
-	common::sourcecontents get_sourcecontent() const noexcept;
+      private:
+        int num_sources;
+        int source_x;
+        int source_y;
+        int source_z;
+        int source_t;
+        bool place_sources_on_host;
 
-private:
-	po::options_description options;
+      protected:
+        ParametersSources();
+        virtual ~ParametersSources()                = default;
+        ParametersSources(ParametersSources const&) = delete;
+        ParametersSources& operator=(ParametersSources const&) = delete;
+        InputparametersOptions getAllOptions();
+        void makeNeededTranslations();
 
-	int num_sources;
-	int source_x;
-	int source_y;
-	int source_z;
-	int source_t;
-	bool place_sources_on_host;
+        InputparametersOptions options;
+        std::string sourcetypeString;
+        std::string sourcecontentString;
+        common::sourcetypes sourcetype;
+        common::sourcecontents sourcecontent;
+    };
 
-protected:
-	ParametersSources();
-	virtual ~ParametersSources();
-	ParametersSources(ParametersSources const&) = delete;
-	ParametersSources & operator=(ParametersSources const&) = delete;
-	po::options_description & getOptions();
-
-	common::sourcetypes sourcetype;
-	common::sourcecontents sourcecontent;
-};
-
-}
+}  // namespace meta
 
 #endif

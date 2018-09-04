@@ -24,12 +24,13 @@
  */
 
 #include "find_minmax_eigenvalue.hpp"
+
+#include "../../host_functionality/logger.hpp"
+#include "../../interfaceImplementations/hardwareParameters.hpp"
+#include "../../interfaceImplementations/interfacesHandler.hpp"
+#include "../../interfaceImplementations/openClKernelParameters.hpp"
 #include "../lattices/staggeredfield_eo.hpp"
 #include "../lattices/util.hpp"
-#include "../../host_functionality/logger.hpp"
-#include "../../interfaceImplementations/interfacesHandler.hpp"
-#include "../../interfaceImplementations/hardwareParameters.hpp"
-#include "../../interfaceImplementations/openClKernelParameters.hpp"
 
 // use the boost test framework
 #define BOOST_TEST_DYN_LINK
@@ -38,287 +39,310 @@
 
 BOOST_AUTO_TEST_CASE(max)
 {
-	using namespace physics::lattices;
-	using namespace physics::algorithms;
+    using namespace physics::lattices;
+    using namespace physics::algorithms;
 
-	hmc_float ref_max_eig = 5.9887256245527069609;
+    hmc_float ref_max_eig = 5.9887256245527069609;
 
-	const char * _params[] = {"foo", "--ntime=4", "--fermact=rooted_stagg", "--mass=1.01335", "--num_dev=1"};
-	meta::Inputparameters params(5, _params);
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=rooted_stagg", "--mass=1.01335", "--nDevices=1"};
+    meta::Inputparameters params(5, _params);
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
     hardware::System system(hP, kP);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	//Operator for the test
-	physics::fermionmatrix::MdagM_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::MdagM_eo>());
-	//This configuration for the Ref.Code is the same as for example dks_input_5
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // Operator for the test
+    physics::fermionmatrix::MdagM_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::MdagM_eo>());
+    // This configuration for the Ref.Code is the same as for example dks_input_5
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
-	hmc_float max = find_max_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-5, interfacesHandler.getAdditionalParameters<Staggeredfield_eo>());
+    hmc_float max = find_max_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-5,
+                                        interfacesHandler.getAdditionalParameters<Staggeredfield_eo>());
 
-	logger.info() << "ref_max_eig = " << std::setprecision(16) << ref_max_eig;
-	logger.info() << "    max_eig = " << std::setprecision(16) << max;
+    logger.info() << "ref_max_eig = " << std::setprecision(16) << ref_max_eig;
+    logger.info() << "    max_eig = " << std::setprecision(16) << max;
 
-	//The precision of this test is not 1.e-8 because the method is not exactly
-	//in the same way implemented in the Ref.Code
-	BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-6);
+    // The precision of this test is not 1.e-8 because the method is not exactly
+    // in the same way implemented in the Ref.Code
+    BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-6);
 }
 
 BOOST_AUTO_TEST_CASE(wilson_max)
 {
-	using namespace physics::lattices;
-	using namespace physics::algorithms;
+    using namespace physics::lattices;
+    using namespace physics::algorithms;
 
-	hmc_float ref_max_eig = 3.386990108467724;
+    hmc_float ref_max_eig = 3.386990108467724;
 
-	const char * _params[] = {"foo", "--ntime=4", "--fermact=wilson", "--num_dev=1"};
-	meta::Inputparameters params(4, _params);
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=wilson", "--nDevices=1"};
+    meta::Inputparameters params(4, _params);
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
     hardware::System system(hP, kP);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	//Operator for the test
-	physics::fermionmatrix::QplusQminus matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // Operator for the test
+    physics::fermionmatrix::QplusQminus matrix(system,
+                                               interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
-	hmc_float max = find_max_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Spinorfield>());
+    hmc_float max = find_max_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3,
+                                        interfacesHandler.getAdditionalParameters<Spinorfield>());
 
-	logger.info() << "ref_max_eig = " << std::setprecision(16) << ref_max_eig;
-	logger.info() << "    max_eig = " << std::setprecision(16) << max;
+    logger.info() << "ref_max_eig = " << std::setprecision(16) << ref_max_eig;
+    logger.info() << "    max_eig = " << std::setprecision(16) << max;
 
-    //TODO: Result still has to be checked by true analytic test
-	BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-2);
+    // TODO: Result still has to be checked by true analytic test
+    BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-2);
 }
 
 BOOST_AUTO_TEST_CASE(wilson_eo_max)
 {
-	using namespace physics::lattices;
-	using namespace physics::algorithms;
+    using namespace physics::lattices;
+    using namespace physics::algorithms;
 
-	hmc_float ref_max_eig = 1.648104965055741;
+    hmc_float ref_max_eig = 1.648104965055741;
 
-	const char * _params[] = {"foo", "--ntime=4", "--fermact=wilson", "--num_dev=1"};
-	meta::Inputparameters params(4, _params);
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=wilson", "--nDevices=1"};
+    meta::Inputparameters params(4, _params);
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
     hardware::System system(hP, kP);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	//Operator for the test
-	physics::fermionmatrix::QplusQminus_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // Operator for the test
+    physics::fermionmatrix::QplusQminus_eo matrix(system, interfacesHandler
+                                                              .getInterface<physics::fermionmatrix::QplusQminus_eo>());
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
-	hmc_float max = find_max_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
+    hmc_float max = find_max_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3,
+                                        interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
 
-	logger.info() << "ref_max_eig = " << std::setprecision(16) << ref_max_eig;
-	logger.info() << "    max_eig = " << std::setprecision(16) << max;
+    logger.info() << "ref_max_eig = " << std::setprecision(16) << ref_max_eig;
+    logger.info() << "    max_eig = " << std::setprecision(16) << max;
 
-    //TODO: Result still has to be checked by true analytic test
-	BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-2);
+    // TODO: Result still has to be checked by true analytic test
+    BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-2);
 }
-
 
 BOOST_AUTO_TEST_CASE(min)
 {
-	using namespace physics::lattices;
-	using namespace physics::algorithms;
+    using namespace physics::lattices;
+    using namespace physics::algorithms;
 
-	hmc_float ref_min_eig = 1.053927941164244;
+    hmc_float ref_min_eig = 1.053927941164244;
 
-	const char * _params[] = {"foo", "--ntime=4", "--fermact=rooted_stagg", "--mass=1.01335", "--num_dev=1"};
-	meta::Inputparameters params(5, _params);
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=rooted_stagg", "--mass=1.01335", "--nDevices=1"};
+    meta::Inputparameters params(5, _params);
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
     hardware::System system(hP, kP);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	//Operator for the test
-	physics::fermionmatrix::MdagM_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::MdagM_eo>());
-	//This configuration for the Ref.Code is the same as for example dks_input_5
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // Operator for the test
+    physics::fermionmatrix::MdagM_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::MdagM_eo>());
+    // This configuration for the Ref.Code is the same as for example dks_input_5
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
-	hmc_float min = find_min_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Staggeredfield_eo>());
+    hmc_float min = find_min_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3,
+                                        interfacesHandler.getAdditionalParameters<Staggeredfield_eo>());
 
-	logger.info() << "mass squared = " << std::setprecision(16) << params.get_mass()*params.get_mass();
-	logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
-	logger.info() << "     min_eig = " << std::setprecision(16) << min;
+    logger.info() << "mass squared = " << std::setprecision(16) << params.get_mass() * params.get_mass();
+    logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
+    logger.info() << "     min_eig = " << std::setprecision(16) << min;
 
-	BOOST_REQUIRE_SMALL(params.get_mass()*params.get_mass(), min);
-	//The precision of this test is not so high because the method to calculate
-	// the eigenvalue is not exactly the same as that implemented in the Ref.Code
-	BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
+    BOOST_REQUIRE_SMALL(params.get_mass() * params.get_mass(), min);
+    // The precision of this test is not so high because the method to calculate
+    // the eigenvalue is not exactly the same as that implemented in the Ref.Code
+    BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
 }
 
 BOOST_AUTO_TEST_CASE(wilson_min)
 {
-	using namespace physics::lattices;
-	using namespace physics::algorithms;
+    using namespace physics::lattices;
+    using namespace physics::algorithms;
 
-	hmc_float ref_min_eig = 0.059663414391956771;
+    hmc_float ref_min_eig = 0.059663414391956771;
 
-	const char * _params[] = {"foo", "--ntime=4", "--fermact=wilson", "--num_dev=1"};
-	meta::Inputparameters params(4, _params);
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=wilson", "--nDevices=1"};
+    meta::Inputparameters params(4, _params);
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
     hardware::System system(hP, kP);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	//Operator for the test
-	physics::fermionmatrix::QplusQminus matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // Operator for the test
+    physics::fermionmatrix::QplusQminus matrix(system,
+                                               interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
-	hmc_float min = find_min_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Spinorfield>());
+    hmc_float min = find_min_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3,
+                                        interfacesHandler.getAdditionalParameters<Spinorfield>());
 
-	logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
-	logger.info() << "     min_eig = " << std::setprecision(16) << min;
+    logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
+    logger.info() << "     min_eig = " << std::setprecision(16) << min;
 
-    //TODO: Result still has to be checked by true analytic test
-	BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
+    // TODO: Result still has to be checked by true analytic test
+    BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
 }
 
 BOOST_AUTO_TEST_CASE(wilson_eo_min)
 {
-	using namespace physics::lattices;
-	using namespace physics::algorithms;
+    using namespace physics::lattices;
+    using namespace physics::algorithms;
 
-	hmc_float ref_min_eig = 0.1880074965126497;
+    hmc_float ref_min_eig = 0.1880074965126497;
 
-	const char * _params[] = {"foo", "--ntime=4", "--fermact=wilson", "--num_dev=1"};
-	meta::Inputparameters params(4, _params);
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=wilson", "--nDevices=1"};
+    meta::Inputparameters params(4, _params);
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
     hardware::System system(hP, kP);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	//Operator for the test
-	physics::fermionmatrix::QplusQminus_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // Operator for the test
+    physics::fermionmatrix::QplusQminus_eo matrix(system, interfacesHandler
+                                                              .getInterface<physics::fermionmatrix::QplusQminus_eo>());
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
-	hmc_float min = find_min_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
+    hmc_float min = find_min_eigenvalue(matrix, gf, system, interfacesHandler, 1.e-3,
+                                        interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
 
-	logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
-	logger.info() << "     min_eig = " << std::setprecision(16) << min;
+    logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
+    logger.info() << "     min_eig = " << std::setprecision(16) << min;
 
-    //TODO: Result still has to be checked by true analytic test
-	BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
+    // TODO: Result still has to be checked by true analytic test
+    BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
 }
 
 BOOST_AUTO_TEST_CASE(maxmin)
 {
-	using namespace physics::lattices;
-	using namespace physics::algorithms;
+    using namespace physics::lattices;
+    using namespace physics::algorithms;
 
-	hmc_float ref_max_eig = 5.2827838704124030;
-	hmc_float ref_min_eig = 0.3485295092571166;
+    hmc_float ref_max_eig = 5.2827838704124030;
+    hmc_float ref_min_eig = 0.3485295092571166;
 
-	const char * _params[] = {"foo", "--ntime=4", "--fermact=rooted_stagg", "--mass=0.567", "--num_dev=1"};
-	meta::Inputparameters params(5, _params);
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=rooted_stagg", "--mass=0.567", "--nDevices=1"};
+    meta::Inputparameters params(5, _params);
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
     hardware::System system(hP, kP);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	//Operator for the test
-	physics::fermionmatrix::MdagM_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::MdagM_eo>());
-	//This configuration for the Ref.Code is the same as for example dks_input_5
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // Operator for the test
+    physics::fermionmatrix::MdagM_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::MdagM_eo>());
+    // This configuration for the Ref.Code is the same as for example dks_input_5
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
-	hmc_float max,min;
-	find_maxmin_eigenvalue(max, min, matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Staggeredfield_eo>());
+    hmc_float max, min;
+    find_maxmin_eigenvalue(max, min, matrix, gf, system, interfacesHandler, 1.e-3,
+                           interfacesHandler.getAdditionalParameters<Staggeredfield_eo>());
 
-	logger.info() << "mass squared = " << std::setprecision(16) << params.get_mass()*params.get_mass();
-	logger.info() << " ref_max_eig = " << std::setprecision(16) << ref_max_eig;
-	logger.info() << "     max_eig = " << std::setprecision(16) << max;
-	logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
-	logger.info() << "     min_eig = " << std::setprecision(16) << min;
+    logger.info() << "mass squared = " << std::setprecision(16) << params.get_mass() * params.get_mass();
+    logger.info() << " ref_max_eig = " << std::setprecision(16) << ref_max_eig;
+    logger.info() << "     max_eig = " << std::setprecision(16) << max;
+    logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
+    logger.info() << "     min_eig = " << std::setprecision(16) << min;
 
-	BOOST_REQUIRE_SMALL(params.get_mass()*params.get_mass(), min);
-	//The precision of this test is not so high because the method to calculate
-	// the eigenvalue is not exactly the same as that implemented in the Ref.Code
-	BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-3);
-	BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
+    BOOST_REQUIRE_SMALL(params.get_mass() * params.get_mass(), min);
+    // The precision of this test is not so high because the method to calculate
+    // the eigenvalue is not exactly the same as that implemented in the Ref.Code
+    BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-3);
+    BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
 }
 
 BOOST_AUTO_TEST_CASE(wilson_maxmin)
 {
-	using namespace physics::lattices;
-	using namespace physics::algorithms;
+    using namespace physics::lattices;
+    using namespace physics::algorithms;
 
-	hmc_float ref_max_eig = 3.3869901084677232;
-	hmc_float ref_min_eig = 0.059663414391956771;
+    hmc_float ref_max_eig = 3.3869901084677232;
+    hmc_float ref_min_eig = 0.059663414391956771;
 
-	const char * _params[] = {"foo", "--ntime=4", "--fermact=wilson", "--num_dev=1"};
-	meta::Inputparameters params(4, _params);
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=wilson", "--nDevices=1"};
+    meta::Inputparameters params(4, _params);
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
     hardware::System system(hP, kP);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	//Operator for the test
-	physics::fermionmatrix::QplusQminus matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // Operator for the test
+    physics::fermionmatrix::QplusQminus matrix(system,
+                                               interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus>());
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
-	hmc_float max,min;
-	find_maxmin_eigenvalue(max, min, matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Spinorfield>());
+    hmc_float max, min;
+    find_maxmin_eigenvalue(max, min, matrix, gf, system, interfacesHandler, 1.e-3,
+                           interfacesHandler.getAdditionalParameters<Spinorfield>());
 
-	logger.info() << " ref_max_eig = " << std::setprecision(16) << ref_max_eig;
-	logger.info() << "     max_eig = " << std::setprecision(16) << max;
-	logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
-	logger.info() << "     min_eig = " << std::setprecision(16) << min;
+    logger.info() << " ref_max_eig = " << std::setprecision(16) << ref_max_eig;
+    logger.info() << "     max_eig = " << std::setprecision(16) << max;
+    logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
+    logger.info() << "     min_eig = " << std::setprecision(16) << min;
 
-    //TODO: Result still has to be checked by true analytic test
-	BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-3);
-	BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
+    // TODO: Result still has to be checked by true analytic test
+    BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-3);
+    BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
 }
 
 BOOST_AUTO_TEST_CASE(wilson_eo_maxmin)
 {
-	using namespace physics::lattices;
-	using namespace physics::algorithms;
+    using namespace physics::lattices;
+    using namespace physics::algorithms;
 
-	hmc_float ref_max_eig = 1.648104965055741;
-	hmc_float ref_min_eig = 0.1880074965126497;
+    hmc_float ref_max_eig = 1.648104965055741;
+    hmc_float ref_min_eig = 0.1880074965126497;
 
-	const char * _params[] = {"foo", "--ntime=4", "--fermact=wilson", "--num_dev=1"};
-	meta::Inputparameters params(4, _params);
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=wilson", "--nDevices=1"};
+    meta::Inputparameters params(4, _params);
     hardware::HardwareParametersImplementation hP(&params);
     hardware::code::OpenClKernelParametersImplementation kP(params);
     hardware::System system(hP, kP);
-	physics::InterfacesHandlerImplementation interfacesHandler{params};
-	physics::PrngParametersImplementation prngParameters{params};
-	physics::PRNG prng{system, &prngParameters};
+    physics::InterfacesHandlerImplementation interfacesHandler{params};
+    physics::PrngParametersImplementation prngParameters{params};
+    physics::PRNG prng{system, &prngParameters};
 
-	//Operator for the test
-	physics::fermionmatrix::QplusQminus_eo matrix(system, interfacesHandler.getInterface<physics::fermionmatrix::QplusQminus_eo>());
-	Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
+    // Operator for the test
+    physics::fermionmatrix::QplusQminus_eo matrix(system, interfacesHandler
+                                                              .getInterface<physics::fermionmatrix::QplusQminus_eo>());
+    Gaugefield gf(system, &interfacesHandler.getInterface<physics::lattices::Gaugefield>(), prng,
+                  std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
-	hmc_float max,min;
-	find_maxmin_eigenvalue(max, min, matrix, gf, system, interfacesHandler, 1.e-3, interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
+    hmc_float max, min;
+    find_maxmin_eigenvalue(max, min, matrix, gf, system, interfacesHandler, 1.e-3,
+                           interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
 
-	logger.info() << " ref_max_eig = " << std::setprecision(16) << ref_max_eig;
-	logger.info() << "     max_eig = " << std::setprecision(16) << max;
-	logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
-	logger.info() << "     min_eig = " << std::setprecision(16) << min;
+    logger.info() << " ref_max_eig = " << std::setprecision(16) << ref_max_eig;
+    logger.info() << "     max_eig = " << std::setprecision(16) << max;
+    logger.info() << " ref_min_eig = " << std::setprecision(16) << ref_min_eig;
+    logger.info() << "     min_eig = " << std::setprecision(16) << min;
 
-	//TODO: Result still has to be checked by true analytic test
-	BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-3);
-	BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
+    // TODO: Result still has to be checked by true analytic test
+    BOOST_CHECK_CLOSE(ref_max_eig, max, 1.e-3);
+    BOOST_CHECK_CLOSE(ref_min_eig, min, 1.e-3);
 }

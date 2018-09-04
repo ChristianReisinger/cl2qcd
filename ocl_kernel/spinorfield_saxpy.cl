@@ -20,78 +20,78 @@
  */
 
 // -alpha*x + y
-//CP: defined with a minus!!!
+// CP: defined with a minus!!!
 
-__kernel void saxpy(__global spinor* x, __global spinor* y, __global const hmc_complex * alpha_p, __global spinor* out)
+__kernel void saxpy(__global spinor* x, __global spinor* y, __global const hmc_complex* alpha_p, __global spinor* out)
 {
-	int id = get_global_id(0);
-	int global_size = get_global_size(0);
+    int id          = get_global_id(0);
+    int global_size = get_global_size(0);
 
-	const hmc_complex alpha = complexLoadHack(alpha_p);
+    const hmc_complex alpha = complexLoadHack(alpha_p);
 
-	for(int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
-		const spinor x_tmp = x[id_mem];
-		const spinor y_tmp = y[id_mem];
-		const spinor tmp = spinor_times_complex(x_tmp, alpha);
-		out[id_mem] = spinor_dim(y_tmp, tmp);
-	}
+    for (int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
+        const spinor x_tmp = x[id_mem];
+        const spinor y_tmp = y[id_mem];
+        const spinor tmp   = spinor_times_complex(x_tmp, alpha);
+        out[id_mem]        = spinor_dim(y_tmp, tmp);
+    }
 }
 
 // alpha*x + y
-//CC: defined with a plus according to the staggered code!!!
-__kernel void saxpy_real(__global spinor* x, __global spinor* y, __global const hmc_float * alpha, __global spinor* out)
+// CC: defined with a plus according to the staggered code!!!
+__kernel void saxpy_real(__global spinor* x, __global spinor* y, __global const hmc_float* alpha, __global spinor* out)
 {
-	int id = get_global_id(0);
-	int global_size = get_global_size(0);
+    int id          = get_global_id(0);
+    int global_size = get_global_size(0);
 
-	for(int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
-		const spinor x_tmp = x[id_mem];
-		const spinor y_tmp = y[id_mem];
-		const spinor tmp = real_multiply_spinor(x_tmp, *alpha);
-		out[id_mem] = spinor_acc(y_tmp, tmp);
-	}
+    for (int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
+        const spinor x_tmp = x[id_mem];
+        const spinor y_tmp = y[id_mem];
+        const spinor tmp   = real_multiply_spinor(x_tmp, *alpha);
+        out[id_mem]        = spinor_acc(y_tmp, tmp);
+    }
 }
 
 __kernel void saxpy_real_arg(__global spinor* x, __global spinor* y, const hmc_float alpha, __global spinor* out)
 {
-	int id = get_global_id(0);
-	int global_size = get_global_size(0);
+    int id          = get_global_id(0);
+    int global_size = get_global_size(0);
 
-	for(int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
-		const spinor x_tmp = x[id_mem];
-		const spinor y_tmp = y[id_mem];
-		const spinor tmp = real_multiply_spinor(x_tmp, alpha);
-		out[id_mem] = spinor_acc(y_tmp, tmp);
-	}
+    for (int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
+        const spinor x_tmp = x[id_mem];
+        const spinor y_tmp = y[id_mem];
+        const spinor tmp   = real_multiply_spinor(x_tmp, alpha);
+        out[id_mem]        = spinor_acc(y_tmp, tmp);
+    }
 }
 
-__kernel void saxpy_real_vec(__global spinor* x, __global spinor* y, __global const hmc_float * alpha, const int index_alpha, __global spinor* out)
+__kernel void saxpy_real_vec(__global spinor* x, __global spinor* y, __global const hmc_float* alpha,
+                             const int index_alpha, __global spinor* out)
 {
-	int id = get_global_id(0);
-	int global_size = get_global_size(0);
+    int id          = get_global_id(0);
+    int global_size = get_global_size(0);
 
-	for(int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
-		const spinor x_tmp = x[id_mem];
-		const spinor y_tmp = y[id_mem];
-		const spinor tmp = real_multiply_spinor(x_tmp, alpha[index_alpha]);
-		out[id_mem] = spinor_acc(y_tmp, tmp);
-	}
+    for (int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
+        const spinor x_tmp = x[id_mem];
+        const spinor y_tmp = y[id_mem];
+        const spinor tmp   = real_multiply_spinor(x_tmp, alpha[index_alpha]);
+        out[id_mem]        = spinor_acc(y_tmp, tmp);
+    }
 }
 
 // the arguments have been hacked to work on apple
-__kernel void saxpy_arg(__global spinor* x, __global spinor* y, const hmc_float alpha_re, const hmc_float alpha_im, __global spinor* out)
+__kernel void saxpy_arg(__global spinor* x, __global spinor* y, const hmc_float alpha_re, const hmc_float alpha_im,
+                        __global spinor* out)
 {
-	const int id = get_global_id(0);
-	const int global_size = get_global_size(0);
+    const int id          = get_global_id(0);
+    const int global_size = get_global_size(0);
 
-	const hmc_complex alpha = (hmc_complex) {
-		alpha_re, alpha_im
-	};
+    const hmc_complex alpha = (hmc_complex){alpha_re, alpha_im};
 
-	for(int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
-		const spinor x_tmp = x[id_mem];
-		const spinor y_tmp = y[id_mem];
-		const spinor tmp = spinor_times_complex(x_tmp, alpha);
-		out[id_mem] = spinor_dim(y_tmp, tmp);
-	}
+    for (int id_mem = id; id_mem < SPINORFIELDSIZE_MEM; id_mem += global_size) {
+        const spinor x_tmp = x[id_mem];
+        const spinor y_tmp = y[id_mem];
+        const spinor tmp   = spinor_times_complex(x_tmp, alpha);
+        out[id_mem]        = spinor_dim(y_tmp, tmp);
+    }
 }
