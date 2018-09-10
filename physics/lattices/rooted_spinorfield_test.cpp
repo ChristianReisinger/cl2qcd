@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(initialization)
     BOOST_CHECK_NO_THROW(
         wilson::Rooted_Spinorfield sf2(system,
                                        interfacesHandler.getInterface<physics::lattices::wilson::Rooted_Spinorfield>(),
-                                       approx))
+                                       approx));
 }
 
 BOOST_AUTO_TEST_CASE(initializationWithPseudofermions)
