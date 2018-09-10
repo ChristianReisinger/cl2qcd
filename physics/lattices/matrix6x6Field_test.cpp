@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE(set_field)
     using namespace physics::lattices;
 
     {
-        const char* _params[] = {"foo", "--ntime=8", "--fermact=clover", "--csw=0.1"};
+        const char* _params[] = {"foo", "--nTime=8", "--fermionAction=clover", "--csw=0.1"};
         meta::Inputparameters params(4, _params);
         const GaugefieldParametersImplementation parametersTmp{&params};
         hardware::HardwareParametersImplementation hP(&params);
@@ -63,10 +63,12 @@ BOOST_AUTO_TEST_CASE(set_field)
         Gaugefield gf2(system, &parametersTmp, prng, true);
 
         mat2.setField(&gf2, true);
-        BOOST_CHECK_CLOSE(count_Matrix6x6Field(mat2), 12345., 0.1);
+        BOOST_ERROR("Test to be implemented!");
+        //BOOST_CHECK_CLOSE(count_Matrix6x6Field(mat2), 12345., 0.1);
 
         mat3.setField(&gf2, false);
-        BOOST_CHECK_CLOSE(count_Matrix6x6Field(mat3), 12345., 0.1);
+        BOOST_ERROR("Test to be implemented!");
+        //BOOST_CHECK_CLOSE(count_Matrix6x6Field(mat3), 12345., 0.1);
 
         // init gaugefield cold
         Gaugefield gf3(system, &parametersTmp, prng, false);
@@ -79,7 +81,7 @@ BOOST_AUTO_TEST_CASE(set_field)
     }
 
     {
-        const char* _params[] = {"foo", "--ntime=4", "--fermact=clover", "--csw=0.1"};
+        const char* _params[] = {"foo", "--nTime=4", "--fermionAction=clover", "--csw=0.1"};
         meta::Inputparameters params(4, _params);
         const GaugefieldParametersImplementation parametersTmp{&params};
         hardware::HardwareParametersImplementation hP(&params);
@@ -97,10 +99,12 @@ BOOST_AUTO_TEST_CASE(set_field)
         Gaugefield gf(system, &parametersTmp, prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
         mat.setField(&gf, true);
-        BOOST_CHECK_CLOSE(count_Matrix6x6Field(mat), 12345., 0.1);
+        BOOST_ERROR("Test to be implemented!");
+        //BOOST_CHECK_CLOSE(count_Matrix6x6Field(mat), 12345., 0.1);
 
         mat1.setField(&gf, false);
-        BOOST_CHECK_CLOSE(count_Matrix6x6Field(mat1), 12345., 0.1);
+        BOOST_ERROR("Test to be implemented!");
+        //BOOST_CHECK_CLOSE(count_Matrix6x6Field(mat1), 12345., 0.1);
     }
 }
 
@@ -108,7 +112,7 @@ BOOST_AUTO_TEST_CASE(S_det_test)
 {
     using namespace physics::lattices;
 
-    const char* _params[] = {"foo", "--ntime=4", "--fermact=clover", "--csw=0.1"};
+    const char* _params[] = {"foo", "--nTime=4", "--fermionAction=clover", "--csw=0.1"};
     meta::Inputparameters params(4, _params);
     const GaugefieldParametersImplementation parametersTmp{&params};
     hardware::HardwareParametersImplementation hP(&params);
@@ -119,6 +123,9 @@ BOOST_AUTO_TEST_CASE(S_det_test)
     physics::PRNG prng(system, &prngParameters);
     physics::observables::GaugeObservablesParametersImplementation gaugeobservablesParameters(params);
 
+    BOOST_ERROR("Test to be implemented!");
+
+    /*
     // init gaugefield cold
     Gaugefield gf1(system, &parametersTmp, prng, false);
 
@@ -133,4 +140,5 @@ BOOST_AUTO_TEST_CASE(S_det_test)
     Gaugefield gf3(system, &parametersTmp, prng, std::string(SOURCEDIR) + "/ildg_io/conf.00200");
 
     BOOST_CHECK_CLOSE(S_det(gf3, 0.12345, 0.12345), 0.12345, 0.1);
+    */
 }

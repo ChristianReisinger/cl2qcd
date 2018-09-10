@@ -95,13 +95,15 @@ BOOST_AUTO_TEST_CASE(QplusQminus_eo)
 
 BOOST_AUTO_TEST_CASE(Aee_clover)
 {
-    const hmc_float refs[4] = {1111.6772283004893, 1290.5580533222192, 1114.183875802898, 1304.0219632505139};
-    test_fermionmatrix<physics::fermionmatrix::Aee>(refs, 10, true);
+    BOOST_ERROR("Test to be implemented!");
+    //const hmc_float refs[4] = {1111.6772283004893, 1290.5580533222192, 1114.183875802898, 1304.0219632505139};
+    //test_fermionmatrix<physics::fermionmatrix::Aee>(refs, 10, true);
 }
 BOOST_AUTO_TEST_CASE(Qplus_eo_clover)
 {
-    const hmc_float refs[4] = {1120.7679957612427, 1303.6316057267845, 1095.6614513886482, 1285.3471211115243};
-    test_fermionmatrix<physics::fermionmatrix::Qplus_eo>(refs, 11, true);
+    BOOST_ERROR("Test to be implemented!");
+    //const hmc_float refs[4] = {1120.7679957612427, 1303.6316057267845, 1095.6614513886482, 1285.3471211115243};
+    //test_fermionmatrix<physics::fermionmatrix::Qplus_eo>(refs, 11, true);
 }
 
 template<class FERMIONMATRIX>
@@ -112,9 +114,9 @@ test_fermionmatrix(const hmc_float refs[4], const int seed, const bool clover)
         using namespace physics::lattices;
 
         std::vector<const char*> options(1, "foo");
-        options.push_back("--ntime=16");
+        options.push_back("--nTime=16");
         if (clover) {
-            options.push_back("--fermact=clover");
+            options.push_back("--fermionAction=clover");
             options.push_back("--csw=0.1");
         }
         meta::Inputparameters params(options.size(), &(options[0]));
@@ -156,9 +158,9 @@ test_fermionmatrix(const hmc_float refs[4], const int seed, const bool clover)
         using namespace physics::lattices;
 
         std::vector<const char*> options(1, "foo");
-        options.push_back("--ntime=4");
+        options.push_back("--nTime=4");
         if (clover) {
-            options.push_back("--fermact=clover");
+            options.push_back("--fermionAction=clover");
             options.push_back("--csw=0.1");
         }
         meta::Inputparameters params(options.size(), &(options[0]));

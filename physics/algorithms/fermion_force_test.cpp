@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(fermion_force_clover_eo)
 {
     {
         using namespace physics::lattices;
-        const char* _params[] = {"foo", "--ntime=4", "--fermact=clover", "--csw=0.5"};
+        const char* _params[] = {"foo", "--nTime=4", "--fermionAction=clover", "--csw=0.5"};
         meta::Inputparameters params(4, _params);
         physics::InterfacesHandlerImplementation interfacesHandler{params};
         hardware::HardwareParametersImplementation hP(&params);
@@ -179,10 +179,10 @@ BOOST_AUTO_TEST_CASE(fermion_force_clover_eo)
 
         physics::algorithms::fermion_force(&gm, sf1, sf2, EVEN, gf, *C, *D,
                                            interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
-        BOOST_CHECK_CLOSE(squarenorm(gm), 1294.880037707632, 0.01);
+        BOOST_ERROR("Test to be implemented!");
         physics::algorithms::fermion_force(&gm, sf1, sf2, ODD, gf, *C, *D,
                                            interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
-        BOOST_CHECK_CLOSE(squarenorm(gm), 3659.59932413153, 0.01);
+        BOOST_ERROR("Test to be implemented!");
     }
 }
 
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(calc_fermion_forces_clover_eo)
 {
     {
         using namespace physics::lattices;
-        const char* _params[] = {"foo", "--ntime=4", "--fermact=clover", "--csw=0.5"};
+        const char* _params[] = {"foo", "--nTime=4", "--fermionAction=clover", "--csw=0.5"};
         meta::Inputparameters params(4, _params);
         physics::InterfacesHandlerImplementation interfacesHandler{params};
         hardware::HardwareParametersImplementation hP(&params);
@@ -269,7 +269,7 @@ BOOST_AUTO_TEST_CASE(calc_fermion_forces_clover_eo)
 
         physics::algorithms::calc_fermion_forces(&gm, gf, sf1, system, interfacesHandler,
                                                  interfacesHandler.getAdditionalParameters<Spinorfield_eo>());
-        BOOST_CHECK_CLOSE(squarenorm(gm), 12345, 0.01);
+        BOOST_ERROR("Test to be implemented!");
     }
 }
 

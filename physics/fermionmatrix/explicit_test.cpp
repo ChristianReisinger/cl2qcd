@@ -367,7 +367,7 @@ BOOST_AUTO_TEST_CASE(clover_eo)
 {
     {
         using namespace physics::lattices;
-        const char* _params[] = {"foo", "--ntime=16", "--fermact=clover", "--csw=0.1"};
+        const char* _params[] = {"foo", "--nTime=16", "--fermionAction=clover", "--csw=0.1"};
         meta::Inputparameters params(4, _params);
         hardware::HardwareParametersImplementation hP(&params);
         hardware::code::OpenClKernelParametersImplementation kP(params);
@@ -385,14 +385,14 @@ BOOST_AUTO_TEST_CASE(clover_eo)
         convert_to_eoprec(&sf1, &sf2, src);
 
         physics::fermionmatrix::clover_eo(&sf2, gf, sf1, EVEN, params.get_kappa(), params.get_csw());
-        BOOST_CHECK_CLOSE(squarenorm(sf2), 3311.2698428285048, 0.01);
+        BOOST_ERROR("Test to be implemented!");
         physics::fermionmatrix::clover_eo(&sf1, gf, sf2, ODD, params.get_kappa(), params.get_csw());
-        BOOST_CHECK_CLOSE(squarenorm(sf1), 3146.1039504225546, 0.01);
+        BOOST_ERROR("Test to be implemented!");
     }
 
     {
         using namespace physics::lattices;
-        const char* _params[] = {"foo", "--ntime=4", "--fermact=clover", "--csw=0.1"};
+        const char* _params[] = {"foo", "--nTime=4", "--fermionAction=clover", "--csw=0.1"};
         meta::Inputparameters params(4, _params);
         hardware::HardwareParametersImplementation hP(&params);
         hardware::code::OpenClKernelParametersImplementation kP(params);
@@ -411,9 +411,9 @@ BOOST_AUTO_TEST_CASE(clover_eo)
         convert_to_eoprec(&sf1, &sf2, src);
 
         physics::fermionmatrix::clover_eo(&sf2, gf, sf1, EVEN, params.get_kappa(), params.get_csw());
-        BOOST_CHECK_CLOSE(squarenorm(sf2), 251.84231257415126, 0.01);
+        BOOST_ERROR("Test to be implemented!");
         physics::fermionmatrix::clover_eo(&sf1, gf, sf2, ODD, params.get_kappa(), params.get_csw());
-        BOOST_CHECK_CLOSE(squarenorm(sf1), 75.926255640020059, 0.01);
+        BOOST_ERROR("Test to be implemented!");
     }
 }
 
@@ -421,7 +421,7 @@ BOOST_AUTO_TEST_CASE(clover_eo_inverse)
 {
     {
         using namespace physics::lattices;
-        const char* _params[] = {"foo", "--ntime=16", "--fermact=clover", "--csw=0.1"};
+        const char* _params[] = {"foo", "--nTime=16", "--fermionAction=clover", "--csw=0.1"};
         meta::Inputparameters params(4, _params);
         hardware::HardwareParametersImplementation hP(&params);
         hardware::code::OpenClKernelParametersImplementation kP(params);
@@ -439,14 +439,14 @@ BOOST_AUTO_TEST_CASE(clover_eo_inverse)
         convert_to_eoprec(&sf1, &sf2, src);
 
         physics::fermionmatrix::clover_eo_inverse(&sf2, gf, sf1, EVEN, params.get_kappa(), params.get_csw());
-        BOOST_CHECK_CLOSE(squarenorm(sf2), 3311.2698428285048, 0.01);
+        BOOST_ERROR("Test to be implemented!");
         physics::fermionmatrix::clover_eo_inverse(&sf1, gf, sf2, ODD, params.get_kappa(), params.get_csw());
-        BOOST_CHECK_CLOSE(squarenorm(sf1), 3146.1039504225546, 0.01);
+        BOOST_ERROR("Test to be implemented!");
     }
 
     {
         using namespace physics::lattices;
-        const char* _params[] = {"foo", "--ntime=4", "--fermact=clover", "--csw=0.1"};
+        const char* _params[] = {"foo", "--nTime=4", "--fermionAction=clover", "--csw=0.1"};
         meta::Inputparameters params(4, _params);
         hardware::HardwareParametersImplementation hP(&params);
         hardware::code::OpenClKernelParametersImplementation kP(params);
@@ -465,8 +465,8 @@ BOOST_AUTO_TEST_CASE(clover_eo_inverse)
         convert_to_eoprec(&sf1, &sf2, src);
 
         physics::fermionmatrix::clover_eo_inverse(&sf2, gf, sf1, EVEN, params.get_kappa(), params.get_csw());
-        BOOST_CHECK_CLOSE(squarenorm(sf2), 251.84231257415126, 0.01);
+        BOOST_ERROR("Test to be implemented!");
         physics::fermionmatrix::clover_eo_inverse(&sf1, gf, sf2, ODD, params.get_kappa(), params.get_csw());
-        BOOST_CHECK_CLOSE(squarenorm(sf1), 75.926255640020059, 0.01);
+        BOOST_ERROR("Test to be implemented!");
     }
 }
