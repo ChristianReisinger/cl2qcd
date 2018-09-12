@@ -55,12 +55,12 @@ endif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER MATCHES "/clang\\+\\+$")
 # Add endianess information
 include(TestBigEndian)
 TEST_BIG_ENDIAN(BIG_ENDIAN)
-message("Big Endian: ${BIG_ENDIAN}")
+message(STATUS "Big Endian: ${BIG_ENDIAN}")
 if(BIG_ENDIAN)
-    message("Big endian arch..")
+    message(STATUS "Big endian architecture!")
     add_definitions( "BIG_ENDIAN_ARCH=1" )
 else()
-    message("Little endian arch..")
+    message(STATUS "Little endian architecture!")
 endif()
 
 # Make sure we can compile agains opencl
@@ -193,12 +193,12 @@ add_library(optimal ${DUMMY_SOURCE} ${OPTIMAL_FILES})
 
 # Add all modules
 add_modules(optimal
-    meta
     hardware
     geometry
-    host_functionality
-    ildg_io
     physics
+    meta
+    ildg_io
+    host_functionality
     einhard
     executables
 )
@@ -239,6 +239,7 @@ add_subdirectory(ranluxcl)
 # Crypto
 add_subdirectory(crypto)
 
+# Interfaces
 add_subdirectory(interfaceImplementations)
 
 option(BUILD_MICROBENCHMARKS "Build micro benchmarks" OFF)

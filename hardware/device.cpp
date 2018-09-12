@@ -92,6 +92,13 @@ hardware::Device::Device(cl_context context, cl_device_id device_id, LatticeGrid
 
 hardware::Device::~Device()
 {
+    /*
+     * NOTE: It is important not to call clReleaseKernel with still kernels enqueued.
+     *       Therefore, clFinish is done before deleting the code instances!
+     *         --->  https://stackoverflow.com/a/45555146
+     */
+    clFinish(command_queue);
+
     if (buffer_code) {
         delete buffer_code;
     }
@@ -141,7 +148,6 @@ hardware::Device::~Device()
         delete gaugefield_code;
     }
 
-    clFinish(command_queue);
     clReleaseCommandQueue(command_queue);
 
     logger.info() << "Maximum memory used (" << latticeGridIndex.x << "," << latticeGridIndex.y << ","
@@ -237,7 +243,7 @@ void hardware::Device::enqueue_kernel(cl_kernel kernel, size_t global_threads, s
             throw hardware::OpenclException(clerr, "clWaitForEvents", __FILE__, __LINE__);
         }
 
-        profiling_data[kernel] += profiling_event;
+        profiling_data[kernel].add(profiling_event);
     }
 }
 
