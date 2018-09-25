@@ -43,7 +43,6 @@ add_library(code
 target_link_libraries(code
     buffers
     klepsydra
-    einhard
     hardwareTestUtilities
 )
 
