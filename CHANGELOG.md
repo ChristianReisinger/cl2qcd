@@ -25,7 +25,7 @@ Refer also to the [TODO](TODO.md) file to get more information of the changes oc
 
 ---
 
-## [Version 1.0] &nbsp;&nbsp; <sub><sup>26 09 2018</sub></sup>
+## [Version 1.0] &nbsp;&nbsp; <sub><sup>26 September 2018</sub></sup>
 
 This has been the first release of the repository.
 
