@@ -20,7 +20,8 @@
  */
 
 __kernel void heatbath_even(__global Matrixsu3StorageType* const restrict gaugefield, const int mu,
-                            __global rngStateStorageType* const restrict rngStates)
+                            __global rngStateStorageType* const restrict rngStates,
+							const int* const fixed_timeslices, const int fixed_timeslice_num)
 {
     prng_state rnd;
     prng_loadState(&rnd, rngStates);
