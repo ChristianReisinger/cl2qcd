@@ -198,6 +198,7 @@ add_modules(optimal
     physics
     meta
     ildg_io
+    contractioncode_io
     host_functionality
     einhard
     executables
