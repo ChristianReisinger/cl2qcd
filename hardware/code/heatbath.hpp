@@ -29,6 +29,8 @@
 #include "../buffers/su3.hpp"
 #include "opencl_module.hpp"
 
+#include <set>
+
 namespace hardware {
 
     namespace code {
@@ -50,7 +52,8 @@ namespace hardware {
              * Perform one heatbath step.
              */
             void
-            run_heatbath(const hardware::buffers::SU3* gaugefield, const hardware::buffers::PRNGBuffer* prng) const;
+            run_heatbath(const hardware::buffers::SU3* gaugefield, const hardware::buffers::PRNGBuffer* prng,
+                         const std::set<int>& fixed_timeslices = std::set<int>()) const;
 
             /**
              * Perform one overrelaxation step.

@@ -40,7 +40,7 @@ void physics::algorithms::su3heatbath(physics::lattices::Gaugefield& gf, physics
     auto prng_dev = prng.get_buffers()[0];
     auto code     = gf_dev->get_device()->getHeatbathCode();
 
-    code->run_heatbath(gf_dev, prng_dev);
+    code->run_heatbath(gf_dev, prng_dev, fixed_timeslices);
 
     // add overrelaxation
     if (overrelax > 0) {

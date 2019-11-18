@@ -30,6 +30,8 @@
 #include "prng.hpp"
 #include "spinors.hpp"
 
+#include <vector>
+
 using namespace std;
 
 void hardware::code::Heatbath::fill_kernels()
@@ -77,11 +79,14 @@ void hardware::code::Heatbath::clear_kernels()
 }
 
 void hardware::code::Heatbath::run_heatbath(const hardware::buffers::SU3* gaugefield,
-                                            const hardware::buffers::PRNGBuffer* prng) const
+                                            const hardware::buffers::PRNGBuffer* prng,
+											const std::set<int>& fixed_timeslices) const
 {
     cl_int clerr = CL_SUCCESS;
 
     logger.debug() << "Clearing Heatbath kernels...";
+    const std::vector<int> fixed_timeslices_vec(fixed_timeslices.begin(), fixed_timeslices.end());
+    const cl_int fixed_timeslice_num = fixed_timeslices_vec.size();
 
     size_t global_work_size, ls;
     cl_uint num_groups;
