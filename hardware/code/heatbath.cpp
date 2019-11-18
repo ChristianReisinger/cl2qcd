@@ -99,10 +99,10 @@ void hardware::code::Heatbath::run_heatbath(const hardware::buffers::SU3* gaugef
 
     clerr = clSetKernelArg(heatbath_even, 3, sizeof(cl_mem), fixed_timeslices.get_cl_buffer());
     if(clerr != CL_SUCCESS)
-    	throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
+        throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
     clerr = clSetKernelArg(heatbath_even, 4, sizeof(cl_int), &fixed_timeslice_num);
     if(clerr != CL_SUCCESS)
-        	throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
+        throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
 
     for (cl_int i = 0; i < NDIM; i++) {
         clerr = clSetKernelArg(heatbath_even, 1, sizeof(cl_int), &i);
@@ -122,10 +122,10 @@ void hardware::code::Heatbath::run_heatbath(const hardware::buffers::SU3* gaugef
 
     clerr = clSetKernelArg(heatbath_odd, 3, sizeof(cl_mem), fixed_timeslices.get_cl_buffer());
     if(clerr != CL_SUCCESS)
-    	throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
+        throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
     clerr = clSetKernelArg(heatbath_odd, 4, sizeof(cl_int), &fixed_timeslice_num);
     if(clerr != CL_SUCCESS)
-        	throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
+        throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
 
     for (cl_int i = 0; i < NDIM; i++) {
         clerr = clSetKernelArg(heatbath_odd, 1, sizeof(cl_int), &i);
