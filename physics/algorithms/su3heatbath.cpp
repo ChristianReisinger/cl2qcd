@@ -29,7 +29,8 @@
 
 #include <cassert>
 
-void physics::algorithms::su3heatbath(physics::lattices::Gaugefield& gf, physics::PRNG& prng, int overrelax)
+void physics::algorithms::su3heatbath(physics::lattices::Gaugefield& gf, physics::PRNG& prng, int overrelax,
+		const std::set<int>& fixed_timeslices)
 {
     assert(overrelax >= 0);
     assert(gf.get_buffers().size() == 1);
