@@ -24,6 +24,8 @@
 #include "gaugefield.hpp"
 
 #include "../../hardware/code/gaugefield.hpp"
+
+#include "../../contractioncode_io/contractioncode_io.hpp"
 #include "../../hardware/device.hpp"
 #include "../../host_functionality/host_operations_gaugefield.hpp"
 #include "../../host_functionality/logger.hpp"
@@ -172,4 +174,22 @@ const physics::lattices::GaugefieldParametersInterface* physics::lattices::Gauge
 int physics::lattices::Gaugefield::get_trajectoryNumberAtInit() const
 {
     return trajectoryNumberAtInit;
+}
+
+void physics::lattices::Gaugefield::copyToContractionCodeArray(double* gauge_field)
+		{
+	Matrixsu3* host_buf = new Matrixsu3[latticeObjectParameters->getNumberOfElements()];
+	gaugefield.fetch_gaugefield_from_buffers(host_buf);
+	contractioncode_io::writeGaugefieldToArray(gauge_field, host_buf, latticeObjectParameters);
+	delete[] host_buf;
+}
+
+void physics::lattices::Gaugefield::setToContractionCodeArray(const double* gauge_field) {
+	Matrixsu3* gf_host = contractioncode_io::readGaugefieldFromArray(gauge_field, latticeObjectParameters);
+	gaugefield.send_gaugefield_to_buffers(gf_host);
+	delete[] gf_host;
+}
+
+void physics::lattices::Gaugefield::readFromILDGSourcefile(std::string filename) {
+	initializeFromILDGSourcefile(filename);
 }
