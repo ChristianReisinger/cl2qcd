@@ -42,8 +42,10 @@ void physics::algorithms::su3heatbath(physics::lattices::Gaugefield& gf, physics
     auto prng_dev = prng.get_buffers()[0];
     auto code     = gf_dev->get_device()->getHeatbathCode();
 
-    hardware::buffers::Plain<int> fixed_timeslices_buf(fixed_timeslices.size(), gf_dev->get_device());
     std::vector<int> fixed_timeslices_vec(fixed_timeslices.begin(), fixed_timeslices.end());
+    if(fixed_timeslices_vec.empty())
+        fixed_timeslices_vec.push_back(-1);
+    hardware::buffers::Plain<int> fixed_timeslices_buf(fixed_timeslices_vec.size(), gf_dev->get_device());
     fixed_timeslices_buf.load(fixed_timeslices_vec.data());
 
     code->run_heatbath(gf_dev, prng_dev, fixed_timeslices_buf);
