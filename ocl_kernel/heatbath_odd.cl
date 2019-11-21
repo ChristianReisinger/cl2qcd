@@ -28,7 +28,15 @@ __kernel void heatbath_odd(__global Matrixsu3StorageType* const restrict gaugefi
 
     PARALLEL_FOR (id, VOL4D_LOCAL / 2) {
         st_index pos = get_odd_st_idx_local(id);
-        perform_heatbath(gaugefield, mu, &rnd, pos.space, pos.time);
+        const coord_temporal t_GLOBAL = GRID_POS_LOCAL * T_EXTENT_LOCAL + pos.time;
+        bool is_fixed = false;
+        for(int i = 0; i < fixed_timeslice_num; ++i)
+        	if(t_GLOBAL == fixed_timeslices[i]) {
+        		is_fixed = true;
+        		break;
+        	}
+        if(!is_fixed)
+        	perform_heatbath(gaugefield, mu, &rnd, pos.space, pos.time);
     }
 
     prng_storeState(rngStates, &rnd);
