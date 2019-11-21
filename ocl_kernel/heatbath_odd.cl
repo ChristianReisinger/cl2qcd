@@ -21,7 +21,7 @@
 
 __kernel void heatbath_odd(__global Matrixsu3StorageType* const restrict gaugefield, const int mu,
                            __global rngStateStorageType* const restrict rngStates,
-                           const int fixed_timeslice_num = 0, const int* const fixed_timeslices = NULL)
+                           const int fixed_timeslice_num, const int* const fixed_timeslices)
 {
     prng_state rnd;
     prng_loadState(&rnd, rngStates);
