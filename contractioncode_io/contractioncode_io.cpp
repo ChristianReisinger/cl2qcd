@@ -61,10 +61,10 @@ void contractioncode_io::writeGaugefieldToArray(double* arr, const Matrixsu3* ho
 		for (size_t x = 0; x < L; x++)
 			for (size_t y = 0; y < L; y++)
 				for (size_t z = 0; z < L; z++) {
-					const Index site_index(z, y, x, t, LatticeExtents(L, T));
+					const Index site_index_CL2QCD(x, y, z, t, LatticeExtents(L, T));
 
 					for (int l = 0; l < NDIM; l++) {
-						Matrixsu3 srcElem = host_buf[uint(LinkIndex(site_index, static_cast<Direction>((l + 1) % NDIM)))];
+						Matrixsu3 srcElem = host_buf[uint(LinkIndex(site_index_CL2QCD, static_cast<Direction>(l)))];
 
 						hmc_complex destElem[NC][NC];
 						destElem[0][0] = srcElem.e00;
@@ -77,7 +77,8 @@ void contractioncode_io::writeGaugefieldToArray(double* arr, const Matrixsu3* ho
 						destElem[2][1] = srcElem.e21;
 						destElem[2][2] = srcElem.e22;
 
-						LinkIndex link_index(site_index, static_cast<Direction>((l + 1) % NDIM));
+						const Index site_index_ContractionCode(z, y, x, t, LatticeExtents(L, T));
+						LinkIndex link_index(site_index_ContractionCode, static_cast<Direction>(l));
 						for (int i = 0; i < NC; i++)
 							for (int j = 0; j < NC; j++) {
 								const uint elem_index = link_index.get_su3_idx_ildg_format(j, i);
