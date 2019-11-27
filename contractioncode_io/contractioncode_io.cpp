@@ -17,7 +17,7 @@ Matrixsu3* contractioncode_io::readGaugefieldFromArray(const double* arr,
 	const unsigned L = parameters->getNs();
 
 	Matrixsu3* gf_host = new Matrixsu3[parameters->getNumberOfElements()];
-	for (int t = 0; t < T; t++)
+	for (size_t t = 0; t < T; t++)
 		for (size_t x = 0; x < L; x++)
 			for (size_t y = 0; y < L; y++)
 				for (size_t z = 0; z < L; z++) {
@@ -57,7 +57,7 @@ void contractioncode_io::writeGaugefieldToArray(double* arr, const Matrixsu3* ho
 	const unsigned T = parameters->getNt();
 	const unsigned L = parameters->getNs();
 
-	for (int t = 0; t < T; t++)
+	for (size_t t = 0; t < T; t++)
 		for (size_t x = 0; x < L; x++)
 			for (size_t y = 0; y < L; y++)
 				for (size_t z = 0; z < L; z++) {
