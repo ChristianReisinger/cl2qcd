@@ -8,8 +8,6 @@
 #include "../geometry/latticeExtents.hpp"
 #include "../geometry/index.hpp"
 
-//direction l: 0,1,2,3 = x,y,z,t
-
 Matrixsu3* contractioncode_io::readGaugefieldFromArray(const double* arr,
 		const physics::lattices::GaugefieldParametersInterface* parameters)
 		{
@@ -21,10 +19,10 @@ Matrixsu3* contractioncode_io::readGaugefieldFromArray(const double* arr,
 		for (size_t x = 0; x < L; x++)
 			for (size_t y = 0; y < L; y++)
 				for (size_t z = 0; z < L; z++) {
-					const Index site_index(z, y, x, t, LatticeExtents(L, T));
+					const Index site_index_ContractionCode(z, y, x, t, LatticeExtents(L, T));
 
 					for (int l = 0; l < NDIM; l++) {
-						LinkIndex link_index(site_index, static_cast<Direction>((l + 1) % NDIM));
+						LinkIndex link_index(site_index_ContractionCode, static_cast<Direction>(l));
 
 						hmc_complex tmp[NC][NC];
 						for (int i = 0; i < NC; i++)
@@ -45,7 +43,8 @@ Matrixsu3* contractioncode_io::readGaugefieldFromArray(const double* arr,
 						destElem.e21 = tmp[2][1];
 						destElem.e22 = tmp[2][2];
 
-						gf_host[uint(LinkIndex(site_index, static_cast<Direction>((l + 1) % NDIM)))] = destElem;
+						const Index site_index_CL2QCD(x, y, z, t, LatticeExtents(L, T));
+						gf_host[uint(LinkIndex(site_index_CL2QCD, static_cast<Direction>(l)))] = destElem;
 					}
 				}
 	return gf_host;
