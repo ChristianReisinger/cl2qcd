@@ -35,7 +35,7 @@ __kernel void heatbath_even(__global Matrixsu3StorageType* const restrict gaugef
         		is_fixed = true;
         		break;
         	}
-        if(!is_fixed)
+        if(!is_fixed || mu == 0)
         	perform_heatbath(gaugefield, mu, &rnd, pos.space, pos.time);
     }
 
