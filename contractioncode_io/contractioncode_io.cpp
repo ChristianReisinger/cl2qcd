@@ -3,6 +3,8 @@
  * Author 2019 Christian Reisinger
  */
 
+#include <omp.h>
+
 #include "../contractioncode_io/contractioncode_io.hpp"
 
 #include "../geometry/latticeExtents.hpp"
@@ -15,6 +17,8 @@ Matrixsu3* contractioncode_io::readGaugefieldFromArray(const double* arr,
 	const unsigned L = parameters->getNs();
 
 	Matrixsu3* gf_host = new Matrixsu3[parameters->getNumberOfElements()];
+
+#pragma omp parallel for collapse(4)
 	for (size_t t = 0; t < T; t++)
 		for (size_t x = 0; x < L; x++)
 			for (size_t y = 0; y < L; y++)
@@ -56,6 +60,7 @@ void contractioncode_io::writeGaugefieldToArray(double* arr, const Matrixsu3* ho
 	const unsigned T = parameters->getNt();
 	const unsigned L = parameters->getNs();
 
+#pragma omp parallel for collapse(4)
 	for (size_t t = 0; t < T; t++)
 		for (size_t x = 0; x < L; x++)
 			for (size_t y = 0; y < L; y++)
@@ -63,7 +68,7 @@ void contractioncode_io::writeGaugefieldToArray(double* arr, const Matrixsu3* ho
 					const Index site_index_CL2QCD(x, y, z, t, LatticeExtents(L, T));
 
 					for (int l = 0; l < NDIM; l++) {
-						Matrixsu3 srcElem = host_buf[uint(LinkIndex(site_index_CL2QCD, static_cast<Direction>(l)))];
+						const Matrixsu3 srcElem = host_buf[uint(LinkIndex(site_index_CL2QCD, static_cast<Direction>(l)))];
 
 						hmc_complex destElem[NC][NC];
 						destElem[0][0] = srcElem.e00;
