@@ -27,9 +27,12 @@
 #include "../../hardware/code/heatbath.hpp"
 #include "../../hardware/device.hpp"
 
+#include <set>
+#include <vector>
 #include <cassert>
 
-void physics::algorithms::su3heatbath(physics::lattices::Gaugefield& gf, physics::PRNG& prng, int overrelax)
+void physics::algorithms::su3heatbath(physics::lattices::Gaugefield& gf, physics::PRNG& prng, int overrelax,
+		const std::set<int>& fixed_timeslices)
 {
     assert(overrelax >= 0);
     assert(gf.get_buffers().size() == 1);
@@ -39,7 +42,13 @@ void physics::algorithms::su3heatbath(physics::lattices::Gaugefield& gf, physics
     auto prng_dev = prng.get_buffers()[0];
     auto code     = gf_dev->get_device()->getHeatbathCode();
 
-    code->run_heatbath(gf_dev, prng_dev);
+    std::vector<int> fixed_timeslices_vec(fixed_timeslices.begin(), fixed_timeslices.end());
+    if(fixed_timeslices_vec.empty())
+        fixed_timeslices_vec.push_back(-1);
+    hardware::buffers::Plain<int> fixed_timeslices_buf(fixed_timeslices_vec.size(), gf_dev->get_device());
+    fixed_timeslices_buf.load(fixed_timeslices_vec.data());
+
+    code->run_heatbath(gf_dev, prng_dev, fixed_timeslices_buf);
 
     // add overrelaxation
     if (overrelax > 0) {

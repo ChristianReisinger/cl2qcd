@@ -44,6 +44,7 @@ target_link_libraries(physics
     prng
     host_functionality
     ildg_io
+    contractioncode_io
 )
 
 #

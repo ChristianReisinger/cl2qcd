@@ -119,6 +119,10 @@ namespace physics {
             const physics::PRNG* getPrng() const;
             const hardware::System* getSystem() const;
             const GaugefieldParametersInterface* getParameters() const;
+            void copyToContractionCodeArray(double* gauge_field); //const missing due to non-const fetch_gaugefield_from_buffers
+
+            void setToContractionCodeArray(const double* gauge_field);
+            void readFromILDGSourcefile(std::string filename);
 
           private:
             hardware::System const& system;

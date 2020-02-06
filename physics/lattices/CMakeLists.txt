@@ -42,6 +42,7 @@ target_link_libraries(lattices
     hardware
     gaugefield
     ildg_io
+    contractioncode_io
     host_functionality
     prng
     observables
@@ -53,7 +54,7 @@ target_link_libraries(lattices
 add_unit_test(NAME physics/lattices/scalar_complex           LIBRARIES lattices)
 add_unit_test(NAME physics/lattices/vector                   LIBRARIES lattices)
 add_unit_test(NAME physics/lattices/algebra_real             LIBRARIES lattices)
-add_unit_test(NAME physics/lattices/gaugefield               LIBRARIES gaugefield meta hardware gaugeObservables prng ildg_io host_functionality)
+add_unit_test(NAME physics/lattices/gaugefield               LIBRARIES gaugefield meta hardware gaugeObservables prng ildg_io contractioncode_io host_functionality)
 add_unit_test(NAME physics/lattices/gaugemomenta             LIBRARIES lattices)
 add_unit_test(NAME physics/lattices/spinorfield              LIBRARIES lattices)
 add_unit_test(NAME physics/lattices/spinorfield_eo           LIBRARIES lattices)

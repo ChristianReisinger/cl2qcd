@@ -40,6 +40,7 @@ target_link_libraries(observables
     hardware
     host_functionality
     ildg_io
+    contractioncode_io
 )
 
 #

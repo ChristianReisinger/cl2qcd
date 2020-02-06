@@ -77,11 +77,14 @@ void hardware::code::Heatbath::clear_kernels()
 }
 
 void hardware::code::Heatbath::run_heatbath(const hardware::buffers::SU3* gaugefield,
-                                            const hardware::buffers::PRNGBuffer* prng) const
+                                            const hardware::buffers::PRNGBuffer* prng,
+                                            const hardware::buffers::Plain<int>& fixed_timeslices) const
 {
     cl_int clerr = CL_SUCCESS;
 
     logger.debug() << "Clearing Heatbath kernels...";
+
+    const cl_int fixed_timeslice_num = fixed_timeslices.get_elements();
 
     size_t global_work_size, ls;
     cl_uint num_groups;
@@ -92,6 +95,13 @@ void hardware::code::Heatbath::run_heatbath(const hardware::buffers::SU3* gaugef
         throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
     clerr = clSetKernelArg(heatbath_even, 2, sizeof(cl_mem), prng->get_cl_buffer());
     if (clerr != CL_SUCCESS)
+        throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
+
+    clerr = clSetKernelArg(heatbath_even, 3, sizeof(cl_int), &fixed_timeslice_num);
+    if(clerr != CL_SUCCESS)
+        throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
+    clerr = clSetKernelArg(heatbath_even, 4, sizeof(cl_mem), fixed_timeslices.get_cl_buffer());
+    if(clerr != CL_SUCCESS)
         throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
 
     for (cl_int i = 0; i < NDIM; i++) {
@@ -108,6 +118,13 @@ void hardware::code::Heatbath::run_heatbath(const hardware::buffers::SU3* gaugef
         throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
     clerr = clSetKernelArg(heatbath_odd, 2, sizeof(cl_mem), prng->get_cl_buffer());
     if (clerr != CL_SUCCESS)
+        throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
+
+    clerr = clSetKernelArg(heatbath_odd, 3, sizeof(cl_int), &fixed_timeslice_num);
+    if(clerr != CL_SUCCESS)
+        throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
+    clerr = clSetKernelArg(heatbath_odd, 4, sizeof(cl_mem), fixed_timeslices.get_cl_buffer());
+    if(clerr != CL_SUCCESS)
         throw Opencl_Error(clerr, "clSetKernelArg", __FILE__, __LINE__);
 
     for (cl_int i = 0; i < NDIM; i++) {

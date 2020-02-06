@@ -27,6 +27,8 @@
 #include "../lattices/gaugefield.hpp"
 #include "../prng.hpp"
 
+#include <set>
+
 namespace physics {
 
     namespace algorithms {
@@ -40,7 +42,8 @@ namespace physics {
          * @param[in,out] prng The PRNG to use
          * @param[in] overrelax The number of overrelaxation steps to perform. Default is none.
          */
-        void su3heatbath(physics::lattices::Gaugefield& gf, physics::PRNG& prng, int overrelax = 0);
+        void su3heatbath(physics::lattices::Gaugefield& gf, physics::PRNG& prng, int overrelax = 0,
+        		const std::set<int>& fixed_timeslices = std::set<int>());
 
         /**
          * Perform one overrelaxation step on the given gaugefield.

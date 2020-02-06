@@ -68,8 +68,9 @@ static std::string collect_basic_options(const hardware::Device* device,
     using namespace hardware::buffers;
     using namespace hardware::code;
 
-    const size_4 local_size = device->getLocalLatticeExtents();
-    const size_4 mem_size   = device->getLocalLatticeMemoryExtents();
+    const size_4 local_size				   = device->getLocalLatticeExtents();
+    const latticeCoordinate local_grid_pos = device->getGridPos().t.value;
+    const size_4 mem_size				   = device->getLocalLatticeMemoryExtents();
 
     std::ostringstream options;
     options.precision(16);
@@ -87,6 +88,8 @@ static std::string collect_basic_options(const hardware::Device* device,
 
     options << " -D VOL4D_GLOBAL=" << kernelParameters.getLatticeVolume();
     options << " -D VOL4D_LOCAL=" << get_vol4d(local_size);
+    options << " -D T_EXTENT_LOCAL=" << local_size.t;
+    options << " -D GRID_POS_LOCAL=" << local_grid_pos;
     options << " -D VOL4D_MEM=" << get_vol4d(mem_size);
 
     // this is needed for hmc_ocl_su3matrix
