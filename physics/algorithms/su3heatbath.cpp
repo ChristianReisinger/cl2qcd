@@ -30,6 +30,7 @@
 #include <set>
 #include <vector>
 #include <cassert>
+#include <exception>
 
 void physics::algorithms::su3heatbath(physics::lattices::Gaugefield& gf, physics::PRNG& prng, int overrelax,
 		const std::set<int>& fixed_timeslices)
@@ -52,6 +53,8 @@ void physics::algorithms::su3heatbath(physics::lattices::Gaugefield& gf, physics
 
     // add overrelaxation
     if (overrelax > 0) {
+	if(!fixed_timeslices.empty())
+		throw std::logic_error("Overrelaxation with fixed timeslices is not implemented");
         physics::algorithms::overrelax(gf, prng, overrelax);
     }
 }
